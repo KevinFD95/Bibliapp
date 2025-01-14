@@ -10,6 +10,7 @@ Bibliapp es una innovadora aplicación multiplataforma diseñada para transforma
 
 - **Visual Studio Code**: Para desarrollo en React Native.
 - **Eclipse IDE**: Para el desarrollo del backend en Java.
+- **MySQL Workbench**: Para el mantenimiento y control de la Base de Datos.
 - **Control de versiones**: Git y GitHub para la colaboración y gestión del código fuente.
 - **Pruebas**: JUnit para pruebas unitarias.
 
