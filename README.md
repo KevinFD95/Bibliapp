@@ -2,6 +2,10 @@
 
 Bibliapp es una innovadora aplicación multiplataforma diseñada para transformar la forma en que organizamos y disfrutamos nuestras colecciones de libros y ebooks. Inspirada en la experiencia de las bibliotecas físicas, Bibliapp combina funcionalidad y diseño para ofrecer una experiencia digital única y personalizada.
 
+## Requisitos técnicos
+- **Frontend**: Node.js versión 22.13.0
+- **Backend**: Java versión 22.0.1
+
 ## Descripción Técnica
 
 ### Tecnologías Utilizadas
