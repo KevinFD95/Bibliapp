@@ -4,7 +4,7 @@ Bibliapp es una innovadora aplicación multiplataforma diseñada para transforma
 
 ## Requisitos de desarrollo
 - **Frontend**: Node.js versión 22.13.0
-- **Backend**: Java versión 22.0.1
+- **Backend**: Java versión 21.0.6
 
 ### Herramientas de Desarrollo
 
