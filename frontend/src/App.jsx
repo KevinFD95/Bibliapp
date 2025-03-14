@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useEffect } from 'react';
 import CustomButton from './components/button'; 
 import * as SplashScreen from 'expo-splash-screen';
+import color from './config/colors.json';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,7 +27,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: color['app-background'],
     alignItems: 'center',
     justifyContent: 'center',
   },

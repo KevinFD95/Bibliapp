@@ -1,13 +1,16 @@
 {
-    "text": "#17202A",
-    "buttons": "#1B4F72",
-    "background": "EAF2F8",
+    "app-background": "#EAF2F8",
+    "splash-background": "#1B4F72",
+    "dark-text": "#17202A",
+    "light-text": "#FFFFFF",
+    "button-background": "#1B4F72",
     "icons": {
         "selected-icons": "#1B4F72",
         "unselected-icons": "#7FB3D5"
     },
     "nav": {
         "nav-background": "#A9CCE3",
+        "tab-selected": "#1B4F72",
         "tab-unselected": "#D4E6F1"
     }
 }
