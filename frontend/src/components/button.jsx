@@ -1,4 +1,5 @@
 import { Text, Pressable, StyleSheet } from 'react-native';
+import colors from '../config/colors.json';
 
 export default function customButton ({text, onPress}) {
     return (
@@ -10,7 +11,7 @@ export default function customButton ({text, onPress}) {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#1B4F72',
+        backgroundColor: colors.buttons,
         width: "90%",
         marginVertical: 20,
         paddingVertical: 10,
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     },
 
     text: {
-        color: '#FFFFFF',
+        color: colors.text,
         textAlign: 'center'
     }
 });
