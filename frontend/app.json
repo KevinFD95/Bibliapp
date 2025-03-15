@@ -23,6 +23,9 @@
     },
     "web": {
       "favicon": "./assets/bibliapp-logo-nav.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
