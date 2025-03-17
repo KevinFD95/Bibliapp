@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "./components/button";
 import * as SplashScreen from "expo-splash-screen";
 import color from "./config/colors.json";
@@ -15,11 +16,15 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text>Bibliapp</Text>
-      <CustomButton text="Iniciar" onPress={() => alert("Botón")} />
+    <SafeAreaProvider>
       <StatusBar style="auto" />
-    </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.view}>
+          <Text>Bibliapp</Text>
+          <CustomButton text="Iniciar" onPress={() => alert("Botón")} />
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -27,7 +32,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: color["app-background"],
+  },
+
+  view: {
+    width: "100%",
+    paddingHorizontal: 20,
     alignItems: "center",
-    justifyContent: "center",
   },
 });

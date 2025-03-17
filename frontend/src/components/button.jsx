@@ -12,7 +12,7 @@ export default function customButton({ text, onPress }) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: color["button-background"],
-    width: "90%",
+    width: "100%",
     marginVertical: 20,
     paddingVertical: 10,
     borderRadius: 10,
