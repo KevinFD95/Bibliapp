@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native";
 import CustomButton from "./components/button";
 import * as SplashScreen from "expo-splash-screen";
 import color from "./config/colors.json";
@@ -18,12 +19,14 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="auto" />
-      <SafeAreaView style={styles.container}>
-        <View style={styles.view}>
-          <Text>Bibliapp</Text>
-          <CustomButton text="Iniciar" onPress={() => alert("Botón")} />
-        </View>
-      </SafeAreaView>
+      <NavigationContainer>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.view}>
+            <Text>Bibliapp</Text>
+            <CustomButton text="Iniciar" onPress={() => alert("Botón")} />
+          </View>
+        </SafeAreaView>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
