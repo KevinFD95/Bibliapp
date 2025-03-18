@@ -28,7 +28,6 @@ export default function App() {
   );
 }
 
-// Comentario culete de Kevin gratis para Joan
 const styles = StyleSheet.create({
   container: {
     flex: 1,
