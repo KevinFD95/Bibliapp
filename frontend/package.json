@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "1.0.0",
   "main": "src/index.jsx",
+  "type": "commonjs",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
