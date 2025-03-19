@@ -3,13 +3,18 @@ import { StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
 import { useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./App";
+import DetailsScreen from "./index";
 import CustomButton from "./components/button";
 import * as SplashScreen from "expo-splash-screen";
 import color from "./config/colors.json";
 import { CustomTextBox, CustomTextBoxFind } from "./components/text-input";
 
 SplashScreen.preventAutoHideAsync();
+const Stack = createStackNavigator();
 
 export default function App() {
   useEffect(() => {
@@ -38,6 +43,10 @@ export default function App() {
               onChangeText={setTextFind}
               placeholder="Búsqueda"
             />
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Details" component={DetailsScreen} />
+            </Stack.Navigator>
           </View>
         </SafeAreaView>
       </NavigationContainer>
