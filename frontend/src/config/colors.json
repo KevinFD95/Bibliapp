@@ -15,6 +15,7 @@
   },
   "text-input": {
     "input-background": "#FFFFFF",
-    "input-border": "#000000"
+    "input-border": "#7FB3D5",
+    "input-border-onFocus": "#1B4F72"
   }
 }

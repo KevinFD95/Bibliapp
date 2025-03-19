@@ -17,10 +17,26 @@ export default function TabNavigator() {
         tabBarInactiveTintColor: color.icons["unselected-icons"],
       }}
     >
-      <Tab.Screen name="Inicio" component={HomeScreen} />
-      <Tab.Screen name="Mi biblioteca" component={LibraryScreen} />
-      <Tab.Screen name="Buscar" component={SearchScreen} />
-      <Tab.Screen name="Perfil" component={ProfileScreen} />
+      <Tab.Screen
+        name="home"
+        component={HomeScreen}
+        options={{ title: "Inicio" }}
+      />
+      <Tab.Screen
+        name="library"
+        component={LibraryScreen}
+        options={{ title: "Libreria" }}
+      />
+      <Tab.Screen
+        name="search"
+        component={SearchScreen}
+        options={{ title: "Buscar" }}
+      />
+      <Tab.Screen
+        name="profile"
+        component={ProfileScreen}
+        options={{ title: "Perfil" }}
+      />
     </Tab.Navigator>
   );
 }
