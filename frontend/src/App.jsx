@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
-import CustomButton from "./components/button";
 import * as SplashScreen from "expo-splash-screen";
-import color from "./config/colors.json";
+
+import TabNavigator from "./components/tab-navigator.jsx";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,26 +19,8 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.view}>
-            <Text>Bibliapp</Text>
-            <CustomButton text="Iniciar" onPress={() => alert("Botón")} />
-          </View>
-        </SafeAreaView>
+        <TabNavigator />
       </NavigationContainer>
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: color["app-background"],
-  },
-
-  view: {
-    width: "100%",
-    paddingHorizontal: 20,
-    alignItems: "center",
-  },
-});
