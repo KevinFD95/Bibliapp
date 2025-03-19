@@ -11,18 +11,16 @@ const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   return (
-    <>
-      <Tab.Navigator
-        screenOptions={{
-          tabBarActiveTintColor: color.icons["selected-icons"],
-          tabBarInactiveTintColor: color.icons["unselected-icons"],
-        }}
-      >
-        <Tab.Screen name="Inicio" component={HomeScreen} />
-        <Tab.Screen name="Mi biblioteca" component={LibraryScreen} />
-        <Tab.Screen name="Buscar" component={SearchScreen} />
-        <Tab.Screen name="Perfil" component={ProfileScreen} />
-      </Tab.Navigator>
-    </>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: color.icons["selected-icons"],
+        tabBarInactiveTintColor: color.icons["unselected-icons"],
+      }}
+    >
+      <Tab.Screen name="Inicio" component={HomeScreen} />
+      <Tab.Screen name="Mi biblioteca" component={LibraryScreen} />
+      <Tab.Screen name="Buscar" component={SearchScreen} />
+      <Tab.Screen name="Perfil" component={ProfileScreen} />
+    </Tab.Navigator>
   );
 }
