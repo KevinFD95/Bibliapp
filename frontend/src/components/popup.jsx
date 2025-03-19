@@ -21,22 +21,23 @@ export default function Popup({ visible, title, message, onClose }) {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
 
   alertBox: {
     width: 300,
-    backgroundColor: "rgba(255,255,255,0.5)",
+    backgroundColor: color["app-background"],
     borderWidth: 1,
     borderColor: color.icons["selected-icons"],
     padding: 20,
     borderRadius: 10,
     elevation: 5,
     shadowColor: "#000000",
-    shadowOffset: { width: 10, height: 20 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowOffset: { width: 10, height: 10 },
+    shadowOpacity: 0.7,
+    shadowRadius: 15,
     alignItems: "center",
   },
 
