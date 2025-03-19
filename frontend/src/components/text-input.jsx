@@ -24,6 +24,28 @@ export function CustomTextBox({
   );
 }
 
+export function CustomTextBoxFind({
+  value = "",
+  onChangeText = () => {},
+  placeholder = "",
+}) {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
+  return (
+    <TextInput
+      style={[styles.inputFind, isFocused && styles.inputFindFocused]}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    />
+  );
+}
+
 const styles = StyleSheet.create({
   input: {
     width: "100%",
@@ -41,32 +63,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: color["button-background"],
   },
-});
 
-export function CustomTextBoxFind({
-  value = "",
-  onChangeText = () => {},
-  placeholder = "",
-}) {
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
-
-  return (
-    <TextInput
-      style={[stylesf.input, isFocused && stylesf.inputFocused]}
-      value={value}
-      onChangeText={onChangeText}
-      placeholder={placeholder}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-    />
-  );
-}
-
-const stylesf = StyleSheet.create({
-  input: {
+  inputFind: {
     width: "100%",
     marginVertical: 20,
     paddingVertical: 10,
@@ -78,7 +76,7 @@ const stylesf = StyleSheet.create({
     backgroundColor: "white",
     borderColor: color.icons["unselected-icons"],
   },
-  inputFocused: {
+  inputFindFocused: {
     borderWidth: 3,
     borderColor: color["button-background"],
   },
