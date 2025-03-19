@@ -12,5 +12,10 @@
     "nav-background": "#A9CCE3",
     "tab-selected": "#1B4F72",
     "tab-unselected": "#D4E6F1"
+  },
+  "text-input": {
+    "input-background": "#FFFFFF",
+    "input-border": "#7FB3D5",
+    "input-border-onFocus": "#1B4F72"
   }
 }
