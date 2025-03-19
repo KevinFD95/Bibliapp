@@ -31,7 +31,6 @@ export default function App() {
   );
 }
 
-// Esta aplicación me parece Bárbara!
 const styles = StyleSheet.create({
   container: {
     flex: 1,
