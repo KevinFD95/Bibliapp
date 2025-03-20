@@ -9,6 +9,8 @@ import LibraryScreen from "../app/library.jsx";
 import SearchScreen from "../app/search.jsx";
 import ProfileScreen from "../app/profile.jsx";
 
+import HomeIcon from "../../assets/icons/home.jsx";
+
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
@@ -36,7 +38,12 @@ export default function TabNavigator() {
       <Tab.Screen
         name="home"
         component={HomeScreen}
-        options={{ title: "Inicio" }}
+        options={{
+          title: "Inicio",
+          tabBarIcon: ({ color, size }) => (
+            <HomeIcon color={color} size={size} />
+          ),
+        }}
       />
       <Tab.Screen
         name="library"
