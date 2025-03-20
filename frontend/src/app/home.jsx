@@ -4,6 +4,8 @@ import { useState } from "react";
 import CustomButton from "../components/button.jsx";
 import Popup from "../components/popup.jsx";
 
+import color from "../config/colors.json";
+
 export default function HomeStackNavigator() {
   const [alert, setAlert] = useState(false);
 
@@ -26,6 +28,8 @@ export default function HomeStackNavigator() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: color["app-background"],
+    height: "100%",
   },
 
   titleStyle: {
