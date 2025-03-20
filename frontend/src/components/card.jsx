@@ -1,55 +1,54 @@
 import React from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import color from "../config/colors.json";
-import { useNavigation } from "@react-navigation/native"; // Importamos useNavigation
+import { Pressable, Text, StyleSheet, View, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-export function CustomCard({ title, description, destination }) {
+export function BookLite({ title, image, destination, params }) {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate(destination);
+    navigation.navigate(destination, params);
   };
 
   return (
     <Pressable onPress={handlePress} style={styles.card}>
-      <View style={styles.cardContent}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
-      </View>
+      {image ? (
+        <Image source={{ uri: image }} style={styles.image} />
+      ) : (
+        <View style={styles.placeholderImage}>
+          <Text style={styles.placeholderText}>No Image</Text>
+        </View>
+      )}
+      <Text style={styles.title}>{title}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    width: "100%",
-    marginVertical: 10,
-    padding: 15,
-    backgroundColor: color["white"],
+    backgroundColor: "#f9f9f9",
+    padding: 10,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: color["gray"],
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  cardContent: {
-    padding: 10,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 30,
+    marginHorizontal: 15,
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "bold",
-    color: color["black"],
+    color: "#333",
+    textAlign: "center",
   },
-  description: {
-    fontSize: 14,
-    color: color["gray"],
+  image: {
+    width: 120,
+    height: 180,
+    borderRadius: 8,
+    marginBottom: 5,
+    resizeMode: "cover",
   },
 });
-
-/* App <Stack.Navigator initialRouteName="Home">
-<Stack.Screen name="Home" component={HomeScreen} />
-<Stack.Screen name="Details" component={DetailsScreen} />
-</Stack.Navigator> */
