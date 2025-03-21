@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import color from "../config/colors.json";
 
 const viewStyles = StyleSheet.create({
-  viewContainer: {
+  mainContainer: {
     flex: 1,
     padding: 20,
     backgroundColor: color["app-background"],
