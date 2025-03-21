@@ -11,8 +11,8 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   useEffect(() => {
     setTimeout(async () => {
-      await SplashScreen.hideAsync(); // Oculta el Splash después del tiempo deseado
-    }, 2000); // Cambia el número de milisegundos según lo que necesites
+      await SplashScreen.hideAsync();
+    }, 2000);
   }, []);
 
   return (
