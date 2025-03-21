@@ -4,7 +4,7 @@ import color from "../config/colors.json";
 
 const viewStyles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
     backgroundColor: color["app-background"],
   },
