@@ -1,9 +1,14 @@
 import Svg, { Path } from "react-native-svg";
 
-const HomeIcon = ({ color, size }) => {
+const HomeIcon = ({ size, filled, selectedColor, unselectedColor }) => {
   return (
-    <Svg height={size} width={size} viewBox="0 -960 960 960" fill={color}>
-      <Path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+    <Svg height={size} width={size} viewBox="0 -960 960 960">
+      <Path
+        d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z"
+        fill={filled ? selectedColor : "none"}
+        stroke={filled ? selectedColor : unselectedColor}
+        strokeWidth={50}
+      />
     </Svg>
   );
 };

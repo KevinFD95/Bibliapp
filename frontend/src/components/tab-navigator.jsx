@@ -39,10 +39,8 @@ export default function TabNavigator() {
         ),
         tabBarStyle: {
           backgroundColor: color.nav["nav-background"],
-          paddingTop: 10,
+          paddingTop: 5,
         },
-        tabBarActiveTintColor: color.icons["selected-icons"],
-        tabBarInactiveTintColor: color.icons["unselected-icons"],
         tabBarLabel: () => null,
       }}
     >
@@ -51,7 +49,14 @@ export default function TabNavigator() {
         component={HomeScreen}
         options={{
           title: "Inicio",
-          tabBarIcon: ({ color }) => <HomeIcon color={color} size={iconSize} />,
+          tabBarIcon: ({ focused }) => (
+            <HomeIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -59,8 +64,13 @@ export default function TabNavigator() {
         component={LibraryScreen}
         options={{
           title: "Mi biblioteca",
-          tabBarIcon: ({ color }) => (
-            <LibraryIcon color={color} size={iconSize} />
+          tabBarIcon: ({ focused }) => (
+            <LibraryIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
           ),
         }}
       />
@@ -69,8 +79,13 @@ export default function TabNavigator() {
         component={SearchScreen}
         options={{
           title: "Buscar",
-          tabBarIcon: ({ color }) => (
-            <SearchIcon color={color} size={iconSize} />
+          tabBarIcon: ({ focused }) => (
+            <SearchIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
           ),
         }}
       />
@@ -79,8 +94,13 @@ export default function TabNavigator() {
         component={ProfileScreen}
         options={{
           title: "Perfil",
-          tabBarIcon: ({ color }) => (
-            <ProfileIcon color={color} size={iconSize} />
+          tabBarIcon: ({ focused }) => (
+            <ProfileIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
           ),
         }}
       />

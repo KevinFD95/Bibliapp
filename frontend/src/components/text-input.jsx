@@ -2,11 +2,7 @@ import { useState } from "react";
 import { TextInput, StyleSheet } from "react-native";
 import color from "../config/colors.json";
 
-export function CustomTextBox({
-  value = "",
-  onChangeText = () => {},
-  placeholder = "",
-}) {
+export function CustomTextBox({ value, onChangeText, placeholder }) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => setIsFocused(true);
@@ -24,11 +20,7 @@ export function CustomTextBox({
   );
 }
 
-export function CustomTextBoxFind({
-  value = "",
-  onChangeText = () => {},
-  placeholder = "",
-}) {
+export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => setIsFocused(true);
