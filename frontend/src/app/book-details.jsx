@@ -1,13 +1,22 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import BookLite from "../components/card.jsx";
 
-export default function BookDetails({ route }) {
+export default function BookDetails({ route, navigation }) {
   const { bookId, bookTitle, bookSynopsis, bookImage } = route.params;
+
+  const handleNavigation = () => {
+    navigation.navigate("BookView", { bookId });
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{bookTitle}</Text>
-      <Image source={{ uri: bookImage }} style={styles.image} />
+      <BookLite
+        title="Pulsa para abrir"
+        onPress={handleNavigation}
+        image={bookImage}
+      />
       <Text style={styles.content}>ID: {bookId}</Text>
       <Text style={styles.content}>{bookSynopsis}</Text>
     </View>

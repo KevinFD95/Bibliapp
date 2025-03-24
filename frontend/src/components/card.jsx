@@ -1,21 +1,14 @@
 import React from "react";
 import { Pressable, Text, StyleSheet, View, Image } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
-export function BookLite({ title, image, destination, params }) {
-  const navigation = useNavigation();
-
-  const handlePress = () => {
-    navigation.navigate(destination, params);
-  };
-
+export default function BookLite({ title, image, onPress }) {
   return (
-    <Pressable onPress={handlePress} style={styles.card}>
+    <Pressable onPress={onPress} style={styles.card}>
       {image ? (
         <Image source={{ uri: image }} style={styles.image} />
       ) : (
-        <View style={styles.placeholderImage}>
-          <Text style={styles.placeholderText}>No Image</Text>
+        <View>
+          <Text>No Image</Text>
         </View>
       )}
       <Text style={styles.title}>{title}</Text>
