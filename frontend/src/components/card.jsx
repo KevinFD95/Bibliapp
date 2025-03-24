@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 30,
     marginHorizontal: 15,
+    width: "140",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -36,6 +37,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
+
+    fontStyle: "italic",
   },
   image: {
     width: 120,

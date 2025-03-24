@@ -1,8 +1,7 @@
 import { ScrollView, Text, StyleSheet } from "react-native";
 
-export default function HomeStackNavigator({ route }) {
+export default function BookView({ route }) {
   const { bookId } = route.params;
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.titleStyle}>Lectura de Libro</Text>
@@ -10,31 +9,27 @@ export default function HomeStackNavigator({ route }) {
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 15,
-    paddingRight: 30,
-    paddingBottom: 15,
-    paddingLeft: 30,
-  },
-
-  titleStyle: {
-    marginBottom: 15,
-    fontSize: 20,
-    fontWeight: "bold",
-    fontFamily: "Helvetica",
-  },
-
-  list: {
-    marginBottom: 30,
-    gap: 20,
-  },
-
-  books: {
+    padding: 20,
+    backgroundColor: "#fff",
     flex: 1,
-    width: 100,
-    height: 150,
-    resizeMode: "contain",
+  },
+  image: {
+    width: 200,
+    height: 300,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  content: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "justify",
   },
 });
