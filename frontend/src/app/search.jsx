@@ -3,7 +3,7 @@ import { ScrollView, Text, StyleSheet } from "react-native";
 export default function HomeStackNavigator() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.titleStyle}>Perfil</Text>
+      <Text style={styles.titleStyle}>Buscar</Text>
     </ScrollView>
   );
 }

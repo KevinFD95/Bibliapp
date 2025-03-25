@@ -1,9 +1,12 @@
 import { ScrollView, Text, StyleSheet } from "react-native";
 
-export default function HomeStackNavigator() {
+export default function HomeStackNavigator({ route }) {
+  const { bookId } = route.params;
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.titleStyle}>Perfil</Text>
+      <Text style={styles.titleStyle}>Lectura de Libro</Text>
+      <Text>{bookId}</Text>
     </ScrollView>
   );
 }

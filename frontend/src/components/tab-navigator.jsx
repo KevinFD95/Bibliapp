@@ -9,9 +9,14 @@ import LibraryScreen from "../app/library.jsx";
 import SearchScreen from "../app/search.jsx";
 import ProfileScreen from "../app/profile.jsx";
 
-import HomeIcon from "../../assets/icons/home.jsx";
+// Iconos
+import HomeIcon from "../../assets/icons/home-icon.jsx";
+import LibraryIcon from "../../assets/icons/library-icon.jsx";
+import SearchIcon from "../../assets/icons/search-icon.jsx";
+import ProfileIcon from "../../assets/icons/profile-icon.jsx";
 
 const Tab = createBottomTabNavigator();
+const iconSize = 40;
 
 export default function TabNavigator() {
   return (
@@ -24,15 +29,19 @@ export default function TabNavigator() {
         headerLeft: () => (
           <Image
             source={navLogo}
-            style={{ width: 50, height: 50, marginLeft: 20, marginBottom: 0 }}
+            style={{
+              width: 50,
+              height: 50,
+              marginLeft: 20,
+            }}
             resizeMode="contain"
           />
         ),
         tabBarStyle: {
           backgroundColor: color.nav["nav-background"],
+          paddingTop: 5,
         },
-        tabBarActiveTintColor: color.icons["selected-icons"],
-        tabBarInactiveTintColor: color.icons["unselected-icons"],
+        tabBarLabel: () => null,
       }}
     >
       <Tab.Screen
@@ -40,25 +49,60 @@ export default function TabNavigator() {
         component={HomeScreen}
         options={{
           title: "Inicio",
-          tabBarIcon: ({ color, size }) => (
-            <HomeIcon color={color} size={size} />
+          tabBarIcon: ({ focused }) => (
+            <HomeIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
           ),
         }}
       />
       <Tab.Screen
         name="library"
         component={LibraryScreen}
-        options={{ title: "Mi biblioteca" }}
+        options={{
+          title: "Mi biblioteca",
+          tabBarIcon: ({ focused }) => (
+            <LibraryIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
+          ),
+        }}
       />
       <Tab.Screen
         name="search"
         component={SearchScreen}
-        options={{ title: "Buscar" }}
+        options={{
+          title: "Buscar",
+          tabBarIcon: ({ focused }) => (
+            <SearchIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
+          ),
+        }}
       />
       <Tab.Screen
         name="profile"
         component={ProfileScreen}
-        options={{ title: "Perfil" }}
+        options={{
+          title: "Perfil",
+          tabBarIcon: ({ focused }) => (
+            <ProfileIcon
+              size={iconSize}
+              filled={focused}
+              selectedColor={color.icons["selected-icons"]}
+              unselectedColor={color.icons["unselected-icons"]}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
