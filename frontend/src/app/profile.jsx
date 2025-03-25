@@ -2,10 +2,7 @@ import { ScrollView, Text, StyleSheet, View, Image } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
 export default function HomeStackNavigator() {
   return (
-<<<<<<< Updated upstream
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.titleStyle}>Buscar</Text>
-=======
+
     <ScrollView contentContainerStyle={viewStyle.mainContainer}>
       <View style={styles.box}>
       <Image
@@ -61,7 +58,6 @@ export default function HomeStackNavigator() {
           style={{height:50,width:50,marginTop:"25%"}} 
         />
       </View>
->>>>>>> Stashed changes
     </ScrollView>
   );
 }
