@@ -1,7 +1,7 @@
 import { ScrollView, Text } from "react-native";
 import { useState } from "react";
 
-import CustomButton from "../components/button.jsx";
+import { CustomButton } from "../components/button.jsx";
 import Popup from "../components/popup.jsx";
 
 import viewStyles from "../styles/view-styles.jsx";
