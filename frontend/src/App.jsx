@@ -4,7 +4,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 
-import TabNavigator from "./components/tab-navigator.jsx";
+import LoginScreen from "./app/login.jsx";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,7 +19,7 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <TabNavigator />
+        <LoginScreen />
       </NavigationContainer>
     </SafeAreaProvider>
   );

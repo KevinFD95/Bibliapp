@@ -7,8 +7,8 @@ export default function Popup({ visible, title, message, onClose }) {
     <Modal transparent visible={visible} animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.alertBox}>
-          <Text>{title}</Text>
-          <Text>{message}</Text>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.message}>{message}</Text>
           <Pressable style={styles.button} onPress={() => onClose()}>
             <Text style={styles.buttonText}>Aceptar</Text>
           </Pressable>
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
 
   alertBox: {
     width: 300,
+    maxHeight: "70%",
     backgroundColor: color["app-background"],
     borderWidth: 1,
     borderColor: color.icons["selected-icons"],
@@ -39,20 +40,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.7,
     shadowRadius: 15,
     alignItems: "center",
+    alignSelf: "center",
   },
 
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
     color: color["dark-text"],
+    textAlign: "center",
+    flexWrap: "wrap",
   },
 
   message: {
     fontSize: 16,
-    marginBottom: 20,
     textAlign: "center",
     color: color["dark-text"],
+    flexWrap: "wrap",
   },
 
   button: {
