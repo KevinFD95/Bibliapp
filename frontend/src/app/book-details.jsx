@@ -21,24 +21,26 @@ export default function BookDetails({ route, navigation }) {
   };
 
   return (
-    <ScrollView style={viewStyles.mainContainer}>
-      <Text style={styles.title}>{bookTitle}</Text>
-      <View style={styles.rowContainer}>
-        <BookLite
-          style={styles.title}
-          title="Pulsa para abrir"
-          onPress={handleNavigation}
-          image={bookImage}
-        />
-        <View style={styles.detailsContainer}>
-          <Text style={styles.content}>Autor: {bookAutor}</Text>
-          <Text style={styles.content}>Categoría: {bookCategory}</Text>
-          <Text style={styles.content}>Páginas: {bookPage}</Text>
-          <Text style={styles.content}>Año: {bookYear}</Text>
-          <Text style={styles.content}>Tipo: {bookType}</Text>
+    <ScrollView contentContainerStyle={viewStyles.mainContainer}>
+      <View style={{ gap: 20 }}>
+        <Text style={styles.title}>{bookTitle}</Text>
+        <View style={styles.rowContainer}>
+          <BookLite
+            style={styles.title}
+            title="Pulsa para abrir"
+            onPress={handleNavigation}
+            image={bookImage}
+          />
+          <View style={styles.detailsContainer}>
+            <Text style={styles.content}>Autor: {bookAutor}</Text>
+            <Text style={styles.content}>Categoría: {bookCategory}</Text>
+            <Text style={styles.content}>Páginas: {bookPage}</Text>
+            <Text style={styles.content}>Año: {bookYear}</Text>
+            <Text style={styles.content}>Tipo: {bookType}</Text>
+          </View>
         </View>
+        <Text style={styles.synopsisContent}>{bookSynopsis}</Text>
       </View>
-      <Text style={styles.content}>{bookSynopsis}</Text>
     </ScrollView>
   );
 }
@@ -58,22 +60,27 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 10,
+    textAlign: "center",
   },
   content: {
     fontSize: 16,
     color: "#666",
     paddingBottom: 5,
   },
+  synopsisContent: {
+    fontSize: 16,
+    color: "#666",
+    paddingBottom: 35,
+  },
   rowContainer: {
     flexDirection: "row",
     alignItems: "flex-start",
-    marginBottom: 0,
     gap: 2,
   },
   detailsContainer: {
     flexDirection: "column",
     justifyContent: "flex-start",
     paddingVertical: 5,
+    paddingLeft: 20,
   },
 });

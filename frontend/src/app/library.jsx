@@ -97,7 +97,7 @@ function Library() {
 
   return (
     <ScrollView
-      contentContainerStyle={[viewStyles.mainContainer, styles.tarjeta]}
+      contentContainerStyle={[viewStyles.mainContainer, styles.vistaTarjeta]}
     >
       {books.map((item) => (
         <BookLite
@@ -112,9 +112,10 @@ function Library() {
 }
 
 const styles = StyleSheet.create({
-  tarjeta: {
+  vistaTarjeta: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
+    gap: 30,
   },
 });

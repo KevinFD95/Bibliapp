@@ -26,19 +26,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    marginBottom: 30,
-    marginHorizontal: 15,
-    width: "140",
-    alignItems: "center",
-    justifyContent: "center",
+    maxWidth: 140,
+    maxHeight: 260,
   },
   title: {
     fontSize: 12,
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
-
     fontStyle: "italic",
+    fontFamily: "serif",
+    flexGrow: 1,
   },
   image: {
     width: 120,

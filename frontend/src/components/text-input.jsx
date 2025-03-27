@@ -38,6 +38,25 @@ export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
   );
 }
 
+export function CustomTextBoxPass({ value, onChangeText, placeholder }) {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
+  return (
+    <TextInput
+      style={[styles.input, isFocused && styles.inputFocused]}
+      secureTextEntry
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    />
+  );
+}
+
 const styles = StyleSheet.create({
   input: {
     width: "100%",
