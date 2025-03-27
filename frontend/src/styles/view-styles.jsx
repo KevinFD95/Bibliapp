@@ -5,7 +5,6 @@ import color from "../config/colors.json";
 const viewStyles = StyleSheet.create({
   mainContainer: {
     flexGrow: 1,
-    flexWrap: "wrap",
     padding: 20,
     backgroundColor: color["app-background"],
   },
@@ -13,7 +12,7 @@ const viewStyles = StyleSheet.create({
   h1: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
   },
 
   p: {
