@@ -1,16 +1,11 @@
-import { ScrollView, Text, StyleSheet, View, Image } from "react-native";
+import { ScrollView, Text, StyleSheet, View, Image, TextInput } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
+import { CustomTextBox } from "../components/text-input.jsx";
 export default function HomeStackNavigator() {
   return (
 
     <ScrollView contentContainerStyle={viewStyle.mainContainer}>
-      <View style={styles.box}>
-      <Image
-          source={{
-            uri: "https://e7.pngegg.com/pngimages/410/195/png-clipart-pencil-drawing-pencil-angle-pencil.png"
-          }}
-          style={{height:50,width:50}} 
-        />
+
         <View style={{alignItems: "center"}}>
                 <Image
                   source={{
@@ -20,44 +15,32 @@ export default function HomeStackNavigator() {
                 />
                       <Text style={{marginTop:10,marginBottom:50}}>Icono Perfil</Text>
               </View>
-
-        <Image
-          source={{
-            uri: "https://e7.pngegg.com/pngimages/529/757/png-clipart-computer-icons-nut-bolt-desktop-wallpaper-cog.png"
-          }}
-          style={{height:50,width:50}} 
-        />
-      </View>
-
+        
       <View style={styles.text}>
         <Text>Nombre de Usuario: </Text>
         <Text>joan005</Text>
+        <CustomTextBox></CustomTextBox>
       </View> 
       <View style={styles.text}>
         <Text>Correo Electronico: </Text>
         <Text>joancarmona05@gmail.com</Text>
+        <CustomTextBox></CustomTextBox>
       </View>
       <View style={styles.text}>
         <Text>Apellido: </Text>
         <Text>Carmona</Text>
+        <CustomTextBox></CustomTextBox>
       </View>
       <View style={styles.text}>
         <Text>Direccion: </Text>
         <Text>C/ MiCasa Nº1</Text>
+        <CustomTextBox></CustomTextBox>
       </View>
       <View style={styles.text}>
         <Text>Nombre: </Text>
         <Text>joan</Text>
+        <CustomTextBox></CustomTextBox>
       </View>     
-
-      <View style={{alignItems: "center"}}>
-        <Image
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/7175/7175236.png"
-          }}
-          style={{height:50,width:50,marginTop:"25%"}} 
-        />
-      </View>
     </ScrollView>
   );
 }
