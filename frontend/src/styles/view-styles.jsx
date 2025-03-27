@@ -9,13 +9,13 @@ const viewStyles = StyleSheet.create({
     backgroundColor: color["app-background"],
   },
 
-  mainTitle: {
+  h1: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
   },
 
-  text: {
+  p: {
     fontSize: 14,
     color: color["dark-text"],
   },

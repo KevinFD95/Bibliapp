@@ -46,10 +46,12 @@ export default function HomeStackNavigator() {
         { justifyContent: "center" },
       ]}
     >
-      <Text style={viewStyles.mainTitle}>Novedades</Text>
+      <Text style={viewStyles.h1}>Novedades</Text>
       <FlatList
-        contentContainerStyle={styles.list}
+        contentContainerStyle={styles.section}
+        nestedScrollEnabled={true}
         data={books}
+        numColumns={1}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <BookLite title={item.title} image={item.image} />
@@ -57,9 +59,9 @@ export default function HomeStackNavigator() {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
       />
-      <Text style={viewStyles.mainTitle}>Recomendados para ti</Text>
+      <Text style={viewStyles.h1}>Recomendados para ti</Text>
       <FlatList
-        contentContainerStyle={styles.list}
+        contentContainerStyle={styles.section}
         data={books}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
@@ -73,9 +75,9 @@ export default function HomeStackNavigator() {
 }
 
 const styles = StyleSheet.create({
-  list: {
+  section: {
     marginBottom: 20,
     gap: 20,
-    flexWrap: "wrap",
+    maxHeight: 250,
   },
 });
