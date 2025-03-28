@@ -9,6 +9,10 @@ export function CustomButton({ text, onPress }) {
   );
 }
 
+export function IconButton({ icon, onPress }) {
+  return <Pressable onPress={onPress}>{icon}</Pressable>;
+}
+
 const styles = StyleSheet.create({
   button: {
     backgroundColor: color["button-background"],

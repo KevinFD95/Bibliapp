@@ -2,16 +2,37 @@ import React from "react";
 import { Modal, Text, View, Pressable, StyleSheet } from "react-native";
 import color from "../config/colors.json";
 
-export default function Popup({ visible, title, message, onClose }) {
+export function Popup({ visible, title, message, onClose }) {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.alertBox}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
-          <Pressable style={styles.button} onPress={() => onClose()}>
+          <Pressable style={styles.button} onPress={onClose}>
             <Text style={styles.buttonText}>Aceptar</Text>
           </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+export function ConfirmPopup({ visible, title, message, onConfirm, onClose }) {
+  return (
+    <Modal transparent visible={visible} animationType="fade">
+      <View style={styles.overlay}>
+        <View style={styles.alertBox}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.message}>{message}</Text>
+          <View style={styles.buttonBox}>
+            <Pressable style={styles.button} onPress={onConfirm}>
+              <Text style={styles.buttonText}>Sí</Text>
+            </Pressable>
+            <Pressable style={styles.button} onPress={onClose}>
+              <Text style={styles.buttonText}>No</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </Modal>
@@ -59,6 +80,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
 
+  buttonBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 20,
+  },
+
   button: {
     backgroundColor: color["button-background"],
     paddingVertical: 10,
@@ -70,5 +97,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: color["light-text"],
     textAlign: "center",
+    paddingHorizontal: 15,
   },
 });

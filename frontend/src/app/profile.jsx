@@ -1,30 +1,30 @@
-import { ScrollView, Text, StyleSheet, View, Image } from "react-native";
+import { useState } from "react";
+import { Text, StyleSheet, View } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
-export default function HomeStackNavigator() {
-  return (
-    <ScrollView contentContainerStyle={viewStyle.mainContainer}>
-      <View style={styles.box}>
-        <Image
-          source={{
-            uri: "https://e7.pngegg.com/pngimages/410/195/png-clipart-pencil-drawing-pencil-angle-pencil.png",
-          }}
-          style={{ height: 50, width: 50 }}
-        />
-        <View style={{ alignItems: "center" }}>
-          <Image
-            source={{
-              uri: "https://media.istockphoto.com/id/1495088043/es/vector/icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-símbolo-de-retrato.jpg?s=612x612&w=0&k=20&c=mY3gnj2lU7khgLhV6dQBNqomEGj3ayWH-xtpYuCXrzk=",
-            }}
-            style={styles.image}
-          />
-          <Text style={{ marginTop: 10, marginBottom: 50 }}>Icono Perfil</Text>
-        </View>
 
-        <Image
-          source={{
-            uri: "https://e7.pngegg.com/pngimages/529/757/png-clipart-computer-icons-nut-bolt-desktop-wallpaper-cog.png",
-          }}
-          style={{ height: 50, width: 50 }}
+import { IconButton } from "../components/button.jsx";
+import { ConfirmPopup, Popup } from "../components/popup.jsx";
+
+import EditIcon from "../../assets/icons/edit-icon.jsx";
+import LogoutIcon from "../../assets/icons/logout-icon.jsx";
+import AccountIcon from "../../assets/icons/account-icon.jsx";
+import SettingsIcon from "../../assets/icons/settings-icon.jsx";
+
+export default function HomeStackNavigator() {
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+
+  return (
+    <View style={viewStyle.mainContainer}>
+      <View style={styles.box}>
+        <IconButton
+          onPress={() => setAlertVisible(true)}
+          icon={<EditIcon size={52} />}
+        />
+        <AccountIcon size={200} />
+        <IconButton
+          onPress={() => setAlertVisible(true)}
+          icon={<SettingsIcon size={52} />}
         />
       </View>
 
@@ -37,6 +37,10 @@ export default function HomeStackNavigator() {
         <Text>joancarmona05@gmail.com</Text>
       </View>
       <View style={styles.text}>
+        <Text>Nombre:</Text>
+        <Text>joan</Text>
+      </View>
+      <View style={styles.text}>
         <Text>Apellido:</Text>
         <Text>Carmona</Text>
       </View>
@@ -44,20 +48,36 @@ export default function HomeStackNavigator() {
         <Text>Direccion:</Text>
         <Text>C/ MiCasa Nº1</Text>
       </View>
-      <View style={styles.text}>
-        <Text>Nombre:</Text>
-        <Text>joan</Text>
-      </View>
 
-      <View style={{ alignItems: "center" }}>
-        <Image
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/7175/7175236.png",
-          }}
-          style={{ height: 50, width: 50, marginTop: "25%" }}
+      <View
+        style={{
+          alignItems: "center",
+          position: "absolute",
+          bottom: 0,
+          left: "50%",
+          marginBottom: 40,
+        }}
+      >
+        <IconButton
+          onPress={() => setConfirmVisible(true)}
+          icon={<LogoutIcon size={52} />}
         />
       </View>
-    </ScrollView>
+
+      <Popup
+        title={"Alerta"}
+        message={"Cambio de ventana"}
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+      />
+      <ConfirmPopup
+        title={"Cerrando sesión"}
+        message={"¿Desea realmente cerrar sesión y salir de la aplicación?"}
+        visible={confirmVisible}
+        onConfirm={() => {}}
+        onClose={() => setConfirmVisible(false)}
+      />
+    </View>
   );
 }
 

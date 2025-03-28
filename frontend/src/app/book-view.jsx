@@ -1,12 +1,19 @@
-import { ScrollView, Text, StyleSheet } from "react-native";
+import React from "react";
+import { Text, StyleSheet, View } from "react-native";
+import { WebView } from "react-native-webview";
 
 export default function BookView({ route }) {
   const { bookId } = route.params;
+  const bookUrl =
+    "https://www.mercaba.org/SANLUIS/ALiteratura/Literatura%20contempor%C3%A1nea/Tolkien%20J.%20R.%20R/El%20se%C3%B1or%20de%20los%20anillos%203%20El%20retorno%20del%20Rey.pdf";
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.titleStyle}>Lectura de Libro</Text>
       <Text>{bookId}</Text>
-    </ScrollView>
+
+      <WebView source={{ uri: bookUrl }} style={{ flex: 1 }} />
+    </View>
   );
 }
 const styles = StyleSheet.create({
