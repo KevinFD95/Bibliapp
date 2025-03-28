@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { CustomButton } from "../components/button.jsx";
 import { CustomTextBox } from "../components/text-input.jsx";
-import Popup from "../components/popup.jsx";
+import { Popup } from "../components/popup.jsx";
 
 import TabNavigator from "../components/tab-navigator.jsx";
 import RegisterScreen from "./register.jsx";

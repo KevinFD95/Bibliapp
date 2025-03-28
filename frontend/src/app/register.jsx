@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 import { CustomTextBox } from "../components/text-input.jsx";
 import { CustomButton } from "../components/button.jsx";
-import Popup from "../components/popup.jsx";
+import { Popup } from "../components/popup.jsx";
 
 import RegisterImage from "../../assets/icons/account-icon";
 import viewStyles from "../styles/view-styles";
