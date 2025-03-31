@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
 import { CustomButton } from "../components/button.jsx";
-import { CustomTextBox } from "../components/text-input.jsx";
+import { CustomTextBox, CustomTextBoxPass } from "../components/text-input.jsx";
 import { Popup } from "../components/popup.jsx";
 
 import TabNavigator from "../components/tab-navigator.jsx";
@@ -12,6 +12,7 @@ import RegisterScreen from "./register.jsx";
 
 import viewStyles from "../styles/view-styles.jsx";
 import logo from "../../assets/bibliapp-logo-inicio.png";
+import CheckboxIcon from "../../assets/icons/checkbox-icon.jsx";
 
 const Stack = createStackNavigator();
 
@@ -52,6 +53,7 @@ export function LoginScreen() {
 
   const [userInput, setUserInput] = useState();
   const [passInput, setPassInput] = useState();
+  const [checked, setChecked] = useState(false);
 
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
@@ -88,24 +90,32 @@ export function LoginScreen() {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text>Usuario o correo electrónico:</Text>
+        <Text style={viewStyles.p}>Usuario o correo electrónico:</Text>
         <CustomTextBox
           placeholder={"Escribe tu usuario o correo"}
           value={userInput}
           onChangeText={setUserInput}
         />
-        <Text>Contraseña:</Text>
-        <CustomTextBox
+
+        <Text style={viewStyles.p}>Contraseña:</Text>
+        <CustomTextBoxPass
           placeholder={"Escribe tu contraseña"}
           value={passInput}
           onChangeText={setPassInput}
         />
+
+        <Pressable onPress={() => !setChecked(!checked)} style={styles.row}>
+          <CheckboxIcon size={32} checked={checked} />
+          <Text style={viewStyles.h5}>Recuérdame</Text>
+        </Pressable>
       </View>
 
       <View style={styles.buttonsContainer}>
         <CustomButton text="Entrar" onPress={handleLogin} />
         <Pressable onPress={handleRegister}>
-          <Text>¿Todavía no tienes cuenta? ¡Entra aquí!</Text>
+          <Text style={viewStyles.h5}>
+            ¿Todavía no tienes cuenta? ¡Entra aquí!
+          </Text>
         </Pressable>
       </View>
 
@@ -123,17 +133,28 @@ const styles = StyleSheet.create({
   view: {
     justifyContent: "center",
   },
+
   logoContainer: {
     alignItems: "center",
     marginBottom: 20,
   },
+
   logo: {
     width: 200,
     height: 200,
   },
+
   inputContainer: {
     marginVertical: 50,
   },
+
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 5,
+  },
+
   buttonsContainer: {
     alignItems: "center",
   },

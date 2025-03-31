@@ -112,7 +112,7 @@ function HomeScreen() {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
       />
-      <Text style={viewStyles.h1}>Recomendados para ti</Text>
+      <Text style={viewStyles.h2}>Recomendados para ti</Text>
       <FlatList
         contentContainerStyle={styles.section}
         data={books}

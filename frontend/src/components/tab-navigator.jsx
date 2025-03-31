@@ -1,4 +1,4 @@
-import { Image } from "react-native";
+import { Image, View, Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import color from "../config/colors.json";
 import navLogo from "../../assets/bibliapp-logo-nav.png";
@@ -14,6 +14,7 @@ import HomeIcon from "../../assets/icons/home-icon.jsx";
 import LibraryIcon from "../../assets/icons/library-icon.jsx";
 import SearchIcon from "../../assets/icons/search-icon.jsx";
 import ProfileIcon from "../../assets/icons/profile-icon.jsx";
+import CartIcon from "../../assets/icons/cart-icon.jsx";
 
 const Tab = createBottomTabNavigator();
 const iconSize = 40;
@@ -36,6 +37,13 @@ export default function TabNavigator() {
             }}
             resizeMode="contain"
           />
+        ),
+        headerRight: () => (
+          <View style={{ marginRight: 20 }}>
+            <Pressable onPress={() => alert("Carrito")}>
+              <CartIcon size={38} />
+            </Pressable>
+          </View>
         ),
         tabBarStyle: {
           backgroundColor: color.nav["nav-background"],
