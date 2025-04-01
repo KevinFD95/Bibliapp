@@ -1,3 +1,4 @@
+# app/models/document.py
 from app.database.connection import get_db_connection
 
 class Document:
