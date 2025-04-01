@@ -39,3 +39,4 @@ yarn-error.*
 # python
 .venv
 .env
+__pycache__/
