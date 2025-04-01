@@ -1,6 +1,6 @@
 # app/controllers/user_controller.py
 from flask import request, jsonify
-from app.models.user import User
+from app.models import User
 import bcrypt
 
 class UserController:

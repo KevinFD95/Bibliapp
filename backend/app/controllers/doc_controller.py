@@ -1,6 +1,6 @@
 # app/controllers/doc_controller.py
 from flask import jsonify
-from app.models.document import Document
+from app.models import Document
 
 class DocController:
     def get_documents():
