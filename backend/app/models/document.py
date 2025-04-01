@@ -6,7 +6,7 @@ class Document:
     def get_all():
         conn = Connection.get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM documents")
+        cursor.execute(Queries.DOC_GETALL)
         documents = cursor.fetchall()
         conn.close()
         return documents

@@ -14,6 +14,19 @@ class User:
             return users
         except Exception:
             return {"error": "No se han podido recuperar los datos."}
+        
+    @staticmethod
+    def get_user_by_id(user_id):
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(Queries.USERS_GET_BY_ID, (user_id,))
+            user = cursor.fetchone()
+            conn.close()
+            print(f"Usuario con ID {user['user_id']} encontrado: {user['username']}")
+            return user
+        except Exception:
+            return {"error": "Usuario no encontrado en la base de datos"}
     
     @staticmethod
     def create(users):
@@ -51,15 +64,15 @@ class User:
             return {"error": "No se han podido actualizar los datos del usuario."}
     
     @staticmethod
-    def delete(users):
+    def delete(username):
         try:
             conn = Connection.get_db_connection()
             cursor = conn.cursor()
 
-            cursor.execute(Queries.USERS_DELETE, (users["username"],))
+            cursor.execute(Queries.USERS_DELETE, (username,))
             conn.commit()
             conn.close()
-            print(f"Se ha eliminado el usuario {users['username']}")
+
             return {"message": "Usuario eliminado exitosamente"}
         except Exception:
             return {"error": "El usuario no ha sido eliminado."}
