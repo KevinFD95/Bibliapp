@@ -53,10 +53,10 @@ class User:
     @staticmethod
     def delete(users):
         try:
-            conn = get_db_connection()
+            conn = Connection.get_db_connection()
             cursor = conn.cursor()
 
-            cursor.execute(QUERY_USERS_DELETE, (users["username"],))
+            cursor.execute(Queries.USERS_DELETE, (users["username"],))
             conn.commit()
             conn.close()
             print(f"Se ha eliminado el usuario {users['username']}")
