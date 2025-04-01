@@ -1,5 +1,5 @@
 from flask import jsonify
-from app.models.document import Document
+from models import Document
 
 def get_documents():
     documents = Document.get_all()

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app.controllers.doc_controller import get_documents
+from controllers import get_documents
 
 document_bp = Blueprint('document_bp', __name__)
 

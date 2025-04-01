@@ -1,21 +1,19 @@
--- CREACION DE LA BASE DE DATOS
 CREATE DATABASE bibliapp
 DEFAULT CHARACTER SET utf8
 DEFAULT COLLATE utf8_general_ci;
 
--- USO DE LA BASE DE DATOS
 USE bibliapp;
 
--- CREACION DE LAS TABLAS
 CREATE TABLE users (
     user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    user_name VARCHAR(50) NOT NULL,
+    user_lastname VARCHAR(50) NOT NULL,
+    username VARCHAR(30) NOT NULL UNIQUE,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    user_password VARCHAR(60) NOT NULL,
     auth_token VARCHAR(255) DEFAULT NULL,
-    role VARCHAR(20) DEFAULT 'user',
+    user_role VARCHAR(10) DEFAULT 'user',
+    user_sub INT(2) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP
@@ -28,8 +26,10 @@ CREATE TABLE documents (
     publication_year INT NOT NULL,
     document_type VARCHAR(50) NOT NULL,
     num_pages INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
+    prequel INT(2),
+    sequel INT(2),
     synopsis TEXT,
+    price DECIMAL(10, 2) NOT NULL,
     url_image VARCHAR(255),
     url_document VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -43,7 +43,7 @@ CREATE TABLE registers (
     document_id INT NOT NULL,
     favorite BOOLEAN DEFAULT FALSE,
     readed BOOLEAN DEFAULT FALSE,
-    progress INT DEFAULT 0,
+    progress INT(3) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP,
@@ -58,7 +58,7 @@ CREATE TABLE notes (
     note_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     register_id INT NOT NULL,
     note TEXT NOT NULL,
-    page INT NOT NULL,
+    note_page INT NOT NULL,
     coord_x INT NOT NULL,
     coord_y INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -70,10 +70,10 @@ CREATE TABLE notes (
 );
 
 CREATE TABLE categories (
-    id_category INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id_document INT NOT NULL,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    category_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    document_id INT NOT NULL,
+    category_name VARCHAR(50) NOT NULL UNIQUE,
 
-    FOREIGN KEY (id_document) REFERENCES documents(document_id)
+    FOREIGN KEY (document_id) REFERENCES documents(document_id)
     ON DELETE RESTRICT ON UPDATE CASCADE
 );
