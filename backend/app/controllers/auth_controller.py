@@ -1,6 +1,8 @@
+# app/controllers/auth_controller.py
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token
 from app.models import User
+from app.helpers import verify_password
 import bcrypt
 
 
@@ -23,14 +25,10 @@ class AuthController:
 
         if "@" in identifier:
             user = User.get_user_by_email(identifier)
-            print(f"Usuario accediendo desde mail {identifier}")
         else:
             user = User.get_user_by_username(identifier)
-            print(f"Usuario accediendo desde nombre {identifier}")
 
-        if not user or not AuthController.verify_password(
-            user_password, user["user_password"]
-        ):
+        if not user or not verify_password(user_password, user["user_password"]):
             return jsonify({"error": "Credenciales incorrectas"}), 401
 
         access_token = create_access_token(
@@ -51,9 +49,4 @@ class AuthController:
                     "email": user.get("email"),
                 },
             }
-        )
-
-    def verify_password(user_password, hashed_password):
-        return bcrypt.checkpw(
-            user_password.encode("utf-8"), hashed_password.encode("utf-8")
         )

@@ -2,6 +2,7 @@
 import mysql.connector
 from config import Config
 
+
 class Connection:
 
     def get_db_connection():
@@ -9,5 +10,5 @@ class Connection:
             host=Config.MYSQL_HOST,
             user=Config.MYSQL_USER,
             password=Config.MYSQL_PASSWORD,
-            database=Config.MYSQL_DB
+            database=Config.MYSQL_DB,
         )

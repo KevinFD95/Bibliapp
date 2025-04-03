@@ -1,7 +1,8 @@
 # app/controllers/user_controller.py
 from flask import request, jsonify
 from app.models import User
-import bcrypt
+from app.helpers import hash_password
+from app.validations import user_validation
 
 
 class UserController:
@@ -16,35 +17,31 @@ class UserController:
     def create_user():
         data = request.get_json()
 
-        if not data:
-            return jsonify({"error": "No se enviaron datos"}), 400
-        if isinstance(data, list):
-            for user in data:
-                if "user_password" not in user or "username" not in user:
-                    return (
-                        jsonify({"error": "Datos incompletos en uno o más usuarios"}),
-                        400,
-                    )
+        if not isinstance(data, (dict, list)):
+            return jsonify({"error": "Formato de datos inválido"}), 400
 
-                user["user_password"] = bcrypt.hashpw(
-                    user["user_password"].encode(), bcrypt.gensalt()
-                ).decode()
+        users = data if isinstance(data, list) else [data]
+        validated_users = []
+        errors_list = []
 
-            users_created = User.create(data)
-            status = 201 if users_created else 500
-            return jsonify(users_created), status
+        for i, user in enumerate(users):
+            errors = user_validation(user)
 
-        if "user_password" not in data or "username" not in data:
-            return jsonify({"error": "Faltan datos requeridos"}), 400
+            if errors:
+                errors_list.append({"user_index": i, "errors": errors})
+                continue
 
-        data["user_password"] = bcrypt.hashpw(
-            data["user_password"].encode(), bcrypt.gensalt()
-        ).decode()
+            user["user_password"] = hash_password(user["user_password"])
+            validated_users.append(user)
 
-        user_created = User.create(data)
-        status = 201 if user_created else 500
+        if errors_list:
+            return jsonify({"errors": errors_list}), 400
 
-        return jsonify(user_created), status
+        try:
+            users_created = User.create(validated_users)
+            return jsonify(users_created), 201 if users_created else 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
 
     def delete_user(username):
         if not username:
