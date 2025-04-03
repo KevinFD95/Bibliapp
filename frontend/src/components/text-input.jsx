@@ -25,7 +25,9 @@ export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={[styles.inputFind, isFocused && styles.inputFindFocused]}>
+    <View
+      style={[styles.inputFindView, isFocused && styles.inputFindFocusedView]}
+    >
       <SearchIcon
         size={32}
         filled={isFocused}
@@ -33,6 +35,7 @@ export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
         unselectedColor={color.icons["unselected-icons"]}
       />
       <TextInput
+        style={styles.textInput}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -48,15 +51,17 @@ export function CustomTextBoxPass({ value, onChangeText, placeholder }) {
   const [visibility, setVisibility] = useState(true);
 
   return (
-    <View style={[styles.inputPass, isFocused && styles.inputPassFocused]}>
+    <View
+      style={[styles.inputPassView, isFocused && styles.inputPassFocusedView]}
+    >
       <TextInput
+        style={styles.textInput}
         secureTextEntry={visibility}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={{ flex: 1 }}
       />
       <Pressable onPress={() => setVisibility(!visibility)}>
         <VisibilityIcon size={24} checked={visibility} />
@@ -66,6 +71,13 @@ export function CustomTextBoxPass({ value, onChangeText, placeholder }) {
 }
 
 const styles = StyleSheet.create({
+  textInput: {
+    flex: 1,
+    height: "100%",
+    padding: 0,
+    color: color["black"],
+    fontSize: 16,
+  },
   input: {
     width: "100%",
     height: 45,
@@ -77,6 +89,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "white",
     borderColor: color.icons["unselected-icons"],
+    fontSize: 16,
   },
 
   inputFocused: {
@@ -84,7 +97,7 @@ const styles = StyleSheet.create({
     borderColor: color["button-background"],
   },
 
-  inputFind: {
+  inputFindView: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
@@ -94,19 +107,17 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
-    color: color["black"],
-    fontSize: 16,
     borderWidth: 1,
     backgroundColor: "white",
     borderColor: color.icons["unselected-icons"],
   },
 
-  inputFindFocused: {
+  inputFindFocusedView: {
     borderWidth: 3,
     borderColor: color["button-background"],
   },
 
-  inputPass: {
+  inputPassView: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -116,13 +127,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 10,
-    color: color["black"],
     borderWidth: 1,
     backgroundColor: "white",
     borderColor: color.icons["unselected-icons"],
   },
 
-  inputPassFocused: {
+  inputPassFocusedView: {
     borderWidth: 3,
     borderColor: color["button-background"],
   },

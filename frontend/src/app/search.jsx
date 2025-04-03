@@ -82,16 +82,31 @@ function SearchView({ navigation }) {
 
   const handleSearch = (text) => {
     setSearchText(text);
+
+    if (text === "") {
+      setFilteredBooks(book);
+      return;
+    }
+
+    const searchTerms = text
+      .split(",")
+      .map((term) => term.trim().toLowerCase());
+
     setFilteredBooks(
-      text === ""
-        ? book
-        : book.filter(
-            (b) =>
-              b.title.toLowerCase().includes(text.toLowerCase()) ||
-              b.category.toLowerCase().includes(text.toLowerCase()) ||
-              b.autor.toLowerCase().includes(text.toLowerCase()) ||
-              b.year.toLowerCase().includes(text.toLowerCase()),
-          ),
+      book.filter((book) => {
+        // Verificar que TODOS los términos de búsqueda coincidan en ALGÚN campo
+        return searchTerms.every((term) => {
+          if (!term) return true; // Ignorar términos vacíos
+
+          return (
+            book.title.toLowerCase().includes(term) ||
+            book.category.toLowerCase().includes(term) ||
+            book.autor.toLowerCase().includes(term) ||
+            book.year.toString().includes(term) ||
+            book.type.toLowerCase().includes(term)
+          );
+        });
+      }),
     );
   };
 
@@ -129,6 +144,9 @@ function SearchView({ navigation }) {
               <Text style={styles.bookCategory}>
                 Categoría: {item.category}
               </Text>
+              <Text style={styles.bookAutor}>Autor: {item.autor}</Text>
+              <Text style={styles.bookYear}>Año: {item.year}</Text>
+              <Text style={styles.bookType}>Tipo: {item.type}</Text>
             </View>
           </View>
         ))}
