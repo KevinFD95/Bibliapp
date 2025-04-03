@@ -1,11 +1,11 @@
 # app/models/user.py
 from app.database import Queries, Connection
-import bcrypt
+
 
 class User:
     @staticmethod
     def get_all():
-        try: 
+        try:
             conn = Connection.get_db_connection()
             cursor = conn.cursor(dictionary=True)
             cursor.execute(Queries.USERS_GETALL)
@@ -14,7 +14,7 @@ class User:
             return users
         except Exception:
             return {"error": "No se han podido recuperar los datos."}
-        
+
     @staticmethod
     def get_user_by_id(user_id):
         try:
@@ -38,10 +38,7 @@ class User:
             return user
         except Exception:
             return {"error": "Usuario no encontrado en la base de datos"}
-        
-    def verify_password(user_password, hashed_password):
-        return bcrypt.checkpw(user_password.encode('utf-8'), hashed_password.encode('utf-8'))
-        
+
     @staticmethod
     def get_user_by_email(email):
         try:
@@ -53,7 +50,7 @@ class User:
             return user
         except Exception:
             return {"error": "Usuario no encontrado en la base de datos"}
-    
+
     @staticmethod
     def create(users):
         try:
@@ -61,10 +58,28 @@ class User:
             cursor = conn.cursor()
 
             if isinstance(users, list):
-                values = [(user["user_name"], user["user_lastname"], user["username"], user["email"], user["user_password"]) for user in users]
+                values = [
+                    (
+                        user["user_name"],
+                        user["user_lastname"],
+                        user["username"],
+                        user["email"],
+                        user["user_password"],
+                    )
+                    for user in users
+                ]
                 cursor.executemany(Queries.USERS_INSERT, values)
             else:
-                cursor.execute(Queries.USERS_INSERT, (users["user_name"], users["user_lastname"], users["username"], users["email"], users["user_password"]))
+                cursor.execute(
+                    Queries.USERS_INSERT,
+                    (
+                        users["user_name"],
+                        users["user_lastname"],
+                        users["username"],
+                        users["email"],
+                        users["user_password"],
+                    ),
+                )
 
             conn.commit()
             conn.close()
@@ -72,20 +87,20 @@ class User:
             return {"message": "Usuario creado exitosamente."}
         except Exception:
             return {"error": "El usuario no ha sido creado."}
-            
+
     @staticmethod
     def update(users):
         try:
             conn = Connection.get_db_connection()
             cursor = conn.cursor()
 
-            cursor.execute() # Añadir en app/database/queries.py el metodo para actualizar
+            cursor.execute()  # Añadir en app/database/queries.py el metodo para actualizar
             conn.commit()
             conn.close()
             return {"message": "El usuario ha sido actualizado correctamente."}
         except Exception:
             return {"error": "No se han podido actualizar los datos del usuario."}
-    
+
     @staticmethod
     def delete(username):
         try:
@@ -99,4 +114,3 @@ class User:
             return {"message": "Usuario eliminado exitosamente"}
         except Exception:
             return {"error": "El usuario no ha sido eliminado."}
-    

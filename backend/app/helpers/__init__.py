@@ -1,0 +1,1 @@
+from .strings_helper import generate_slug
