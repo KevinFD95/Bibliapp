@@ -1,5 +1,6 @@
+# app/controllers/user_controller.py
 from flask import request, jsonify
-from models import User
+from app.models import User
 import bcrypt
 
 def get_users():
@@ -13,8 +14,15 @@ def create_user():
         return jsonify({"error": "No se enviaron datos"}), 400
     if isinstance(data, list):
         for user in data:
-            user["password"] = bcrypt.hashpw(user["password"].encode(), bcrypt.gensalt()).decode()
+            user["user_password"] = bcrypt.hashpw(user["user_password"].encode(), bcrypt.gensalt()).decode()
         return jsonify(User.create(data)), 201
     
-    data["password"] = bcrypt.hashpw(data["password"].encode(), bcrypt.gensalt()).decode()
+    data["user_password"] = bcrypt.hashpw(data["user_password"].encode(), bcrypt.gensalt()).decode()
     return jsonify(User.create(data)), 201
+
+def delete_user():
+    data = request.get_json()
+
+    if not data or "username" not in data:
+        return jsonify({"error": "Debe proporcionar un username"}), 400
+    return jsonify(User.delete(data)), 201

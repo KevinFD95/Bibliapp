@@ -88,7 +88,9 @@ function SearchView({ navigation }) {
         : book.filter(
             (b) =>
               b.title.toLowerCase().includes(text.toLowerCase()) ||
-              b.category.toLowerCase().includes(text.toLowerCase()),
+              b.category.toLowerCase().includes(text.toLowerCase()) ||
+              b.autor.toLowerCase().includes(text.toLowerCase()) ||
+              b.year.toLowerCase().includes(text.toLowerCase()),
           ),
     );
   };

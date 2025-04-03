@@ -1,4 +1,5 @@
-from database import get_db_connection
+# app/models/document.py
+from app.database.connection import get_db_connection
 
 class Document:
     @staticmethod

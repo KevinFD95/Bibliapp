@@ -1,3 +1,4 @@
+# app/database/connection.py
 import mysql.connector
 from config import Config
 
