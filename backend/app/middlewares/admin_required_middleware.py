@@ -12,6 +12,8 @@ def admin_required(fn):
         try:
             verify_jwt_in_request()
             identify = get_jwt_identity()
+            username = get_jwt_identity().get("username")
+            email = get_jwt_identity().get("email")
 
             user = User.get_user_by_id(identify["user_id"])
 

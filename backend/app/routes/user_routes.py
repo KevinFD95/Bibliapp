@@ -11,7 +11,7 @@ user_bp.route("/users/<int:user_id>", methods=["GET"])(UserController.get_user_b
 
 user_bp.route("/users", methods=["POST"])(UserController.create_user)
 user_bp.route("/users/<string:username>", methods=["DELETE"])(
-    jwt_required()(admin_required(UserController.delete_user))
+    admin_required(jwt_required()(UserController.delete_user))
 )
 # user_bp.route("/users/delete/<string:username>", methods=["DELETE"])(
 #     UserController.delete_user

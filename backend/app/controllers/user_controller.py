@@ -45,7 +45,7 @@ class UserController:
 
     def delete_user(username):
         if not username:
-            return jsonify({"error": "debe proporcionar un username"}), 400
+            return jsonify({"error": "Debe proporcionar un username"}), 400
 
         result = User.delete(username)
         if "error" in result:

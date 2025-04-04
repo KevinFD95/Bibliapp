@@ -5,6 +5,7 @@ import re
 
 # El nombre del usuario no debe contener nada que no sea
 # letras ('^' = negacion, [contenido] = lo contiene el texto)
+@staticmethod
 def user_name_validation(user_name):
     if re.search(r"[^a-zA-Z\s]", user_name):
         return False
@@ -13,6 +14,7 @@ def user_name_validation(user_name):
 
 # El apellido del usuario no debe contener nada que no sea
 # letras ('^' = negacion, [contenido] = lo contiene el texto)
+@staticmethod
 def user_lastname_validation(user_lastname):
     if re.search(r"[^a-zA-Z\s]", user_lastname):
         return False
@@ -22,6 +24,7 @@ def user_lastname_validation(user_lastname):
 # El usuario no debe contener nada que no sea letras o
 # numeros ('^' = negacion, [contenido] = lo contiene el texto)
 # No se aceptan caracteres especiales
+@staticmethod
 def username_validation(username):
     if re.search(r"[^a-zA-z0-9]", username):
         return False
@@ -30,6 +33,7 @@ def username_validation(username):
 
 # El email debe tener una estructura de email
 # independientemente del contenido
+@staticmethod
 def email_validation(email):
     # Estructura: [contenido]@[contenido].[contenido]
     email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
@@ -40,6 +44,7 @@ def email_validation(email):
 
 
 # Validación de contraseña
+@staticmethod
 def password_validation(password):
     # Longitud mínima y máxima
     if len(password) < 8 or len(password) > 30:
@@ -54,12 +59,13 @@ def password_validation(password):
     if not re.search(r"[A-Z]", password):
         return False
     # Al menos que contenga un carácter especial
-    if not re.search(r"[\W_]"):
+    if not re.search(r"[\W_]", password):
         return False
     return True
 
 
 # Verifica que todos los datos de registro sean correctos
+@staticmethod
 def user_validation(user):
     if not user_name_validation(user.get("user_name", "")):
         return (jsonify({"error": f"Nombre '{user['user_name']}' no válido"})), 400
