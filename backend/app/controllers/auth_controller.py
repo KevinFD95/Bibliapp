@@ -31,11 +31,11 @@ class AuthController:
             return jsonify({"error": "Credenciales incorrectas"}), 401
 
         access_token = create_access_token(
-            identity=user["user_id"],
+            identity=user["username"],
             additional_claims={
-                "username": user.get("username"),
                 "email": user.get("email"),
-            }
+                "user_role": user.get("user_role"),
+            },
         )
 
         return jsonify(

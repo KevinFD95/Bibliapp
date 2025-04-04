@@ -1,7 +1,7 @@
 # app/middlewares/admin_required_middleware.py
 from functools import wraps
 from flask import request, jsonify
-from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_jwt_extended import verify_jwt_in_request, get_jwt
 from app.models import User
 
 
@@ -11,13 +11,9 @@ def admin_required(fn):
     def wrapper(*args, **kwargs):
         try:
             verify_jwt_in_request()
-            identify = get_jwt_identity()
-            username = get_jwt_identity().get("username")
-            email = get_jwt_identity().get("email")
-
-            user = User.get_user_by_id(identify["user_id"])
-
-            if not user or user["user_role"] != "admin":
+            claims = get_jwt()
+            
+            if claims.get("user_role") != "admin":
                 return jsonify({"error": "Acceso no autorizado"}), 403
 
             return fn(*args, **kwargs)

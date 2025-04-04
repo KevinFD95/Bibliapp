@@ -8,10 +8,10 @@ class Queries:
         "SELECT user_name, user_lastname, username, email FROM users WHERE user_id = %s"
     )
     USERS_GET_BY_USERNAME = (
-        "SELECT user_id, username, email, user_password, auth_token FROM users WHERE username = %s"
+        "SELECT username, email, user_password, auth_token, user_role FROM users WHERE username = %s"
     )
     USERS_GET_BY_EMAIL = (
-        "SELECT user_id, username, email, user_password, auth_token FROM users WHERE email = %s"
+        "SELECT username, email, user_password, auth_token, user_role FROM users WHERE email = %s"
     )
     USERS_INSERT = "INSERT INTO users (user_name, user_lastname, username, email, user_password) VALUES (%s, %s, %s, %s, %s)"
     USERS_DELETE = "DELETE FROM users WHERE username = %s"
