@@ -1,8 +1,9 @@
-# app/config.py
+# config.py
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 class Config:
     MYSQL_HOST = os.getenv("DB_HOST")

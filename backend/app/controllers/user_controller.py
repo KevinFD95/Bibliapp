@@ -1,28 +1,54 @@
 # app/controllers/user_controller.py
 from flask import request, jsonify
 from app.models import User
-import bcrypt
+from app.helpers import hash_password
+from app.validations import user_validation
 
-def get_users():
-    users = User.get_all()
-    return jsonify(users)
 
-def create_user():
-    data = request.get_json()
+class UserController:
+    def get_users():
+        return jsonify(User.get_all())
 
-    if not data:
-        return jsonify({"error": "No se enviaron datos"}), 400
-    if isinstance(data, list):
-        for user in data:
-            user["user_password"] = bcrypt.hashpw(user["user_password"].encode(), bcrypt.gensalt()).decode()
-        return jsonify(User.create(data)), 201
-    
-    data["user_password"] = bcrypt.hashpw(data["user_password"].encode(), bcrypt.gensalt()).decode()
-    return jsonify(User.create(data)), 201
+    def get_user_by_id(user_id):
+        user = User.get_user_by_id(user_id)
+        status = 200 if "error" not in user else 404
+        return jsonify(user), status
 
-def delete_user():
-    data = request.get_json()
+    def create_user():
+        data = request.get_json()
 
-    if not data or "username" not in data:
-        return jsonify({"error": "Debe proporcionar un username"}), 400
-    return jsonify(User.delete(data)), 201
+        if not isinstance(data, (dict, list)):
+            return jsonify({"error": "Formato de datos inválido"}), 400
+
+        users = data if isinstance(data, list) else [data]
+        validated_users = []
+        errors_list = []
+
+        for i, user in enumerate(users):
+            errors = user_validation(user)
+
+            if errors:
+                errors_list.append({"user_index": i, "errors": errors})
+                continue
+
+            user["user_password"] = hash_password(user["user_password"])
+            validated_users.append(user)
+
+        if errors_list:
+            return jsonify({"errors": errors_list}), 400
+
+        try:
+            users_created = User.create(validated_users)
+            return jsonify(users_created), 201 if users_created else 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+
+    def delete_user(username):
+        if not username:
+            return jsonify({"error": "debe proporcionar un username"}), 400
+
+        result = User.delete(username)
+        if "error" in result:
+            return jsonify(result), 404
+
+        return jsonify(result), 200
