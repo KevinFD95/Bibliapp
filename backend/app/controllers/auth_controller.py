@@ -3,7 +3,6 @@ from flask import request, jsonify
 from flask_jwt_extended import create_access_token
 from app.models import User
 from app.helpers import verify_password
-import bcrypt
 
 
 class AuthController:
@@ -41,12 +40,7 @@ class AuthController:
 
         return jsonify(
             {
-                "message": "Login con éxito",
+                "success": True,
                 "access_token": access_token,
-                "user": {
-                    "user_id": user["user_id"],
-                    "username": user.get("username"),
-                    "email": user.get("email"),
-                },
             }
         )
