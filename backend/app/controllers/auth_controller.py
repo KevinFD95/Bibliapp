@@ -3,6 +3,8 @@ from flask import request, jsonify
 from flask_jwt_extended import create_access_token
 from app.models import User
 from app.helpers import verify_password
+from datetime import timedelta, datetime, timezone
+from app.database import Queries, Connection
 
 
 class AuthController:
@@ -30,13 +32,27 @@ class AuthController:
         if not user or not verify_password(user_password, user["user_password"]):
             return jsonify({"error": "Credenciales incorrectas"}), 401
 
+        expires = timedelta(days=7)
         access_token = create_access_token(
             identity=user["username"],
             additional_claims={
                 "email": user.get("email"),
                 "user_role": user.get("user_role"),
             },
+            expires_delta=expires,
         )
+
+        expires_at = datetime.now(timezone.utc) + expires
+        device = request.headers.get("User-Agent") or "unknown"
+
+        conn = Connection.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            Queries.AUTH_INSERT_TOKEN,
+            (user["username"], access_token, device, expires_at),
+        )
+        conn.commit()
+        conn.close()
 
         return jsonify(
             {

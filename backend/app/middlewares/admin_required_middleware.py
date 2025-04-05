@@ -12,7 +12,7 @@ def admin_required(fn):
         try:
             verify_jwt_in_request()
             claims = get_jwt()
-            
+
             if claims.get("user_role") != "admin":
                 return jsonify({"error": "Acceso no autorizado"}), 403
 
