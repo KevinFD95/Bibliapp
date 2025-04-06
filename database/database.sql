@@ -22,7 +22,7 @@ CREATE TABLE tokens (
     token_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(30) NOT NULL,
     token TEXT NOT NULL,
-    device VARCHAR(255) NOT NULL
+    device VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
@@ -42,7 +42,7 @@ CREATE TABLE documents (
     price DECIMAL(10, 2) NOT NULL,
     url_image VARCHAR(255),
     url_document VARCHAR(255),
-    slug VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP
@@ -87,4 +87,10 @@ CREATE TABLE categories (
 
     FOREIGN KEY (document_id) REFERENCES documents(document_id)
     ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS migrations (
+    migration_id INT AUTO_INCREMENT PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL UNIQUE,
+    applied_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from config import Config
 from .routes import document_bp, user_bp, auth_bp
 from datetime import timedelta
+from apply_migrations import apply_migrations
 
 
 def create_app():
@@ -19,5 +20,10 @@ def create_app():
     app.register_blueprint(user_bp, url_prefix="/api")
     app.register_blueprint(document_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api")
+
+    @app.cli.command("migrate")
+    def migrate_command():
+        """Ejecutar migraciones de la base de datos"""
+        apply_migrations()
 
     return app
