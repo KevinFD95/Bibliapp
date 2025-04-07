@@ -5,7 +5,7 @@ from flask_jwt_extended import JWTManager
 from config import Config
 from .routes import document_bp, user_bp, auth_bp
 from datetime import timedelta
-from commands import apply_migrations, make_migration, migration_status
+from commands import apply_migrations, make_migration, migration_status, rollback_migration
 import click
 
 
@@ -35,5 +35,9 @@ def create_app():
     @app.cli.command("migrate:status")
     def migration_status_command():
         migration_status()
+
+    @app.cli.command("migrate:rollback")
+    def rollback_migration_command():
+        rollback_migration()
 
     return app
