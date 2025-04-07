@@ -42,10 +42,11 @@ class AuthController:
             expires_delta=expires,
         )
 
-        expires_at = datetime.now(timezone.utc) + expires
+        utc_plus_2 = timezone(timedelta(hours=2))
+        expires_at = datetime.now(utc_plus_2) + expires
         device = request.headers.get("User-Agent") or "unknown"
 
-        conn = Connection.get_connection()
+        conn = Connection.get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
             Queries.AUTH_INSERT_TOKEN,

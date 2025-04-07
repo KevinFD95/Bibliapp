@@ -1,11 +1,12 @@
 # app/middlewares/token_required_middleware.py
 from functools import wraps
 from flask import request, jsonify
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity, get_jwt
+from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 from datetime import datetime, timezone
 from app.database import Queries, Connection
 
 
+# FALTA ELIMINAR TOKEN DE LA BASE DE DATOS
 def token_in_db_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
@@ -29,7 +30,9 @@ def token_in_db_required(fn):
                 return jsonify({"error": "Token no encontrado o revocado"}), 401
 
             expires_at = record.get("expires_at")
-            if expires_at and expires_at < datetime.now(timezone.utc):
+            if expires_at and expires_at.replace(tzinfo=timezone.utc) < datetime.now(
+                timezone.utc
+            ):
                 return jsonify({"error": "Token expirado"}), 401
 
             return fn(*args, **kwargs)
