@@ -22,6 +22,13 @@ def create_app():
     app.register_blueprint(document_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api")
 
+    cli_commands(app)
+
+    return app
+
+def cli_commands(app):
+    
+    # Comandos CLI para la gestión de migraciones
     @app.cli.command("make:migration")
     @click.argument("name")
     def make_migration_command(name):
@@ -39,5 +46,3 @@ def create_app():
     @app.cli.command("migrate:rollback")
     def rollback_migration_command():
         rollback_migration()
-
-    return app
