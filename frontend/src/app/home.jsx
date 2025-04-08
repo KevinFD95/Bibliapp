@@ -1,5 +1,5 @@
 // import { useState, useEffect } from "react";
-import { StyleSheet, ScrollView, FlatList, Text } from "react-native";
+import { StyleSheet, ScrollView, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -110,7 +110,16 @@ function HomeScreen() {
 
   const handleBookPress = (book) => {
     navigation.navigate("BookDetails", {
-      bookData: book, // Pasamos el libro completo como un solo objeto
+      bookId: book.document_id,
+      bookTitle: book.title,
+      bookImage: book.url_image,
+      bookSynopsis: book.synopsis,
+      bookAutor: book.autor,
+      bookCategory: book.category,
+      bookYear: book.year,
+      bookPage: book.pages,
+      bookType: book.type,
+      bookPrice: book.price,
     });
   };
 
@@ -122,37 +131,38 @@ function HomeScreen() {
       ]}
     >
       <Text style={viewStyles.h1}>Novedades</Text>
-      <FlatList
-        contentContainerStyle={styles.section}
-        nestedScrollEnabled={true}
-        data={books}
-        numColumns={1}
-        keyExtractor={(item) => item.document_id.toString()}
-        renderItem={({ item }) => (
-          <BookLite
-            title={item.title}
-            image={item.url_image}
-            onPress={handleBookPress(item)}
-          />
-        )}
-        horizontal={true}
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
-      />
+        contentContainerStyle={styles.horizontalSection}
+      >
+        {books.map((item) => (
+          <View key={item.document_id} style={styles.bookItem}>
+            <BookLite
+              key={item.document_id}
+              title={item.title}
+              image={item.url_image}
+              onPress={() => handleBookPress(item)}
+            />
+          </View>
+        ))}
+      </ScrollView>
       <Text style={viewStyles.h2}>Recomendados para ti</Text>
-      <FlatList
-        contentContainerStyle={styles.section}
-        data={books}
-        keyExtractor={(item) => item.document_id}
-        renderItem={({ item }) => (
-          <BookLite
-            title={item.title}
-            image={item.url_image}
-            onPress={handleBookPress(item)}
-          />
-        )}
-        horizontal={true}
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
-      />
+        contentContainerStyle={styles.horizontalSection}
+      >
+        {books.map((item) => (
+          <View key={`rec-${item.document_id}`} style={styles.bookItem}>
+            <BookLite
+              title={item.title}
+              image={item.url_image}
+              onPress={() => handleBookPress(item)}
+            />
+          </View>
+        ))}
+      </ScrollView>
     </ScrollView>
   );
 }
@@ -162,5 +172,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     gap: 20,
     maxHeight: 250,
+  },
+  bookItem: {
+    marginRight: 10,
   },
 });
