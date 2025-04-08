@@ -5,6 +5,7 @@ import sys
 
 MIGRATIONS_DIR = "migrations"
 
+
 def make_migration(name):
     if not os.path.exists(MIGRATIONS_DIR):
         os.makedirs(MIGRATIONS_DIR)
@@ -27,6 +28,7 @@ def make_migration(name):
         f.write("    pass\n")
 
     print(f"Archivo de migración creado: {filepath}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

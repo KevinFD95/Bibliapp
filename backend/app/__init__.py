@@ -5,7 +5,12 @@ from flask_jwt_extended import JWTManager
 from config import Config
 from .routes import document_bp, user_bp, auth_bp
 from datetime import timedelta
-from commands import apply_migrations, make_migration, migration_status, rollback_migration
+from commands import (
+    apply_migrations,
+    make_migration,
+    migration_status,
+    rollback_migration,
+)
 import click
 
 
@@ -26,8 +31,9 @@ def create_app():
 
     return app
 
+
 def cli_commands(app):
-    
+
     # Comandos CLI para la gestión de migraciones
     @app.cli.command("make:migration")
     @click.argument("name")
@@ -36,7 +42,6 @@ def cli_commands(app):
 
     @app.cli.command("migrate")
     def migrate_command():
-        """Ejecutar migraciones de la base de datos"""
         apply_migrations()
 
     @app.cli.command("migrate:status")

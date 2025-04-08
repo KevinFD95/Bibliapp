@@ -25,9 +25,9 @@ CREATE TABLE tokens (
     device VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (username) REFERENCES users(username)
     ON DELETE RESTRICT ON UPDATE CASCADE
-)
+);
 
 CREATE TABLE documents (
     document_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

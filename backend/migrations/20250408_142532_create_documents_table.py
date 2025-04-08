@@ -1,0 +1,39 @@
+# migrations/20250408_142532_create_documents_table.py
+
+
+# Migración: create_documents_table
+# Fecha de creación: 20250408_142532
+
+
+def upgrade(cursor):
+    # Aquí va el código para aplicar la migración
+    cursor.execute(
+        """
+        CREATE TABLE documents (
+        document_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        author VARCHAR(255) NOT NULL,
+        publication_year INT NOT NULL,
+        document_type VARCHAR(50) NOT NULL,
+        num_pages INT NOT NULL,
+        saga VARCHAR(255),
+        prequel INT(2),
+        sequel INT(2),
+        synopsis TEXT,
+        price DECIMAL(10, 2) NOT NULL,
+        url_image VARCHAR(255),
+        url_document VARCHAR(255),
+        slug VARCHAR(255) NOT NULL UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+        );
+        """
+    )
+    pass
+
+
+def downgrade(cursor):
+    # Aquí va el código para revertir la migración
+    cursor.execute("DROP TABLE IF EXISTS documents;")
+    pass
