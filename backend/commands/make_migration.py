@@ -14,8 +14,9 @@ def make_migration(name):
     filepath = os.path.join(MIGRATIONS_DIR, filename)
 
     with open(filepath, "w", encoding="utf-8") as f:
-        f.write(f"# Migración: {name}")
-        f.write(f"\n# Fecha: {timestamp}\n\n")
+        f.write(f"# migrations/{filename}\n\n\n")
+        f.write(f"# Migración: {name}\n")
+        f.write(f"# Fecha de creación: {timestamp}\n\n")
         f.write("def upgrade(cursor):\n")
         f.write("    # Aquí va el código para aplicar la migración\n")
         f.write("    cursor.execute()\n")
