@@ -33,6 +33,8 @@ def token_in_db_required(fn):
             if expires_at and expires_at.replace(tzinfo=timezone.utc) < datetime.now(
                 timezone.utc
             ):
+                cursor.execute(Queries.AUTH_DELETE_TOKEN, (identity, token))
+                conn.commit()
                 return jsonify({"error": "Token expirado"}), 401
 
             return fn(*args, **kwargs)

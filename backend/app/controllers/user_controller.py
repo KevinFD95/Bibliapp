@@ -35,6 +35,7 @@ class UserController:
             validated_users.append(user)
 
         if errors_list:
+            errors_list = [str(e) for e in errors_list]
             return jsonify({"errors": errors_list}), 400
 
         try:

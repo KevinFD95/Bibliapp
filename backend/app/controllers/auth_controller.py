@@ -1,6 +1,10 @@
 # app/controllers/auth_controller.py
 from flask import request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import (
+    create_access_token,
+    verify_jwt_in_request,
+    get_jwt_identity,
+)
 from app.models import User
 from app.helpers import verify_password
 from datetime import timedelta, datetime, timezone
@@ -61,3 +65,31 @@ class AuthController:
                 "access_token": access_token,
             }
         )
+
+    def logout():
+        verify_jwt_in_request()
+
+        token = request.headers.get("Authorization", None)
+
+        if not token:
+            return jsonify({"error": "Token no proporcionado"}), 401
+
+        token = token.replace("Bearer ", "")
+
+        try:
+            username = get_jwt_identity()
+
+            if not username:
+                return jsonify({"error": "No se encontró 'identity en el token"}), 400
+
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor()
+
+            cursor.execute(Queries.AUTH_DELETE_TOKEN, (username, token))
+
+            conn.commit()
+            conn.close()
+
+            return jsonify({"message": "Sesión cerrada con éxito"}), 200
+        except Exception as e:
+            return jsonify({"error": "Error al cerrar sesión", "message": str(e)}), 500
