@@ -1,7 +1,11 @@
+import { useState } from "react";
 import React from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import BookLite from "../components/card.jsx";
 import viewStyles from "../styles/view-styles.jsx";
+import { IconButton } from "../components/button.jsx";
+import { Popup } from "../components/popup.jsx";
+import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";
 
 export default function BookDetails({ route, navigation }) {
   const {
@@ -14,8 +18,9 @@ export default function BookDetails({ route, navigation }) {
     bookYear,
     bookPage,
     bookType,
+    bookPrice,
   } = route.params;
-
+  const [alertVisible, setAlertVisible] = useState(false);
   const handleNavigation = () => {
     navigation.navigate("BookView", { bookId });
   };
@@ -37,9 +42,23 @@ export default function BookDetails({ route, navigation }) {
             <Text style={styles.content}>Páginas: {bookPage}</Text>
             <Text style={styles.content}>Año: {bookYear}</Text>
             <Text style={styles.content}>Tipo: {bookType}</Text>
+            <Text style={[styles.content, { paddingBottom: 30 }]}>
+              Precio: {bookPrice}€
+            </Text>
+
+            <IconButton
+              onPress={() => setAlertVisible(true)}
+              icon={<AddCartIcon size={30} />}
+            />
           </View>
         </View>
         <Text style={styles.synopsisContent}>{bookSynopsis}</Text>
+        <Popup
+          title={"Alerta"}
+          message={"Añadido al Carrito"}
+          visible={alertVisible}
+          onClose={() => setAlertVisible(false)}
+        />
       </View>
     </ScrollView>
   );
