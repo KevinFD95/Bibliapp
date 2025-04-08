@@ -1,14 +1,7 @@
-# app/main.py
-from flask import Flask
-from flask_cors import CORS
-from app.routes import user_bp
-from app.routes import document_bp
+# main.py
+from app import create_app
 
-app = Flask(__name__)
-CORS(app)
+app = create_app()
 
-app.register_blueprint(user_bp, url_prefix='/api')
-app.register_blueprint(document_bp, url_prefix='/api')
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
