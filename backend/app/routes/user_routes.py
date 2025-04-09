@@ -1,6 +1,5 @@
 # app/routes/user_routes.py
 from flask import Blueprint
-from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from app.controllers import UserController
 from app.middlewares import admin_required, token_in_db_required
 

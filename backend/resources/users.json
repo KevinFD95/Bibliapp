@@ -1,0 +1,58 @@
+[
+    {
+        "user_name": "Kevin",
+        "user_lastname": "Fuentes Duran",
+        "username": "Kolera",
+        "email": "emkf_95@hotmail.com",
+        "user_password": "1234Abc!"
+    },
+    {
+        "user_name": "Fran",
+        "user_lastname": "Ojeda",
+        "username": "fojeama",
+        "email": "fojeama@gmail.com",
+        "user_password": "AbCd1234@"
+    },
+    {
+        "user_name": "Joan",
+        "user_lastname": "Carmona",
+        "username": "joancarmona",
+        "email": "joancarmona@gmail.com",
+        "user_password": "1234ABCd!"
+    },
+    {
+        "user_name": "Alan",
+        "user_lastname": "Aidarti",
+        "username": "alanaidarti",
+        "email": "alanaidarti@gmail.com",
+        "user_password": "1234aBcD!"
+    },
+    {
+        "user_name": "kevin",
+        "user_lastname": "fuentes duran",
+        "username": "kevin_usuario",
+        "email": "fuentesduran.kevin95@gmail.com",
+        "user_password": "12345Abc@"
+    },
+    {
+        "user_name": "fran",
+        "user_lastname": "Ojeda",
+        "username": "fran_usuario",
+        "email": "franusaurio",
+        "user_password": "23412"
+    },
+    {
+        "user_name": "joan",
+        "user_lastname": "carmona",
+        "username": "joan_usuario",
+        "email": "joan_carmona@gmail.com",
+        "user_password": "123"
+    },
+    {
+        "user_name": "alan",
+        "user_lastname": "aidarti",
+        "username": "alan@usuario",
+        "email": "alan_aidarti@gmail.com",
+        "user_password": "123456@Ab"
+    }
+]

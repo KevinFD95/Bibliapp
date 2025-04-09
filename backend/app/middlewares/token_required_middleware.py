@@ -6,7 +6,6 @@ from datetime import datetime, timezone
 from app.database import Queries, Connection
 
 
-# FALTA ELIMINAR TOKEN DE LA BASE DE DATOS
 def token_in_db_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
