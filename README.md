@@ -4,24 +4,22 @@ Bibliapp es una innovadora aplicación multiplataforma diseñada para transforma
 
 ## Requisitos de desarrollo
 - **Frontend**: Node.js versión 22.13.0
-- **Backend**: Java versión 21.0.6
+- **Backend**: Python versión 3.13.2
 >[!IMPORTANT]
 > Es necesario desarrollar todo el equipo con la misma versión de tecnologías.
 
 ### Herramientas de Desarrollo
 
 - **Visual Studio Code**: Para desarrollo en React Native.
-- **Eclipse IDE**: Para el desarrollo del backend en Java.
 - **MySQL Workbench**: Para el mantenimiento y control de la Base de Datos.
 - **Control de versiones**: Git y GitHub para la colaboración y gestión del código fuente.
-- **Pruebas**: JUnit para pruebas unitarias.
 
 ## Descripción Técnica
 
 ### Tecnologías Utilizadas
 
 - **Frontend**: React Native (para desarrollo nativo en Android e iOS).
-- **Backend**: Java con Spring Boot.
+- **Backend**: Python con Flask.
 - **Base de datos**: MySQL, optimizada para consultas avanzadas y manejo de grandes volúmenes de datos.
 - **Diseño de interfaz**: Herramientas de diseño UI/UX como Figma.
 - **Integraciones**: Servicios de terceros para autenticación y almacenamiento de archivos (e.g., Firebase, AWS S3).
@@ -29,9 +27,9 @@ Bibliapp es una innovadora aplicación multiplataforma diseñada para transforma
 ### Patrón Arquitectónico
 
 - **Modelo-Vista-Controlador (MVC)**:
-  - **Modelo**: Representa la capa de datos y su lógica de gestión.
+  - **Modelo**: Representa la capa de datos y su lógica de gestión, implementados en el backend de Python.
   - **Vista**: Desarrollada con React Native para interfaces gráficas atractivas y responsivas.
-  - **Controlador**: Implementado en Java con Spring Boot para manejar la lógica de negocio y la comunicación entre la vista y el modelo.
+  - **Controlador**: Implementado en Python con Flask para manejar la lógica de negocio y la comunicación entre la vista y el modelo.
 
 ### Principales Módulos
 
@@ -39,12 +37,12 @@ Bibliapp es una innovadora aplicación multiplataforma diseñada para transforma
 2. **Búsqueda y Filtros Avanzados**: Algoritmos optimizados para búsquedas por título, autor, género, etc.
 3. **Recomendaciones Personalizadas**: Implementación de un motor de recomendaciones basado en preferencias del usuario y aprendizaje automático.
 4. **Gestión de Usuarios**: Registro, inicio de sesión y perfiles personalizados.
-5. **Lectura de Ebooks**: Visualizador de PDF integrado.
+5. **Lectura de Ebooks**: Visualizador de PDF y EPUB integrado.
 
 ### Seguridad
 
-- **Autenticación**: Uso de OAuth 2.0 para garantizar la seguridad en el acceso a la aplicación.
-- **Cifrado de datos**: Información sensible protegida con protocolos de cifrado como AES y SSL.
+- **Autenticación**: Uso de JWT para garantizar la seguridad en el acceso a la aplicación.
+- **Cifrado de datos**: Información sensible protegida con protocolos de cifrado como Bcrypt y SSL.
 
 ### Metodología de Desarrollo
 
