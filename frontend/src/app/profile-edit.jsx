@@ -1,5 +1,6 @@
 import { ScrollView, Text, StyleSheet, View, Image, TextInput } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
+import SwitchButton from "./SwitchButton";
 import { CustomTextBox } from "../components/text-input.jsx";
 export default function HomeStackNavigator() {
   return (
