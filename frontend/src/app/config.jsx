@@ -3,7 +3,7 @@ import { ScrollView, Text, StyleSheet, View, Image } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
 import SwitchComponent from "../components/switch.jsx";
 
-export default function HomeStackNavigator() {
+export default function SettingsScreen() {
   const [switchState, setSwitchState] = useState(false);
 
   const handleSwitchChange = () => {

@@ -1,7 +1,8 @@
 import { ScrollView, Text, StyleSheet, View, Image } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
 import { CustomTextBox } from "../components/text-input.jsx";
-export default function HomeStackNavigator() {
+
+export default function EditProfileScreen() {
   return (
     <ScrollView contentContainerStyle={viewStyle.mainContainer}>
       <View style={{ alignItems: "center" }}>
