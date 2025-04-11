@@ -9,23 +9,46 @@ import EditIcon from "../../assets/icons/edit-icon.jsx";
 import LogoutIcon from "../../assets/icons/logout-icon.jsx";
 import AccountIcon from "../../assets/icons/account-icon.jsx";
 import SettingsIcon from "../../assets/icons/settings-icon.jsx";
+import { createStackNavigator } from "@react-navigation/stack";
 
-export default function HomeStackNavigator() {
+import ProfileEdit from "./profile-edit.jsx";
+import Config from "./config.jsx";
+import { useNavigation } from "@react-navigation/native";
+
+const Stack = createStackNavigator();
+
+export default function ProfileStackNavigator() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Profile"
+      screenOptions={{ headerShown: false }}
+    >
+     <Stack.Screen name="Profile" component={ProfileScreen} />
+     <Stack.Screen name="EditProfile" component={ProfileEdit} />
+     <Stack.Screen name="Config" component={Config} />
+    </Stack.Navigator>
+  )
+}
+
+function ProfileScreen() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
+  const navigation= useNavigation();
 
+  const handleEditProfile = (user) => {
+    navigation.navigate("EditProfile", user);
+  };
+  
+    const handleConfig = (user) => {
+      navigation.navigate("Config", user);
+    };
+  
   return (
     <View style={viewStyle.mainContainer}>
       <View style={styles.box}>
-        <IconButton
-          onPress={() => setAlertVisible(true)}
-          icon={<EditIcon size={52} />}
-        />
+        <IconButton onPress={handleEditProfile} icon={<EditIcon size={52} />} />
         <AccountIcon size={200} />
-        <IconButton
-          onPress={() => setAlertVisible(true)}
-          icon={<SettingsIcon size={52} />}
-        />
+        <IconButton onPress={handleConfig} icon={<SettingsIcon size={52} />} />
       </View>
 
       <View style={styles.text}>
@@ -96,3 +119,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+

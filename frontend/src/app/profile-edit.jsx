@@ -1,6 +1,5 @@
 import { ScrollView, Text, StyleSheet, View, Image, TextInput } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
-import SwitchButton from "./SwitchButton";
 import { CustomTextBox } from "../components/text-input.jsx";
 export default function HomeStackNavigator() {
   return (
@@ -16,32 +15,27 @@ export default function HomeStackNavigator() {
                 />
                       <Text style={{marginTop:10,marginBottom:50}}>Icono Perfil</Text>
               </View>
-        
+      
       <View style={styles.text}>
         <Text>Nombre de Usuario: </Text>
-        <Text>joan005</Text>
-        <CustomTextBox></CustomTextBox>
+        <CustomTextBox value={"joan005"} />
       </View> 
       <View style={styles.text}>
         <Text>Correo Electronico: </Text>
-        <Text>joancarmona05@gmail.com</Text>
-        <CustomTextBox></CustomTextBox>
+        <CustomTextBox value={"joancarmona05@gmail.com"} />
       </View>
       <View style={styles.text}>
         <Text>Apellido: </Text>
-        <Text>Carmona</Text>
-        <CustomTextBox></CustomTextBox>
+        <CustomTextBox value={"Carmona"} />
       </View>
       <View style={styles.text}>
         <Text>Direccion: </Text>
-        <Text>C/ MiCasa Nº1</Text>
-        <CustomTextBox></CustomTextBox>
+        <CustomTextBox value={"C/ MiCasa Nº1"} />
       </View>
       <View style={styles.text}>
         <Text>Nombre: </Text>
-        <Text>joan</Text>
-        <CustomTextBox></CustomTextBox>
-      </View>     
+        <CustomTextBox value={"joan"} />
+      </View>
     </ScrollView>
   );
 }
