@@ -1,5 +1,9 @@
-const API_URL = "http://127.0.0.1:5000/api";
-const FRONTEND_CLIENT = "Bibliapp-Mobile-Agent";
+import { config } from "dotenv";
+
+config();
+
+const API_URL = process.env.API_URL;
+const FRONTEND_CLIENT = process.env.FRONTEND_CLIENT;
 
 export async function customFetch(endpoint, token, options = {}) {
   const response = await fetch(`${API_URL}${endpoint}`, {
