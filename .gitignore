@@ -39,4 +39,5 @@ yarn-error.*
 # python
 .venv
 .env
+.flaskenv
 __pycache__/

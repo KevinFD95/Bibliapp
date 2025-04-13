@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Image, View, Text, Pressable, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
+import * as SecureStore from "expo-secure-store";
+import { login } from "../api/auth.js";
 
 import { CustomButton } from "../components/button.jsx";
 import { CustomTextBox, CustomTextBoxPass } from "../components/text-input.jsx";
@@ -15,21 +17,6 @@ import logo from "../../assets/bibliapp-logo-inicio.png";
 import CheckboxIcon from "../../assets/icons/checkbox-icon.jsx";
 
 const Stack = createStackNavigator();
-
-const users = [
-  {
-    username: "User",
-    email: "User@gmail.com",
-    password: "User",
-    role: "user",
-  },
-  {
-    username: "admin",
-    email: "admin@gmail.com",
-    password: "admin",
-    role: "admin",
-  },
-];
 
 export default function LoginStackNavigator() {
   return (
@@ -53,28 +40,56 @@ export function LoginScreen() {
 
   const [userInput, setUserInput] = useState();
   const [passInput, setPassInput] = useState();
+  const user = { identifier: userInput, user_password: passInput };
   const [checked, setChecked] = useState(false);
 
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
 
-  const handleLogin = () => {
+  useEffect(() => {
+    const validateToken = async () => {
+      const token = await SecureStore.getItemAsync("access_token");
+
+      if (!token) return;
+
+      try {
+        const response = await validateToken();
+
+        const data = await response.json();
+        
+        if (response.ok && data.access_token) {
+          navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
+        } else {
+          await SecureStore.deleteItemAsync("access_token");
+        }
+      } catch (error) {
+        await SecureStore.deleteItemAsync("access_token");
+      }
+    };
+
+    validateToken();
+  }, [navigation]);
+
+  const handleLogin = async () => {
     if (!userInput || !passInput) {
       setAlertMessage("Por favor, completa todos los campos");
       setAlert(true);
       return;
     }
 
-    const user = users.find(
-      (u) =>
-        (u.username === userInput || u.email === userInput) &&
-        u.password === passInput,
-    );
+    try {
+      const data = await login(user);
 
-    if (user) {
-      navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
-    } else {
-      setAlertMessage("Usuario o contraseña incorrectos");
+      if (data.success && data.access_token) {
+        await SecureStore.setItemAsync("access_token", data.access_token);
+        navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
+      } else {
+        setAlertMessage("Usuario o contraseña incorrectos");
+        setAlert(true);
+      }
+    } catch (error) {
+      console.error(error);
+      setAlertMessage(error.message || "Error al iniciar sesión");
       setAlert(true);
     }
   };

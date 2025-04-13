@@ -28,12 +28,51 @@ class AuthController:
         identifier = data["identifier"]
         user_password = data["user_password"]
 
+        conn = Connection.get_db_connection()
+        cursor = conn.cursor()
+
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            access_token = auth_header.split(" ")[1]
+        else:
+            access_token = None
+
         if "@" in identifier:
             user = User.get_user_by_email(identifier)
         else:
             user = User.get_user_by_username(identifier)
 
-        if not user or not verify_password(user_password, user["user_password"]):
+        if not user:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        if access_token:
+            cursor.execute(Queries.AUTH_GET_TOKENS, (user["username"], access_token))
+            token_data = cursor.fetchone()
+
+            if token_data:
+                token_db, expires_at = token_data
+                if datetime.now() < expires_at:
+                    conn.close()
+                    return (
+                        jsonify(
+                            {
+                                "message": "Token válido, sesión ya iniciada",
+                                "access_token": token_db,
+                            }
+                        ),
+                        200,
+                    )
+                else:
+                    cursor.execute(
+                        Queries.AUTH_DELETE_TOKEN, (user["username"], token_db)
+                    )
+                    conn.commit()
+            else:
+                conn.close()
+                return jsonify({"error": "Token no válido"}), 401
+
+        if not verify_password(user_password, user["user_password"]):
+            conn.close()
             return jsonify({"error": "Credenciales incorrectas"}), 401
 
         expires = timedelta(days=7)
@@ -50,8 +89,6 @@ class AuthController:
         expires_at = datetime.now(utc_plus_2) + expires
         device = request.headers.get("User-Agent") or "unknown"
 
-        conn = Connection.get_db_connection()
-        cursor = conn.cursor()
         cursor.execute(
             Queries.AUTH_INSERT_TOKEN,
             (user["username"], access_token, device, expires_at),
@@ -65,6 +102,10 @@ class AuthController:
                 "access_token": access_token,
             }
         )
+    
+    def validate_token():
+        current_user = get_jwt_identity()
+        return jsonify({"message": "Token válido", "user": current_user}), 200
 
     def logout():
         verify_jwt_in_request()

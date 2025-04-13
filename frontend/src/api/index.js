@@ -1,37 +1,23 @@
-import { config } from "dotenv";
+import * as SecureStore from "expo-secure-store";
 
-config();
+const API_URL = "http://127.0.0.1:5000/api";
+const FRONTEND_CLIENT = "Bibliapp-Mobile-Agent";
 
-const API_URL = process.env.API_URL;
-const FRONTEND_CLIENT = process.env.FRONTEND_CLIENT;
+export async function customFetch(endpoint, options = {}) {
+  const token = await SecureStore.getItemAsync("access_token");
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Frontend-Client": FRONTEND_CLIENT,
+    ...options.headers,
+  };
 
-export async function customFetch(endpoint, token, options = {}) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      "X-Frontend-Client": FRONTEND_CLIENT,
-      Authorization: "Bearer " + token,
-      ...options.headers,
-    },
-  });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Error en la API");
+  if (token) {
+    headers.Authorization = "Bearer " + token;
   }
 
-  return response.json();
-}
-
-export async function outsiteFetch(endpoint, options = {}) {
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      "X-Frontend-Client": FRONTEND_CLIENT,
-      ...options.headers,
-    },
+    headers,
   });
 
   if (!response.ok) {
