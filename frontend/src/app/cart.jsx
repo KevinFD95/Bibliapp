@@ -8,10 +8,6 @@ function Cart() {
       <ScrollView
         contentContainerStyle={[viewStyles.mainContainer, styles.container]}
       >
-        <View style={styles.header}>
-          <Text style={styles.title}>Mi Carrito</Text>
-        </View>
-
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>Tu carrito está vacío</Text>
         </View>
@@ -19,7 +15,7 @@ function Cart() {
         <View style={styles.footer}>
           <View style={styles.totalContainer}>
             <Text style={styles.totalText}>Total:</Text>
-            <Text style={styles.priceText}>$0.00</Text>
+            <Text style={styles.priceText}>0.00€</Text>
           </View>
         </View>
       </ScrollView>
