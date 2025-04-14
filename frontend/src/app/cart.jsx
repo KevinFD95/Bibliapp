@@ -4,24 +4,26 @@ import viewStyles from "../styles/view-styles";
 
 function Cart() {
   return (
-    <ScrollView
-      contentContainerStyle={[viewStyles.mainContainer, styles.container]}
-    >
-      <View style={styles.header}>
-        <Text style={styles.title}>Mi Carrito</Text>
-      </View>
-
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Tu carrito está vacío</Text>
-      </View>
-
-      <View style={styles.footer}>
-        <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Total:</Text>
-          <Text style={styles.priceText}>$0.00</Text>
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={[viewStyles.mainContainer, styles.container]}
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>Mi Carrito</Text>
         </View>
-      </View>
-    </ScrollView>
+
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Tu carrito está vacío</Text>
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.totalContainer}>
+            <Text style={styles.totalText}>Total:</Text>
+            <Text style={styles.priceText}>$0.00</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 

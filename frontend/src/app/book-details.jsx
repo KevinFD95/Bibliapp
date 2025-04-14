@@ -8,42 +8,31 @@ import { Popup } from "../components/popup.jsx";
 import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";
 
 export default function BookDetails({ route, navigation }) {
-  const {
-    bookId,
-    bookTitle,
-    bookSynopsis,
-    bookImage,
-    bookAutor,
-    bookCategory,
-    bookYear,
-    bookPage,
-    bookType,
-    bookPrice,
-  } = route.params;
+  const { document } = route.params;
   const [alertVisible, setAlertVisible] = useState(false);
   const handleNavigation = () => {
-    navigation.navigate("BookView", { bookId });
+    navigation.navigate("BookView", { document });
   };
 
   return (
     <ScrollView contentContainerStyle={viewStyles.mainContainer}>
       <View style={{ gap: 20 }}>
-        <Text style={styles.title}>{bookTitle}</Text>
+        <Text style={styles.title}>{document.title}</Text>
         <View style={styles.rowContainer}>
           <BookLite
             style={styles.title}
             title="Pulsa para abrir"
             onPress={handleNavigation}
-            image={bookImage}
+            image={document.url_image}
           />
           <View style={styles.detailsContainer}>
-            <Text style={styles.content}>Autor: {bookAutor}</Text>
-            <Text style={styles.content}>Categoría: {bookCategory}</Text>
-            <Text style={styles.content}>Páginas: {bookPage}</Text>
-            <Text style={styles.content}>Año: {bookYear}</Text>
-            <Text style={styles.content}>Tipo: {bookType}</Text>
+            <Text style={styles.content}>Autor: {document.author}</Text>
+            <Text style={styles.content}>Categoría: {document.category}</Text>
+            <Text style={styles.content}>Páginas: {document.num_pages}</Text>
+            <Text style={styles.content}>Año: {document.publication_year}</Text>
+            <Text style={styles.content}>Tipo: {document.document_type}</Text>
             <Text style={[styles.content, { paddingBottom: 30 }]}>
-              Precio: {bookPrice}€
+              Precio: {document.price}€
             </Text>
 
             <IconButton
@@ -52,7 +41,7 @@ export default function BookDetails({ route, navigation }) {
             />
           </View>
         </View>
-        <Text style={styles.synopsisContent}>{bookSynopsis}</Text>
+        <Text style={styles.synopsisContent}>{document.synopsis}</Text>
         <Popup
           title={"Alerta"}
           message={"Añadido al Carrito"}

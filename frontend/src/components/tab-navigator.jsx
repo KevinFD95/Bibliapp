@@ -8,6 +8,7 @@ import HomeScreen from "../app/home.jsx";
 import LibraryScreen from "../app/library.jsx";
 import SearchScreen from "../app/search.jsx";
 import ProfileScreen from "../app/profile.jsx";
+import CartScreen from "../app/cart.jsx";
 
 // Iconos
 import HomeIcon from "../../assets/icons/home-icon.jsx";
@@ -48,8 +49,7 @@ export default function TabNavigator() {
         tabBarStyle: {
           backgroundColor: color.nav["nav-background"],
           paddingTop: 5,
-          display: "flex",
-          justifyContent: "center",
+          justifyContent: "space-around",
         },
         tabBarLabel: () => null,
       })}
@@ -112,6 +112,20 @@ export default function TabNavigator() {
               unselectedColor={color.icons["unselected-icons"]}
             />
           ),
+        }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          // Oculta completamente el ícono del tab bar
+          tabBarButton: () => null,
+          // Asegura que no ocupe espacio
+          tabBarItemStyle: {
+            display: "none",
+            height: 0,
+            width: 0,
+          },
         }}
       />
     </Tab.Navigator>
