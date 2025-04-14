@@ -4,8 +4,9 @@ from flask_jwt_extended import (
     create_access_token,
     verify_jwt_in_request,
     get_jwt_identity,
-    get_jwt
+    decode_token
 )
+from flask_jwt_extended.exceptions import JWTExtendedException
 from app.models import User
 from app.helpers import verify_password
 from datetime import timedelta, datetime, timezone
@@ -44,7 +45,7 @@ class AuthController:
             conn.close()
             return jsonify({"error": "Credenciales incorrectas"}), 200
 
-        expires = timedelta(days=7)
+        expires = timedelta(minutes=1)
         access_token = create_access_token(
             identity=user["username"],
             additional_claims={
@@ -71,33 +72,59 @@ class AuthController:
                 "access_token": access_token,
             }
         )
-    
+
     def validate_token():
-        verify_jwt_in_request()
-        user = get_jwt_identity()
-        auth_header = request.headers.get("Authorization", "")
-        token = auth_header.replace("Bearer ", "")
+        try:
+            verify_jwt_in_request()
+            user = get_jwt_identity()
+            auth_header = request.headers.get("Authorization", "")
+            token = auth_header.replace("Bearer ", "")
 
-        conn = Connection.get_db_connection()
-        cursor = conn.cursor()
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor()
 
-        cursor.execute(Queries.AUTH_GET_TOKENS, (user, token))
-        token_data = cursor.fetchone()
+            cursor.execute(Queries.AUTH_GET_TOKENS, (user, token))
+            token_data = cursor.fetchone()
 
-        if token_data:
-            token_db, expires_at = token_data
+            if token_data:
+                token_db, expires_at = token_data
 
-            if datetime.now() < expires_at:
-                conn.close()
-                return jsonify({"success": True, "message": "Acceso autorizado"})
+                if datetime.now() < expires_at:
+                    conn.close()
+                    return jsonify({"success": True, "message": "Acceso autorizado"})
+                else:
+                    cursor.execute(Queries.AUTH_DELETE_TOKEN, (user, token_db))
+                    conn.commit()
+                    conn.close()
+                    return jsonify({"success": False, "message": "Token expirado"})
             else:
-                cursor.execute(Queries.AUTH_DELETE_TOKEN, (user, token_db))
-                conn.commit()
                 conn.close()
-                return jsonify({"success": False, "message": "Token expirado"})
-        else:
-            conn.close()
-            return jsonify({"success": False, "message": "Token no encontrado"})
+                return jsonify({"success": False, "message": "Token no encontrado"})
+        except JWTExtendedException:
+            auth_header = request.headers.get("Authorization", "")
+            token = auth_header.replace("Bearer ", "")
+            user = None
+
+            try:
+                decoded_token = decode_token(token, allow_expired=True)
+                user = decoded_token.get("sub")
+            except:
+                pass
+
+            if user:
+                try:
+                    conn = Connection.get_db_connection()
+                    cursor = conn.cursor()
+                    cursor.execute(Queries.AUTH_DELETE_TOKEN, (user, token))
+                    conn.commit()
+                    conn.close()
+                except Exception as e:
+                    print("Error eliminando token: ", e)
+
+            return (
+                jsonify({"success": False, "message": "Token inválido o expirado"}),
+                200,
+            )
 
     def logout():
         verify_jwt_in_request()
