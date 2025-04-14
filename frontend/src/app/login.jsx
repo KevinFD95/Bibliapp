@@ -11,6 +11,7 @@ import { Popup } from "../components/popup.jsx";
 
 import TabNavigator from "../components/tab-navigator.jsx";
 import RegisterScreen from "./register.jsx";
+import CartScreen from "./cart.jsx";
 
 import viewStyles from "../styles/view-styles.jsx";
 import logo from "../../assets/bibliapp-logo-inicio.png";
@@ -31,6 +32,14 @@ export default function LoginStackNavigator() {
       />
       <Stack.Screen name="HomeView" component={TabNavigator} />
       <Stack.Screen name="RegisterView" component={RegisterScreen} />
+      <Stack.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          presentation: "modal",
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }

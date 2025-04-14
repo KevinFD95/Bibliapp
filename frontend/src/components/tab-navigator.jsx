@@ -22,7 +22,7 @@ const iconSize = 40;
 export default function TabNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         headerStyle: {
           backgroundColor: color.nav["nav-background"],
         },
@@ -40,7 +40,7 @@ export default function TabNavigator() {
         ),
         headerRight: () => (
           <View style={{ marginRight: 20 }}>
-            <Pressable onPress={() => alert("Carrito")}>
+            <Pressable onPress={() => navigation.navigate("Cart")}>
               <CartIcon size={38} />
             </Pressable>
           </View>
@@ -48,9 +48,11 @@ export default function TabNavigator() {
         tabBarStyle: {
           backgroundColor: color.nav["nav-background"],
           paddingTop: 5,
+          display: "flex",
+          justifyContent: "center",
         },
         tabBarLabel: () => null,
-      }}
+      })}
     >
       <Tab.Screen
         name="home"
