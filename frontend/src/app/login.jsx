@@ -3,7 +3,7 @@ import { Image, View, Text, Pressable, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
-import { login } from "../api/auth.js";
+import { login, validateToken } from "../api/auth.js";
 
 import { CustomButton } from "../components/button.jsx";
 import { CustomTextBox, CustomTextBoxPass } from "../components/text-input.jsx";
@@ -45,9 +45,10 @@ export function LoginScreen() {
 
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
+  const [isViewReady, setIsViewReady] = useState(false);
 
   useEffect(() => {
-    const validateToken = async () => {
+    const validateUserToken = async () => {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) return;
@@ -55,20 +56,32 @@ export function LoginScreen() {
       try {
         const response = await validateToken();
 
-        const data = await response.json();
-        
-        if (response.ok && data.access_token) {
+        if (response.success) {
           navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
         } else {
           await SecureStore.deleteItemAsync("access_token");
+          setAlertMessage("Sesión caducada. Vuelva a iniciar sesión");
         }
-      } catch (error) {
+      } catch {
         await SecureStore.deleteItemAsync("access_token");
+        setAlertMessage("Sesión caducada. Vuelva a iniciar sesión");
       }
+
+      setIsViewReady(true);
     };
 
-    validateToken();
+    validateUserToken();
   }, [navigation]);
+
+  useEffect(() => {
+    if (isViewReady && alertMessage) {
+      const timeout = setTimeout(() => {
+        setAlert(true);
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isViewReady, alertMessage]);
 
   const handleLogin = async () => {
     if (!userInput || !passInput) {
@@ -80,16 +93,15 @@ export function LoginScreen() {
     try {
       const data = await login(user);
 
-      if (data.success && data.access_token) {
+      if (data.success === true && data.access_token) {
         await SecureStore.setItemAsync("access_token", data.access_token);
         navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
       } else {
         setAlertMessage("Usuario o contraseña incorrectos");
         setAlert(true);
       }
-    } catch (error) {
-      console.error(error);
-      setAlertMessage(error.message || "Error al iniciar sesión");
+    } catch {
+      setAlertMessage("Error al iniciar sesión");
       setAlert(true);
     }
   };
