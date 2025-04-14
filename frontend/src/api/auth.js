@@ -1,21 +1,27 @@
-import { customFetch, outsiteFetch } from "./index.js";
+import { customFetch } from "./index.js";
 
 export function login(user) {
-  return outsiteFetch("/login", {
+  return customFetch("/login", {
     method: "POST",
     body: JSON.stringify(user),
+  });
+}
+
+export function validateToken() {
+  return customFetch("/validate-token", {
+    method: "GET",
   });
 }
 
 export function register(user) {
-  return outsiteFetch("/register", {
+  return customFetch("/register", {
     method: "POST",
     body: JSON.stringify(user),
   });
 }
 
-export function logout(token) {
-  return customFetch("/logout", token, {
+export function logout() {
+  return customFetch("/logout", {
     method: "POST",
   });
 }

@@ -1,15 +1,15 @@
-import { outsiteFetch } from "./index.js";
+import { customFetch } from "./index.js";
 
 export function getDocuments() {
-  return outsiteFetch("/docs");
+  return customFetch("/docs");
 }
 
 export function getDocument(id) {
-  return outsiteFetch("/docs/" + id);
+  return customFetch("/docs/" + id);
 }
 
 export function createBook(book) {
-  return outsiteFetch("/docs", {
+  return customFetch("/docs", {
     method: "POST",
     body: JSON.stringify(book),
   });

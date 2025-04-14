@@ -6,6 +6,7 @@ auth_bp = Blueprint("auth_bp", __name__)
 
 # Requests Login
 auth_bp.route("/login", methods=["POST"])(AuthController.login)
+auth_bp.route("/validate-token", methods=["GET"])(AuthController.validate_token)
 
 # Requests Register
 auth_bp.route("/register", methods=["POST"])(UserController.create_user)

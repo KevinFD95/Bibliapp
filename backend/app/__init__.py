@@ -21,7 +21,7 @@ def create_app():
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7)
     JWTManager(app)
 
-    CORS(app)
+    # CORS(app)
 
     app.register_blueprint(user_bp, url_prefix="/api")
     app.register_blueprint(document_bp, url_prefix="/api")

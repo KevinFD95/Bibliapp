@@ -23,26 +23,26 @@ export default function ProfileStackNavigator() {
       initialRouteName="Profile"
       screenOptions={{ headerShown: false }}
     >
-     <Stack.Screen name="Profile" component={ProfileScreen} />
-     <Stack.Screen name="EditProfile" component={ProfileEdit} />
-     <Stack.Screen name="Config" component={Config} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="EditProfile" component={ProfileEdit} />
+      <Stack.Screen name="Config" component={Config} />
     </Stack.Navigator>
-  )
+  );
 }
 
 function ProfileScreen() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
-  const navigation= useNavigation();
+  const navigation = useNavigation();
 
   const handleEditProfile = (user) => {
     navigation.navigate("EditProfile", user);
   };
-  
-    const handleConfig = (user) => {
-      navigation.navigate("Config", user);
-    };
-  
+
+  const handleConfig = (user) => {
+    navigation.navigate("Config", user);
+  };
+
   return (
     <View style={viewStyle.mainContainer}>
       <View style={styles.box}>
@@ -119,4 +119,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-
