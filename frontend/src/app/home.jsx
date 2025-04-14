@@ -80,19 +80,8 @@ function HomeScreen() {
     return <Text>No se encontraron libros disponibles</Text>;
   }
 
-  const handleBookPress = (book) => {
-    navigation.navigate("BookDetails", {
-      bookId: book.document_id,
-      bookTitle: book.title,
-      bookImage: book.url_image,
-      bookSynopsis: book.synopsis,
-      bookAutor: book.autor,
-      bookCategory: book.category,
-      bookYear: book.year,
-      bookPage: book.pages,
-      bookType: book.type,
-      bookPrice: book.price,
-    });
+  const handleBookPress = (document) => {
+    navigation.navigate("BookDetails", { document });
   };
 
   return (
