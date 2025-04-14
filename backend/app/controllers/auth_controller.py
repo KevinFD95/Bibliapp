@@ -4,9 +4,7 @@ from flask_jwt_extended import (
     create_access_token,
     verify_jwt_in_request,
     get_jwt_identity,
-    decode_token
 )
-from flask_jwt_extended.exceptions import JWTExtendedException
 from app.models import User
 from app.helpers import verify_password
 from datetime import timedelta, datetime, timezone
@@ -74,17 +72,20 @@ class AuthController:
         )
 
     def validate_token():
+        auth_header = request.headers.get("Authorization", "")
+        token = auth_header.replace("Bearer ", "").strip()
+        
+        conn = Connection.get_db_connection()
+        cursor = conn.cursor()
+        
         try:
             verify_jwt_in_request()
             user = get_jwt_identity()
-            auth_header = request.headers.get("Authorization", "")
-            token = auth_header.replace("Bearer ", "")
-
-            conn = Connection.get_db_connection()
-            cursor = conn.cursor()
 
             cursor.execute(Queries.AUTH_GET_TOKENS, (user, token))
             token_data = cursor.fetchone()
+
+            print(f"Datos del token en la BD: {token_data}")
 
             if token_data:
                 token_db, expires_at = token_data
@@ -100,31 +101,11 @@ class AuthController:
             else:
                 conn.close()
                 return jsonify({"success": False, "message": "Token no encontrado"})
-        except JWTExtendedException:
-            auth_header = request.headers.get("Authorization", "")
-            token = auth_header.replace("Bearer ", "")
-            user = None
-
-            try:
-                decoded_token = decode_token(token, allow_expired=True)
-                user = decoded_token.get("sub")
-            except:
-                pass
-
-            if user:
-                try:
-                    conn = Connection.get_db_connection()
-                    cursor = conn.cursor()
-                    cursor.execute(Queries.AUTH_DELETE_TOKEN, (user, token))
-                    conn.commit()
-                    conn.close()
-                except Exception as e:
-                    print("Error eliminando token: ", e)
-
-            return (
-                jsonify({"success": False, "message": "Token inválido o expirado"}),
-                200,
-            )
+        except Exception:
+            cursor.execute(Queries.AUTH_DELETE_EXPIRED_TOKEN, (token,))
+            conn.commit()
+            conn.close()
+            return jsonify({"success": False, "message": "Token expirado"})
 
     def logout():
         verify_jwt_in_request()
