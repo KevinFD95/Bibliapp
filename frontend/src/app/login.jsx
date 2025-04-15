@@ -60,11 +60,11 @@ export function LoginScreen() {
           navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
         } else {
           await SecureStore.deleteItemAsync("access_token");
-          setAlertMessage("Sesión caducada. Vuelva a iniciar sesión");
+          setAlertMessage("Sesión caducada. Vuelva a iniciar sesión.");
         }
       } catch {
         await SecureStore.deleteItemAsync("access_token");
-        setAlertMessage("Sesión caducada. Vuelva a iniciar sesión");
+        setAlertMessage("Sesión caducada. Vuelva a iniciar sesión.");
       }
 
       setIsViewReady(true);
@@ -93,7 +93,7 @@ export function LoginScreen() {
     try {
       const data = await login(user);
 
-      if (data.success === true && data.access_token) {
+      if (data.success && data.access_token) {
         await SecureStore.setItemAsync("access_token", data.access_token);
         navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
       } else {

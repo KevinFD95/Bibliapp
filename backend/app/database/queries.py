@@ -19,7 +19,7 @@ class Queries:
         "SELECT token, expires_at FROM TOKENS WHERE username = %s AND token = %s"
     )
     AUTH_INSERT_TOKEN = "INSERT INTO tokens (username, token, device, expires_at) VALUES (%s, %s, %s, %s)"
-    AUTH_DELETE_TOKEN = "DELETE FROM tokens WHERE username = %s AND token = %s"
+    AUTH_DELETE_TOKEN = "DELETE FROM tokens WHERE token = %s"
 
     # Documents
     DOC_GETALL = "SELECT * FROM documents"
