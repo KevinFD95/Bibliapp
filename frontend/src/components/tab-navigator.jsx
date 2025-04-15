@@ -120,7 +120,6 @@ export default function TabNavigator() {
         options={{
           title: "Mi Carrito",
           tabBarButton: () => null,
-          // Asegura que no ocupe espacio
           tabBarItemStyle: {
             display: "none",
             height: 0,

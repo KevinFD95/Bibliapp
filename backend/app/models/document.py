@@ -29,7 +29,7 @@ class Document:
             return document
         except Exception:
             return {"error": "No se han obtenido los datos del documento"}
-
+    
     @staticmethod
     def create(docs):
         try:

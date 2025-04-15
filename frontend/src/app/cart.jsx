@@ -1,25 +1,104 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
+import BookLite from "../components/card.jsx";
+
 import viewStyles from "../styles/view-styles";
+import { getCart } from "../api/documents.js";
 
 function Cart() {
-  return (
-    <View style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={[viewStyles.mainContainer, styles.container]}
-      >
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Tu carrito está vacío</Text>
-        </View>
+  const [books, setBooks] = useState();
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
 
-        <View style={styles.footer}>
-          <View style={styles.totalContainer}>
-            <Text style={styles.totalText}>Total:</Text>
-            <Text style={styles.priceText}>0.00€</Text>
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const data = await getCart("fojeama");
+        if (data && data.error) {
+          setError(data.error);
+        } else {
+          setBooks(data || []);
+        }
+      } catch (err) {
+        setError("Hubo un error al cargar los libros.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+  if (error) {
+    return <Text>{error}</Text>;
+  }
+  if (!Array.isArray(books)) {
+    return <Text>No se encontraron libros disponibles</Text>;
+  }
+
+  const handleBookPress = (document) => {
+    navigation.navigate("BookDetails", { document });
+  };
+
+  return (
+    <ScrollView
+      contentContainerStyle={[
+        viewStyles.mainContainer,
+        { justifyContent: "center" },
+      ]}
+    >
+      <Text style={viewStyles.h1}>Novedades</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalSection}
+      >
+        {books.map((item) => (
+          <View key={item.document_id} style={styles.bookItem}>
+            <BookLite
+              key={item.document_id}
+              title={item.title}
+              image={item.url_image}
+              onPress={() => handleBookPress(item)}
+            />
           </View>
-        </View>
+        ))}
       </ScrollView>
-    </View>
+      <Text style={viewStyles.h2}>Recomendados para ti</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalSection}
+      >
+        {books.map((item) => (
+          <View key={`rec-${item.document_id}`} style={styles.bookItem}>
+            <BookLite
+              title={item.title}
+              image={item.url_image}
+              onPress={() => handleBookPress(item)}
+            />
+          </View>
+        ))}
+      </ScrollView>
+    </ScrollView>
   );
 }
 
