@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
 
+import * as SecureStore from "expo-secure-store";
+import { logout } from "../api/auth.js";
+
 import { IconButton } from "../components/button.jsx";
 import { ConfirmPopup, Popup } from "../components/popup.jsx";
 
@@ -32,6 +35,7 @@ export default function ProfileStackNavigator() {
 
 function ProfileScreen() {
   const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState();
   const [confirmVisible, setConfirmVisible] = useState(false);
   const navigation = useNavigation();
 
@@ -41,6 +45,20 @@ function ProfileScreen() {
 
   const handleConfig = (user) => {
     navigation.navigate("Config", user);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const data = await logout();
+
+      if (data.success) {
+        await SecureStore.deleteItemAsync("access_token");
+        navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
+      }
+    } catch {
+      setAlertMessage("Error al cerrar sesión. Inténtelo más tarde.");
+      setAlertVisible(true);
+    }
   };
 
   return (
@@ -88,8 +106,8 @@ function ProfileScreen() {
       </View>
 
       <Popup
-        title={"Alerta"}
-        message={"Cambio de ventana"}
+        title={"Aviso"}
+        message={alertMessage}
         visible={alertVisible}
         onClose={() => setAlertVisible(false)}
       />
@@ -97,7 +115,10 @@ function ProfileScreen() {
         title={"Cerrando sesión"}
         message={"¿Desea realmente cerrar sesión y salir de la aplicación?"}
         visible={confirmVisible}
-        onConfirm={() => {}}
+        onConfirm={() => {
+          handleLogout();
+          setConfirmVisible(false);
+        }}
         onClose={() => setConfirmVisible(false)}
       />
     </View>

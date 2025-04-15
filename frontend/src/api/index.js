@@ -25,5 +25,7 @@ export async function customFetch(endpoint, options = {}) {
     throw new Error(error.message || "Error en la API");
   }
 
-  return response.json();
+  const data = await response.json().catch(() => ({}));
+
+  return { status: response.status, ok: response.ok, data };
 }

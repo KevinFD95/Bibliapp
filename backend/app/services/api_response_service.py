@@ -7,8 +7,10 @@ class ApiResponse:
         response = {
             "success": True,
             "message": message,
-            "data": data,
         }
+
+        if (data, dict):
+            response.update(data)
 
         return jsonify(response), status_code
     

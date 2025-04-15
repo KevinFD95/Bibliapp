@@ -9,6 +9,7 @@ from app.models import User
 from app.helpers import verify_password
 from datetime import timedelta, datetime, timezone
 from app.database import Queries, Connection
+from app.services import ApiResponse
 
 
 class AuthController:
@@ -16,14 +17,7 @@ class AuthController:
         data = request.get_json()
 
         if not data or "identifier" not in data or "user_password" not in data:
-            return (
-                jsonify(
-                    {
-                        "error": "Se requiere un identificador (email o username) y una contraseña"
-                    }
-                ),
-                400,
-            )
+            return ApiResponse.error()
 
         identifier = data["identifier"]
         user_password = data["user_password"]
@@ -37,13 +31,13 @@ class AuthController:
             user = User.get_user_by_username(identifier)
 
         if not user:
-            return jsonify({"error": "Usuario no encontrado"}), 404
+            return ApiResponse.error(message="Usuario no encontrado", status_code=404)
 
         if not verify_password(user_password, user["user_password"]):
             conn.close()
             return jsonify({"error": "Credenciales incorrectas"}), 200
 
-        expires = timedelta(minutes=1)
+        expires = timedelta(days=7)
         access_token = create_access_token(
             identity=user["username"],
             additional_claims={
@@ -64,12 +58,7 @@ class AuthController:
         conn.commit()
         conn.close()
 
-        return jsonify(
-            {
-                "success": True,
-                "access_token": access_token,
-            }
-        )
+        return ApiResponse.success(data={"access_token": access_token})
 
     def validate_token():
         auth_header = request.headers.get("Authorization", "")
@@ -85,8 +74,6 @@ class AuthController:
             cursor.execute(Queries.AUTH_GET_TOKENS, (user, token))
             token_data = cursor.fetchone()
 
-            print(f"Datos del token en la BD: {token_data}")
-
             if token_data:
                 token_db, expires_at = token_data
 
@@ -94,7 +81,7 @@ class AuthController:
                     conn.close()
                     return jsonify({"success": True, "message": "Acceso autorizado"})
                 else:
-                    cursor.execute(Queries.AUTH_DELETE_TOKEN, (user, token_db))
+                    cursor.execute(Queries.AUTH_DELETE_TOKEN, (token_db,))
                     conn.commit()
                     conn.close()
                     return jsonify({"success": False, "message": "Token expirado"})
@@ -102,7 +89,7 @@ class AuthController:
                 conn.close()
                 return jsonify({"success": False, "message": "Token no encontrado"})
         except Exception:
-            cursor.execute(Queries.AUTH_DELETE_EXPIRED_TOKEN, (token,))
+            cursor.execute(Queries.AUTH_DELETE_TOKEN, (token,))
             conn.commit()
             conn.close()
             return jsonify({"success": False, "message": "Token expirado"})
@@ -126,11 +113,11 @@ class AuthController:
             conn = Connection.get_db_connection()
             cursor = conn.cursor()
 
-            cursor.execute(Queries.AUTH_DELETE_TOKEN, (username, token))
+            cursor.execute(Queries.AUTH_DELETE_TOKEN, (token,))
 
             conn.commit()
             conn.close()
 
-            return jsonify({"message": "Sesión cerrada con éxito"}), 200
+            return jsonify({"success": True, "message": "Sesión cerrada con éxito"}), 200
         except Exception as e:
-            return jsonify({"error": "Error al cerrar sesión", "message": str(e)}), 500
+            return jsonify({"success": False, "error": "Error al cerrar sesión", "message": str(e)}), 500
