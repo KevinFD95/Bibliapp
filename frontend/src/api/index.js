@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 
-const API_URL = "http://192.168.0.23:5000/api";
+const API_URL = "http://192.168.1.81:5000/api";
 const FRONTEND_CLIENT = "Bibliapp-Mobile-Agent";
 
 export async function customFetch(endpoint, options = {}) {
