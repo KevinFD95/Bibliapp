@@ -6,28 +6,30 @@ import {
   Text,
   View,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import BookLite from "../components/card.jsx";
-
+import { BookLiteCart } from "../components/card.jsx";
 import viewStyles from "../styles/view-styles";
 import { getCart } from "../api/documents.js";
 
 function Cart() {
-  const [books, setBooks] = useState();
+  const [books, setBooks] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(0.0);
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const data = await getCart("fojeama");
+        const username = "franusaurio";
+        const data = await getCart(username);
         if (data && data.error) {
           setError(data.error);
         } else {
-          setBooks(data || []);
+          setBooks(data && data.data ? data.data : []);
         }
       } catch (err) {
         setError("Hubo un error al cargar los libros.");
@@ -40,9 +42,36 @@ function Cart() {
     fetchBooks();
   }, []);
 
+  useEffect(() => {
+    const calculateTotal = () => {
+      let total = 0;
+      if (books && Array.isArray(books)) {
+        books.forEach((book) => {
+          const price = parseFloat(book.price);
+          if (!isNaN(price)) {
+            total += price;
+          }
+        });
+      }
+      setTotalPrice(total.toFixed(2));
+    };
+
+    calculateTotal();
+  }, [books]);
+
+  const handleBookPress = (document) => {
+    navigation.navigate("BookDetails", { document });
+  };
+
+  const handleRemoveBook = (documentId) => {
+    // Aquí iría la lógica para eliminar el libro (no implementada ahora)
+
+    console.log(`Eliminar libro con ID: ${documentId}`);
+  };
+
   if (loading) {
     return (
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <ActivityIndicator size={"large"} />
       </View>
     );
@@ -54,51 +83,48 @@ function Cart() {
     return <Text>No se encontraron libros disponibles</Text>;
   }
 
-  const handleBookPress = (document) => {
-    navigation.navigate("BookDetails", { document });
-  };
-
   return (
-    <ScrollView
-      contentContainerStyle={[
-        viewStyles.mainContainer,
-        { justifyContent: "center" },
-      ]}
-    >
-      <Text style={viewStyles.h1}>Novedades</Text>
+    <View style={{ flex: 1 }}>
       <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.horizontalSection}
+        contentContainerStyle={[
+          viewStyles.mainContainer,
+          { justifyContent: "flex-start", paddingBottom: styles.footer.height },
+        ]}
       >
         {books.map((item) => (
           <View key={item.document_id} style={styles.bookItem}>
-            <BookLite
-              key={item.document_id}
-              title={item.title}
-              image={item.url_image}
-              onPress={() => handleBookPress(item)}
-            />
+            <View style={styles.bookRow}>
+              <BookLiteCart
+                key={item.document_id}
+                image={item.url_image}
+                onPress={() => handleBookPress(item)}
+              />
+              <View style={styles.bookDetails}>
+                <View style={styles.removeIconContainer}>
+                  <TouchableOpacity
+                    onPress={() => handleRemoveBook(item.document_id)}
+                  >
+                    <Text style={styles.removeIcon}>X</Text>
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.bookTitle}>{item.title}</Text>
+                <Text style={styles.bookAuthor}>Autor: {item.author}</Text>
+                <Text style={styles.bookDate}>
+                  Modificado: {new Date(item.updated_at).toLocaleDateString()}
+                </Text>
+                <Text style={styles.bookPrice}>{item.price}€</Text>
+              </View>
+            </View>
           </View>
         ))}
       </ScrollView>
-      <Text style={viewStyles.h2}>Recomendados para ti</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.horizontalSection}
-      >
-        {books.map((item) => (
-          <View key={`rec-${item.document_id}`} style={styles.bookItem}>
-            <BookLite
-              title={item.title}
-              image={item.url_image}
-              onPress={() => handleBookPress(item)}
-            />
-          </View>
-        ))}
-      </ScrollView>
-    </ScrollView>
+      <View style={styles.footer}>
+        <View style={styles.totalContainer}>
+          <Text style={styles.totalText}>Total:</Text>
+          <Text style={styles.priceText}>{totalPrice}€</Text>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -126,35 +152,76 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   footer: {
-    marginTop: 20,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "white",
     borderTopWidth: 1,
     borderTopColor: "#eee",
-    paddingTop: 20,
+    padding: 15,
   },
   totalContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   totalText: {
     fontSize: 18,
     fontWeight: "bold",
+    paddingLeft: 20,
   },
   priceText: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#2e86de",
+    paddingRight: 20,
   },
-  checkoutButton: {
-    backgroundColor: "#2e86de",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
+  bookItem: {
+    marginBottom: 15,
+    paddingHorizontal: 20,
+    width: "100%",
   },
-  checkoutText: {
-    color: "white",
-    fontWeight: "bold",
+  bookRow: {
+    flexDirection: "row",
+    alignItems: "stretch",
+  },
+  bookDetails: {
+    flex: 1,
+    paddingLeft: 15,
+  },
+  bookTitle: {
     fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  bookAuthor: {
+    fontSize: 14,
+    color: "gray",
+    marginBottom: 3,
+  },
+  bookDate: {
+    fontSize: 12,
+    color: "lightgray",
+    marginBottom: 5,
+  },
+  bookPrice: {
+    fontSize: 16,
+    color: "#2e86de",
+    marginTop: 10,
+  },
+  removeIconContainer: {
+    alignItems: "flex-end",
+  },
+  removeIcon: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "red",
+    padding: 5,
+  },
+  removeIconImage: {
+    width: 20,
+    height: 20,
   },
 });
 

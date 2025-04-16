@@ -28,3 +28,5 @@ class Queries:
 
     # Cart
     CART_GETALL = "SELECT d.* FROM cart c JOIN documents d ON c.document_id = d.document_id WHERE c.username = %s"
+    CART_ADDDOC = "INSERT INTO cart (username, document_id) VALUES (%s, %s)"
+    CART_DELETEDOC = "DELETE FROM users WHERE document_id = %s"
