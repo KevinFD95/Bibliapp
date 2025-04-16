@@ -1,5 +1,5 @@
 # app/controllers/auth_controller.py
-from flask import request, jsonify
+from flask import request
 from flask_jwt_extended import (
     create_access_token,
     verify_jwt_in_request,
@@ -17,7 +17,9 @@ class AuthController:
         data = request.get_json()
 
         if not data or "identifier" not in data or "user_password" not in data:
-            return ApiResponse.error()
+            return ApiResponse.error(
+                message="No se encuentran identificador y contraseña"
+            )
 
         identifier = data["identifier"]
         user_password = data["user_password"]
@@ -35,7 +37,9 @@ class AuthController:
 
         if not verify_password(user_password, user["user_password"]):
             conn.close()
-            return ApiResponse.error(message="Credenciales incorrectas", status_code=404)
+            return ApiResponse.error(
+                message="Credenciales incorrectas", status_code=404
+            )
 
         expires = timedelta(days=7)
         access_token = create_access_token(
@@ -63,10 +67,10 @@ class AuthController:
     def validate_token():
         auth_header = request.headers.get("Authorization", "")
         token = auth_header.replace("Bearer ", "").strip()
-        
+
         conn = Connection.get_db_connection()
         cursor = conn.cursor()
-        
+
         try:
             verify_jwt_in_request()
             user = get_jwt_identity()
@@ -84,15 +88,15 @@ class AuthController:
                     cursor.execute(Queries.AUTH_DELETE_TOKEN, (token_db,))
                     conn.commit()
                     conn.close()
-                    return jsonify({"success": False, "message": "Token expirado"})
+                    return ApiResponse.error(message="Token expirado")
             else:
                 conn.close()
-                return jsonify({"success": False, "message": "Token no encontrado"})
+                return ApiResponse.error(message="Token no encontrado")
         except Exception:
             cursor.execute(Queries.AUTH_DELETE_TOKEN, (token,))
             conn.commit()
             conn.close()
-            return jsonify({"success": False, "message": "Token expirado"})
+            return ApiResponse.error(message="Token expirado")
 
     def logout():
         verify_jwt_in_request()
@@ -100,7 +104,7 @@ class AuthController:
         token = request.headers.get("Authorization", None)
 
         if not token:
-            return jsonify({"error": "Token no proporcionado"}), 401
+            return ApiResponse.error(message="Token no proporcionado", status_code=401)
 
         token = token.replace("Bearer ", "")
 
@@ -108,7 +112,9 @@ class AuthController:
             username = get_jwt_identity()
 
             if not username:
-                return jsonify({"error": "No se encontró 'identity en el token"}), 400
+                return ApiResponse.error(
+                    message="No se encontró 'identity en el token", status_code=400
+                )
 
             conn = Connection.get_db_connection()
             cursor = conn.cursor()
@@ -118,6 +124,6 @@ class AuthController:
             conn.commit()
             conn.close()
 
-            return jsonify({"success": True, "message": "Sesión cerrada con éxito"}), 200
+            return ApiResponse.success(message="Acceso autorizado")
         except Exception as e:
-            return jsonify({"success": False, "error": "Error al cerrar sesión", "message": str(e)}), 500
+            return ApiResponse.error(message="Error al cerrar sesión", status_code=500)

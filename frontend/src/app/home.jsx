@@ -53,8 +53,12 @@ function HomeScreen() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const data = await getDocuments();
-        setBooks(data);
+        const response = await getDocuments();
+        const { ok, status, data } = response;
+
+        if (ok || status === 200) {
+          setBooks(data.documents);
+        }
       } catch (err) {
         setError("Hubo un error al cargar los libros.");
         console.error(err);

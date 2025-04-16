@@ -14,9 +14,7 @@ class Document:
             conn.close()
             return documents
         except Exception:
-            return {
-                "error": "No se han obtenido las previsualizaciones de los documentos"
-            }
+            return None
 
     @staticmethod
     def get_document(document_id):
