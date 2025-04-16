@@ -42,8 +42,9 @@ function ProfileScreen() {
 
   const [user_name, setUser_name] = useState("");
   const [user_lastname, setUser_lastname] = useState("");
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [subscription, setSubscription] = useState("");
 
   const user = {
     user_name: user_name,
@@ -63,6 +64,7 @@ function ProfileScreen() {
           setUser_lastname(data.user.user_lastname);
           setUsername(data.user.username);
           setEmail(data.user.email);
+          setSubscription(data.user.user_sub);
         } else if (status === 404) {
           setAlertMessage("Hubo un error al buscar el usuario");
           setAlertVisible(true);
@@ -103,7 +105,7 @@ function ProfileScreen() {
 
   return (
     <View style={viewStyle.mainContainer}>
-      <View style={styles.box}>
+      <View style={styles.iconsBox}>
         <IconButton
           onPress={() => handleEditProfile(user)}
           icon={<EditIcon size={52} />}
@@ -112,30 +114,42 @@ function ProfileScreen() {
         <IconButton onPress={handleConfig} icon={<SettingsIcon size={52} />} />
       </View>
 
-      <View style={styles.text}>
-        <Text>Nombre de Usuario:</Text>
-        <Text>{username}</Text>
+      <View
+        style={{
+          flexWrap: "wrap",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={styles.textContainer}>
+          <Text style={viewStyle.h5}>Nombre: </Text>
+          <Text style={viewStyle.p}>{user_name}</Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={viewStyle.h5}>Nivel: </Text>
+          <Text style={viewStyle.p}>{subscription}</Text>
+        </View>
       </View>
-      <View style={styles.text}>
-        <Text>Correo Electronico:</Text>
-        <Text>{email}</Text>
+
+      <View style={styles.textContainer}>
+        <Text style={viewStyle.h5}>Apellido: </Text>
+        <Text style={viewStyle.p}>{user_lastname}</Text>
       </View>
-      <View style={styles.text}>
-        <Text>Nombre:</Text>
-        <Text>{user_name}</Text>
+      <View style={styles.textContainer}>
+        <Text style={viewStyle.h5}>Usuario: </Text>
+        <Text style={viewStyle.p}>{username}</Text>
       </View>
-      <View style={styles.text}>
-        <Text>Apellido:</Text>
-        <Text>{user_lastname}</Text>
+      <View style={styles.textContainer}>
+        <Text style={viewStyle.h5}>Correo Electronico: </Text>
+        <Text style={viewStyle.p}>{email}</Text>
       </View>
 
       <View
         style={{
-          alignItems: "center",
           position: "absolute",
           bottom: 0,
-          left: "50%",
-          marginBottom: 40,
+          right: 20,
+          marginBottom: 20,
         }}
       >
         <IconButton
@@ -165,17 +179,20 @@ function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  box: {
+  iconsBox: {
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 50,
   },
   image: {
     height: 150,
     width: 150,
     alignItems: "center",
   },
-  text: {
+  textContainer: {
+    flexWrap: "wrap",
+    flexDirection: "row",
     marginBottom: 20,
   },
 });
