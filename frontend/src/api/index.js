@@ -1,7 +1,7 @@
 import * as SecureStore from "expo-secure-store";
 
-const API_URL = "http://192.168.0.23:5000/api";
-const FRONTEND_CLIENT = "Bibliapp-Mobile-Agent";
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+const FRONTEND_CLIENT = process.env.EXPO_PUBLIC_FRONTEND_CLIENT;
 
 export async function customFetch(endpoint, options = {}) {
   const token = await SecureStore.getItemAsync("access_token");
@@ -25,7 +25,5 @@ export async function customFetch(endpoint, options = {}) {
     throw new Error(error.message || "Error en la API");
   }
 
-  const data = await response.json().catch(() => ({}));
-
-  return { status: response.status, ok: response.ok, data };
+  return response.json();
 }
