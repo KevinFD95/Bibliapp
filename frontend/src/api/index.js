@@ -1,7 +1,5 @@
 import * as SecureStore from "expo-secure-store";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
-const FRONTEND_CLIENT = process.env.EXPO_PUBLIC_FRONTEND_CLIENT;
+import { API_URL, FRONTEND_CLIENT } from "../../constants.js";
 
 export async function customFetch(endpoint, options = {}) {
   const token = await SecureStore.getItemAsync("access_token");
@@ -20,10 +18,7 @@ export async function customFetch(endpoint, options = {}) {
     headers,
   });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Error en la API");
-  }
+  const data = await response.json().catch(() => ({}));
 
-  return response.json();
+  return { status: response.status, ok: response.ok, data };
 }

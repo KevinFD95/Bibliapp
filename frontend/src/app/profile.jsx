@@ -49,9 +49,10 @@ function ProfileScreen() {
 
   const handleLogout = async () => {
     try {
-      const data = await logout();
+      const response = await logout();
+      const { ok, status } = response;
 
-      if (data.success) {
+      if (ok || status === 200) {
         await SecureStore.deleteItemAsync("access_token");
         navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
       }

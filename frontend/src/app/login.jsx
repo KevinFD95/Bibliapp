@@ -55,8 +55,9 @@ export function LoginScreen() {
 
       try {
         const response = await validateToken();
+        const { ok, status } = response;
 
-        if (response.success) {
+        if (ok || status === 200) {
           navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
         } else {
           await SecureStore.deleteItemAsync("access_token");
@@ -91,17 +92,21 @@ export function LoginScreen() {
     }
 
     try {
-      const data = await login(user);
+      const response = await login(user);
+      const { ok, status, data } = response;
 
-      if (data.success && data.access_token) {
+      if (ok && data.access_token) {
         await SecureStore.setItemAsync("access_token", data.access_token);
         navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
-      } else {
+      } else if (status === 404) {
         setAlertMessage("Usuario o contraseña incorrectos");
+        setAlert(true);
+      } else {
+        setAlertMessage(data.message || "Error al iniciar sesión");
         setAlert(true);
       }
     } catch {
-      setAlertMessage("Error al iniciar sesión");
+      setAlertMessage("Error inesperado, pruebe más tarde.");
     }
   };
 
