@@ -11,7 +11,9 @@ class Queries:
     USERS_GET_BY_EMAIL = (
         "SELECT username, email, user_password, user_role FROM users WHERE email = %s"
     )
+    USERS_GET_DATA_BY_USERNAME = "SELECT user_name, user_lastname, email, username FROM users WHERE username = %s"
     USERS_INSERT = "INSERT INTO users (user_name, user_lastname, username, email, user_password) VALUES (%s, %s, %s, %s, %s)"
+    USERS_UPDATE_BY_USERNAME = "UPDATE users SET user_name = %s, user_lastname = %s, email = %s  WHERE username = %s"
     USERS_DELETE = "DELETE FROM users WHERE username = %s"
 
     # Auth

@@ -12,6 +12,14 @@ user_bp.route("/users/<int:user_id>", methods=["GET"])(
     token_in_db_required(admin_required(UserController.get_user_by_id))
 )
 
+user_bp.route("/users/profile", methods=["GET"])(
+    token_in_db_required(UserController.get_profile)
+)
+
+user_bp.route("/users/<string:username>", methods=["PATCH"])(
+    token_in_db_required(UserController.update_profile)
+)
+
 user_bp.route("/users/<string:username>", methods=["DELETE"])(
     token_in_db_required(admin_required(UserController.delete_user))
 )

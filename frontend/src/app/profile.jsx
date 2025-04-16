@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
 
@@ -17,6 +17,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ProfileEdit from "./profile-edit.jsx";
 import Config from "./config.jsx";
 import { useNavigation } from "@react-navigation/native";
+import { getProfile } from "../api/users.js";
 
 const Stack = createStackNavigator();
 
@@ -39,8 +40,46 @@ function ProfileScreen() {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const navigation = useNavigation();
 
+  const [user_name, setUser_name] = useState("");
+  const [user_lastname, setUser_lastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+
+  const user = {
+    user_name: user_name,
+    user_lastname: user_lastname,
+    email: email,
+    username: username,
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      const getUserData = async () => {
+        const response = await getProfile();
+        const { ok, status, data } = response;
+
+        if (ok || status === 200) {
+          setUser_name(data.user.user_name);
+          setUser_lastname(data.user.user_lastname);
+          setUsername(data.user.username);
+          setEmail(data.user.email);
+        } else if (status === 404) {
+          setAlertMessage("Hubo un error al buscar el usuario");
+          setAlertVisible(true);
+        } else {
+          setAlertMessage("Hubo un error al buscar el usuario");
+          setAlertVisible(true);
+        }
+      };
+
+      getUserData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   const handleEditProfile = (user) => {
-    navigation.navigate("EditProfile", user);
+    navigation.navigate("EditProfile", { user });
   };
 
   const handleConfig = (user) => {
@@ -65,30 +104,29 @@ function ProfileScreen() {
   return (
     <View style={viewStyle.mainContainer}>
       <View style={styles.box}>
-        <IconButton onPress={handleEditProfile} icon={<EditIcon size={52} />} />
+        <IconButton
+          onPress={() => handleEditProfile(user)}
+          icon={<EditIcon size={52} />}
+        />
         <AccountIcon size={200} />
         <IconButton onPress={handleConfig} icon={<SettingsIcon size={52} />} />
       </View>
 
       <View style={styles.text}>
         <Text>Nombre de Usuario:</Text>
-        <Text>joan005</Text>
+        <Text>{username}</Text>
       </View>
       <View style={styles.text}>
         <Text>Correo Electronico:</Text>
-        <Text>joancarmona05@gmail.com</Text>
+        <Text>{email}</Text>
       </View>
       <View style={styles.text}>
         <Text>Nombre:</Text>
-        <Text>joan</Text>
+        <Text>{user_name}</Text>
       </View>
       <View style={styles.text}>
         <Text>Apellido:</Text>
-        <Text>Carmona</Text>
-      </View>
-      <View style={styles.text}>
-        <Text>Direccion:</Text>
-        <Text>C/ MiCasa Nº1</Text>
+        <Text>{user_lastname}</Text>
       </View>
 
       <View

@@ -1,40 +1,73 @@
-import { ScrollView, Text, StyleSheet, View, Image } from "react-native";
+import { useState } from "react";
+import { ScrollView, Text, StyleSheet, View } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
 import { CustomTextBox } from "../components/text-input.jsx";
+import { CustomButton } from "../components/button.jsx";
+import { Popup } from "../components/popup.jsx";
+import AccountIcon from "../../assets/icons/account-icon.jsx";
+import { updateProfile } from "../api/users.js";
 
-export default function EditProfileScreen() {
+export default function EditProfileScreen({ route }) {
+  const { user } = route.params;
+
+  const [alertMessage, setAlertMessage] = useState();
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  const [user_name, setUser_name] = useState(user.user_name);
+  const [user_lastname, setUser_lastname] = useState(user.user_lastname);
+  const [email, setEmail] = useState(user.email);
+
+  const newUser = {
+    user_name: user_name,
+    user_lastname: user_lastname,
+    email: email,
+    username: user.username,
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await updateProfile(newUser);
+      const { ok, status } = response;
+
+      if (ok || status === 200) {
+        setAlertMessage("Cambios guardados");
+        setAlertVisible(true);
+      } else {
+        setAlertMessage("Imposible guardar cambios");
+        setAlertVisible(true);
+      }
+    } catch {
+      alert("Error");
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={viewStyle.mainContainer}>
       <View style={{ alignItems: "center" }}>
-        <Image
-          source={{
-            uri: "https://media.istockphoto.com/id/1495088043/es/vector/icono-de-perfil-de-usuario-avatar-o-icono-de-persona-foto-de-perfil-símbolo-de-retrato.jpg?s=612x612&w=0&k=20&c=mY3gnj2lU7khgLhV6dQBNqomEGj3ayWH-xtpYuCXrzk=",
-          }}
-          style={styles.image}
-        />
+        <AccountIcon size={200} />
         <Text style={{ marginTop: 10, marginBottom: 50 }}>Icono Perfil</Text>
       </View>
 
       <View style={styles.text}>
-        <Text>Nombre de Usuario: </Text>
-        <CustomTextBox value={"joan005"} />
+        <Text>Nombre: </Text>
+        <CustomTextBox value={user_name} onChangeText={setUser_name} />
+      </View>
+      <View style={styles.text}>
+        <Text>Apellidos: </Text>
+        <CustomTextBox value={user_lastname} onChangeText={setUser_lastname} />
       </View>
       <View style={styles.text}>
         <Text>Correo Electronico: </Text>
-        <CustomTextBox value={"joancarmona05@gmail.com"} />
+        <CustomTextBox value={email} onChangeText={setEmail} />
       </View>
-      <View style={styles.text}>
-        <Text>Apellido: </Text>
-        <CustomTextBox value={"Carmona"} />
-      </View>
-      <View style={styles.text}>
-        <Text>Direccion: </Text>
-        <CustomTextBox value={"C/ MiCasa Nº1"} />
-      </View>
-      <View style={styles.text}>
-        <Text>Nombre: </Text>
-        <CustomTextBox value={"joan"} />
-      </View>
+      <CustomButton text={"Guardar cambios"} onPress={handleSave} />
+
+      <Popup
+        title={"Aviso"}
+        message={alertMessage}
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+      />
     </ScrollView>
   );
 }

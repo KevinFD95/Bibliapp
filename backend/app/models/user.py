@@ -52,6 +52,17 @@ class User:
             return {"error": "Usuario no encontrado en la base de datos"}
 
     @staticmethod
+    def get_user_data_by_username(username):
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(Queries.USERS_GET_DATA_BY_USERNAME, (username,))
+            user = cursor.fetchone()
+            return user
+        except Exception:
+            return {"error": "Usuario no encontrado en la base de datos"}
+
+    @staticmethod
     def create(users):
         try:
             conn = Connection.get_db_connection()
@@ -89,12 +100,20 @@ class User:
             return {"error": "El usuario no ha sido creado."}
 
     @staticmethod
-    def update(users):
+    def update(user):
         try:
             conn = Connection.get_db_connection()
             cursor = conn.cursor()
 
-            cursor.execute()  # Añadir en app/database/queries.py el metodo para actualizar
+            cursor.execute(
+                Queries.USERS_UPDATE_BY_USERNAME,
+                (
+                    user["user_name"],
+                    user["user_lastname"],
+                    user["email"],
+                    user["username"],
+                ),
+            )
             conn.commit()
             conn.close()
             return {"message": "El usuario ha sido actualizado correctamente."}
