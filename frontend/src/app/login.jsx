@@ -98,6 +98,7 @@ export function LoginScreen() {
         navigation.reset({ index: 0, routes: [{ name: "HomeView" }] });
       } else {
         setAlertMessage("Usuario o contraseña incorrectos");
+        setAlert(true);
       }
     } catch {
       setAlertMessage("Error al iniciar sesión");

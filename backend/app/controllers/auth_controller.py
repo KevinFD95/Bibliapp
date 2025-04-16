@@ -35,7 +35,7 @@ class AuthController:
 
         if not verify_password(user_password, user["user_password"]):
             conn.close()
-            return jsonify({"error": "Credenciales incorrectas"}), 200
+            return ApiResponse.error(message="Credenciales incorrectas", status_code=404)
 
         expires = timedelta(days=7)
         access_token = create_access_token(
@@ -79,7 +79,7 @@ class AuthController:
 
                 if datetime.now() < expires_at:
                     conn.close()
-                    return jsonify({"success": True, "message": "Acceso autorizado"})
+                    return ApiResponse.success(message="Acceso autorizado")
                 else:
                     cursor.execute(Queries.AUTH_DELETE_TOKEN, (token_db,))
                     conn.commit()
