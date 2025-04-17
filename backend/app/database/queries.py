@@ -11,7 +11,9 @@ class Queries:
     USERS_GET_BY_EMAIL = (
         "SELECT username, email, user_password, user_role FROM users WHERE email = %s"
     )
+    USERS_GET_DATA_BY_USERNAME = "SELECT user_name, user_lastname, email, username, user_sub FROM users WHERE username = %s"
     USERS_INSERT = "INSERT INTO users (user_name, user_lastname, username, email, user_password) VALUES (%s, %s, %s, %s, %s)"
+    USERS_UPDATE_BY_USERNAME = "UPDATE users SET user_name = %s, user_lastname = %s, email = %s  WHERE username = %s"
     USERS_DELETE = "DELETE FROM users WHERE username = %s"
 
     # Auth
@@ -28,5 +30,5 @@ class Queries:
 
     # Cart
     CART_GETALL = "SELECT d.* FROM cart c JOIN documents d ON c.document_id = d.document_id WHERE c.username = %s"
-    CART_ADDDOC = "INSERT INTO cart (username, document_id) VALUES (%s, %s)"
-    CART_DELETEDOC = "DELETE FROM users WHERE document_id = %s"
+    CART_ADD_DOC = "INSERT INTO cart (username, document_id) VALUES (%s, %s)"
+    CART_DELETE_DOC = "DELETE FROM cart WHERE document_id = %s AND username = %s"

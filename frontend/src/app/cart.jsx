@@ -12,7 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 
 import { BookLiteCart } from "../components/card.jsx";
 import viewStyles from "../styles/view-styles";
-import { getCart } from "../api/documents.js";
+import { getCart, deleteCart } from "../api/documents.js";
+import { Popup } from "../components/popup.jsx";
 
 function Cart() {
   const [books, setBooks] = useState([]);
@@ -20,27 +21,31 @@ function Cart() {
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0.0);
   const navigation = useNavigation();
+  const [deleteAlertVisible, setDeleteAlertVisible] = useState(false);
+  const [deletedBookTitle, setDeletedBookTitle] = useState("");
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const username = "franusaurio";
-        const data = await getCart(username);
-        if (data && data.error) {
-          setError(data.error);
-        } else {
-          setBooks(data && data.data ? data.data : []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      const fetchBooks = async () => {
+        try {
+          const username = "franusaurio";
+          const data = await getCart(username);
+          if (data && data.error) {
+            setError(data.error);
+          } else {
+            setBooks(data && data.data ? data.data : []);
+          }
+        } catch (err) {
+          setError("Hubo un error al cargar los libros.");
+          console.error(err);
+        } finally {
+          setLoading(false);
         }
-      } catch (err) {
-        setError("Hubo un error al cargar los libros.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
-  }, []);
+      };
+      fetchBooks();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const calculateTotal = () => {
@@ -63,10 +68,32 @@ function Cart() {
     navigation.navigate("BookDetails", { document });
   };
 
-  const handleRemoveBook = (documentId) => {
-    // Aquí iría la lógica para eliminar el libro (no implementada ahora)
+  const handleRemoveBook = async (documentId, bookTitle) => {
+    try {
+      setLoading(true);
 
-    console.log(`Eliminar libro con ID: ${documentId}`);
+      const username = "franusaurio";
+      const response = await deleteCart(username, documentId);
+
+      if (response && response.ok) {
+        const updatedBooks = books.filter(
+          (book) => book.document_id !== documentId,
+        );
+        setBooks(updatedBooks);
+        setDeletedBookTitle(bookTitle);
+        setDeleteAlertVisible(true);
+      } else {
+        setError("Hubo un error al eliminar el libro del carrito.");
+        console.error("Error al eliminar el libro:", response);
+      }
+    } catch (err) {
+      setError(
+        "Hubo un error al comunicarse con el servidor para eliminar el libro.",
+      );
+      console.error("Error al eliminar el libro:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -102,7 +129,9 @@ function Cart() {
               <View style={styles.bookDetails}>
                 <View style={styles.removeIconContainer}>
                   <TouchableOpacity
-                    onPress={() => handleRemoveBook(item.document_id)}
+                    onPress={() =>
+                      handleRemoveBook(item.document_id, item.title)
+                    }
                   >
                     <Text style={styles.removeIcon}>X</Text>
                   </TouchableOpacity>
@@ -124,6 +153,12 @@ function Cart() {
           <Text style={styles.priceText}>{totalPrice}€</Text>
         </View>
       </View>
+      <Popup
+        title={"Libro Eliminado"}
+        message={`'${deletedBookTitle}' ha sido eliminado del carrito.`}
+        visible={deleteAlertVisible}
+        onClose={() => setDeleteAlertVisible(false)}
+      />
     </View>
   );
 }
