@@ -16,6 +16,20 @@ export default function BookLite({ title, image, onPress }) {
   );
 }
 
+export function BookLiteCart({ image, onPress }) {
+  return (
+    <Pressable onPress={onPress} style={styles.cardcart}>
+      {image ? (
+        <Image source={{ uri: image }} style={styles.image} />
+      ) : (
+        <View>
+          <Text>No Image</Text>
+        </View>
+      )}
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#f9f9f9",
@@ -28,6 +42,18 @@ const styles = StyleSheet.create({
     elevation: 3,
     maxWidth: 140,
     maxHeight: 260,
+  },
+  cardcart: {
+    backgroundColor: "#f9f9f9",
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    maxWidth: 140,
+    maxHeight: 200,
   },
   title: {
     fontSize: 12,

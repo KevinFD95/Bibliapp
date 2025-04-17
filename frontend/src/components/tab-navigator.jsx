@@ -41,7 +41,7 @@ export default function TabNavigator() {
         ),
         headerRight: () => (
           <View style={{ marginRight: 20 }}>
-            <Pressable onPress={() => navigation.navigate("Cart")}>
+            <Pressable onPress={() => navigation.navigate("cart")}>
               <CartIcon size={38} />
             </Pressable>
           </View>
@@ -115,12 +115,11 @@ export default function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Cart"
+        name="cart"
         component={CartScreen}
         options={{
-          // Oculta completamente el ícono del tab bar
+          title: "Mi Carrito",
           tabBarButton: () => null,
-          // Asegura que no ocupe espacio
           tabBarItemStyle: {
             display: "none",
             height: 0,

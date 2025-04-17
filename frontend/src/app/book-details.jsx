@@ -6,10 +6,35 @@ import viewStyles from "../styles/view-styles.jsx";
 import { IconButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";
+import { customFetch } from "../api";
 
 export default function BookDetails({ route, navigation }) {
   const { document } = route.params;
   const [alertVisible, setAlertVisible] = useState(false);
+
+  const handleAddToCart = async () => {
+    try {
+      const username = "franusaurio";
+      const response = await customFetch(`/cart/${username}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ document_id: document.document_id }),
+      });
+
+      console.log("Respuesta de customFetch:", response);
+
+      if (response) {
+        setAlertVisible(true);
+      } else {
+        console.error("Error al añadir al carrito");
+      }
+    } catch (error) {
+      console.error("Error al añadir al carrito:", error);
+    }
+  };
+
   const handleNavigation = () => {
     navigation.navigate("BookView", { document });
   };
@@ -34,16 +59,15 @@ export default function BookDetails({ route, navigation }) {
             <Text style={[styles.content, { paddingBottom: 30 }]}>
               Precio: {document.price}€
             </Text>
-
             <IconButton
-              onPress={() => setAlertVisible(true)}
+              onPress={handleAddToCart}
               icon={<AddCartIcon size={30} />}
             />
           </View>
         </View>
         <Text style={styles.synopsisContent}>{document.synopsis}</Text>
         <Popup
-          title={"Alerta"}
+          title={"Añadir Libro"}
           message={"Añadido al Carrito"}
           visible={alertVisible}
           onClose={() => setAlertVisible(false)}

@@ -28,3 +28,9 @@ class Queries:
     DOC_GET_DOCUMENT = "SELECT * FROM documents WHERE document_id = %s"
     DOC_CREATE = "INSERT INTO documents (title, author, publication_year, document_type, num_pages, saga, prequel, sequel, synopsis, price, url_image, url_document, slug) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     DOC_GET_EPUB_PATH = "SELECT url_document FROM documents WHERE document_id = %s"
+
+
+    # Cart
+    CART_GETALL = "SELECT d.* FROM cart c JOIN documents d ON c.document_id = d.document_id WHERE c.username = %s"
+    CART_ADD_DOC = "INSERT INTO cart (username, document_id) VALUES (%s, %s)"
+    CART_DELETE_DOC = "DELETE FROM cart WHERE document_id = %s AND username = %s"
