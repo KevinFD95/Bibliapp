@@ -27,3 +27,4 @@ class Queries:
     DOC_GETALL = "SELECT * FROM documents"
     DOC_GET_DOCUMENT = "SELECT * FROM documents WHERE document_id = %s"
     DOC_CREATE = "INSERT INTO documents (title, author, publication_year, document_type, num_pages, saga, prequel, sequel, synopsis, price, url_image, url_document, slug) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    DOC_GET_EPUB_PATH = "SELECT url_document FROM documents WHERE document_id = %s"
