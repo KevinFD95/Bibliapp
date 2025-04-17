@@ -84,8 +84,8 @@ function ProfileScreen() {
     navigation.navigate("EditProfile", { user });
   };
 
-  const handleConfig = (user) => {
-    navigation.navigate("Config", user);
+  const handleConfig = () => {
+    navigation.navigate("Config");
   };
 
   const handleLogout = async () => {

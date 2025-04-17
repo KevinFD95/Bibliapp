@@ -35,8 +35,8 @@ const viewStyles = StyleSheet.create({
 
   h5: {
     fontSize: 14,
-    fontWeight: 600,
-    marginBottom: 10,
+    fontWeight: 700,
+    marginBottom: 5,
   },
 
   p: {

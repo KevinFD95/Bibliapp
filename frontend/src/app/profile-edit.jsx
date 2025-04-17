@@ -43,9 +43,8 @@ export default function EditProfileScreen({ route }) {
 
   return (
     <ScrollView contentContainerStyle={viewStyle.mainContainer}>
-      <View style={{ alignItems: "center" }}>
+      <View style={{ alignItems: "center", marginTop: 10, marginBottom: 50 }}>
         <AccountIcon size={200} />
-        <Text style={{ marginTop: 10, marginBottom: 50 }}>Icono Perfil</Text>
       </View>
 
       <View style={styles.text}>
@@ -78,11 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  image: {
-    height: 150,
-    width: 150,
-    alignItems: "center",
-  },
+
   text: {
     marginBottom: 20,
   },
