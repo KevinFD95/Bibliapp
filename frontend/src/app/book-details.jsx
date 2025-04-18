@@ -7,28 +7,47 @@ import { IconButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";
 import { customFetch } from "../api";
+import { getCart } from "../api/documents.js";
 
 export default function BookDetails({ route, navigation }) {
   const { document } = route.params;
   const [alertVisible, setAlertVisible] = useState(false);
+  const [alreadyInCartVisible, setAlreadyInCartVisible] = useState(false);
+  const [bookAlreadyInCartTitle, setBookAlreadyInCartTitle] = useState("");
 
   const handleAddToCart = async () => {
+    const username = "franusaurio";
+    const bookTitle = document.title;
+    const documentIdToAdd = document.document_id;
+
     try {
-      const username = "franusaurio";
-      const response = await customFetch(`/cart/${username}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ document_id: document.document_id }),
-      });
+      const checkResponse = await getCart(username);
 
-      console.log("Respuesta de customFetch:", response);
+      if (checkResponse && checkResponse.ok) {
+        setBookAlreadyInCartTitle(bookTitle);
+        setAlreadyInCartVisible(true);
+        return;
+      } else if (checkResponse && checkResponse.status === 404) {
+        const addResponse = await customFetch(`/cart/${username}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ document_id: documentIdToAdd }),
+        });
 
-      if (response) {
-        setAlertVisible(true);
+        if (addResponse && addResponse.ok) {
+          setAlertVisible(true);
+        } else {
+          const errorData = await addResponse;
+          console.error("Error al añadir al carrito", errorData);
+        }
       } else {
-        console.error("Error al añadir al carrito");
+        const errorData = await checkResponse;
+        console.error(
+          "Error al verificar si el libro existe en el carrito",
+          errorData,
+        );
       }
     } catch (error) {
       console.error("Error al añadir al carrito:", error);
@@ -71,6 +90,12 @@ export default function BookDetails({ route, navigation }) {
           message={"Añadido al Carrito"}
           visible={alertVisible}
           onClose={() => setAlertVisible(false)}
+        />
+        <Popup
+          title={"Libro ya en el carrito"}
+          message={`'${bookAlreadyInCartTitle}' ya existe en tu carrito.`}
+          visible={alreadyInCartVisible}
+          onClose={() => setAlreadyInCartVisible(false)}
         />
       </View>
     </ScrollView>

@@ -30,5 +30,7 @@ class Queries:
 
     # Cart
     CART_GETALL = "SELECT d.* FROM cart c JOIN documents d ON c.document_id = d.document_id WHERE c.username = %s"
+    CART_CHECK_DOC = "SELECT 1 FROM cart WHERE username = %s AND document_id = %s"
     CART_ADD_DOC = "INSERT INTO cart (username, document_id) VALUES (%s, %s)"
     CART_DELETE_DOC = "DELETE FROM cart WHERE document_id = %s AND username = %s"
+    CART_BUY_DOC = "DELETE FROM cart WHERE username = %s"
