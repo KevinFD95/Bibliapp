@@ -11,7 +11,7 @@ from commands import (
     migration_status,
     rollback_migration,
 )
-import click
+import click, warnings
 
 
 def create_app():
@@ -30,6 +30,9 @@ def create_app():
     app.register_blueprint(epub_bp, url_prefix="/api")
 
     cli_commands(app)
+
+    warnings.filterwarnings("ignore", category=UserWarning)
+    warnings.filterwarnings("ignore", category=FutureWarning)
 
     return app
 

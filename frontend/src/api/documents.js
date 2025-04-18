@@ -8,6 +8,10 @@ export function getDocument(id) {
   return customFetch("/docs/" + id);
 }
 
+export function getEpub(id) {
+  return customFetch("/epub/" + id);
+}
+
 export function getCart(username) {
   return customFetch("/cart/" + username);
 }

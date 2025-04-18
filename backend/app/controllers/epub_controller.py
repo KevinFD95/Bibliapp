@@ -1,6 +1,7 @@
 # app/controllers/epub_controller.py
 from app.services import EpubConverter, ApiResponse
 from app.database import Connection, Queries
+from config import Config
 import os
 
 class EpubController:
@@ -14,7 +15,7 @@ class EpubController:
             if not result:
                 return ApiResponse.error("Documento no encontrado en la base de datos.")
             
-            epub_file_path = result[0]
+            epub_file_path = os.path.join(Config.CLOUD_PATH, result[0])
 
             if not os.path.exists(epub_file_path):
                 return ApiResponse.error(message="Archivo EPUB no encontrado en la ruta.")
@@ -22,6 +23,6 @@ class EpubController:
             converter = EpubConverter(epub_file_path)
             html_content = converter.convert_to_html()
 
-            return ApiResponse.success(data={"html": html_content})
+            return ApiResponse.success(data={"chapters": html_content})
         except Exception as e:
             return ApiResponse.error(message="Error al convertir el EPUB en HTML")

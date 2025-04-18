@@ -14,7 +14,6 @@ import RegisterScreen from "./register.jsx";
 
 import viewStyles from "../styles/view-styles.jsx";
 import logo from "../../assets/bibliapp-logo-inicio.png";
-import CheckboxIcon from "../../assets/icons/checkbox-icon.jsx";
 
 const Stack = createStackNavigator();
 
@@ -41,7 +40,6 @@ export function LoginScreen() {
   const [userInput, setUserInput] = useState();
   const [passInput, setPassInput] = useState();
   const user = { identifier: userInput, user_password: passInput };
-  const [checked, setChecked] = useState(false);
 
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
@@ -134,11 +132,6 @@ export function LoginScreen() {
           value={passInput}
           onChangeText={setPassInput}
         />
-
-        <Pressable onPress={() => !setChecked(!checked)} style={styles.row}>
-          <CheckboxIcon size={32} checked={checked} />
-          <Text style={viewStyles.h5}>Recuérdame</Text>
-        </Pressable>
       </View>
 
       <View style={styles.buttonsContainer}>
