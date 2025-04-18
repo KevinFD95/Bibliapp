@@ -6,7 +6,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from app.models import User
-from app.helpers import verify_password
+from app.helpers import verify_password, getToken
 from datetime import timedelta, datetime, timezone
 from app.database import Queries, Connection
 from app.services import ApiResponse
@@ -45,7 +45,6 @@ class AuthController:
         access_token = create_access_token(
             identity=user["username"],
             additional_claims={
-                "email": user.get("email"),
                 "user_role": user.get("user_role"),
             },
             expires_delta=expires,
@@ -65,8 +64,7 @@ class AuthController:
         return ApiResponse.success(data={"access_token": access_token})
 
     def validate_token():
-        auth_header = request.headers.get("Authorization", "")
-        token = auth_header.replace("Bearer ", "").strip()
+        token = getToken()
 
         conn = Connection.get_db_connection()
         cursor = conn.cursor()
