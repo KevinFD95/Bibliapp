@@ -175,9 +175,15 @@ function Cart() {
       </ScrollView>
       <View style={styles.footer}>
         <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Total:</Text>
-          <Text style={styles.priceText}>{totalPrice}€</Text>
-          <CustomButton title="Realizar Compra" onPress={handlePurchase} />
+          <View style={styles.totalPriceContainer}>
+            <Text style={styles.totalText}>Total: </Text>
+            <Text style={styles.priceText}>{totalPrice}€</Text>
+          </View>
+          <CustomButton
+            title="Comprar"
+            text={"Realizar compra"}
+            onPress={handlePurchase}
+          />
         </View>
       </View>
       <Popup
@@ -230,9 +236,14 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   totalContainer: {
+    flexDirection: "column",
+    alignItems: "space-between",
+  },
+  totalPriceContainer: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 10,
+    paddingLeft: 20,
   },
   totalText: {
     fontSize: 18,
