@@ -6,7 +6,10 @@ import * as SecureStore from "expo-secure-store";
 import { login, validateToken } from "../api/auth.js";
 
 import { CustomButton } from "../components/button.jsx";
-import { CustomTextBox, CustomTextBoxPass } from "../components/text-input.jsx";
+import {
+  CustomTextBoxUser,
+  CustomTextBoxPass,
+} from "../components/text-input.jsx";
 import { Popup } from "../components/popup.jsx";
 
 import TabNavigator from "../components/tab-navigator.jsx";
@@ -14,7 +17,6 @@ import RegisterScreen from "./register.jsx";
 
 import viewStyles from "../styles/view-styles.jsx";
 import logo from "../../assets/bibliapp-logo-inicio.png";
-import CheckboxIcon from "../../assets/icons/checkbox-icon.jsx";
 
 const Stack = createStackNavigator();
 
@@ -41,7 +43,6 @@ export function LoginScreen() {
   const [userInput, setUserInput] = useState();
   const [passInput, setPassInput] = useState();
   const user = { identifier: userInput, user_password: passInput };
-  const [checked, setChecked] = useState(false);
 
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
@@ -122,7 +123,7 @@ export function LoginScreen() {
 
       <View style={styles.inputContainer}>
         <Text style={viewStyles.p}>Usuario o correo electrónico:</Text>
-        <CustomTextBox
+        <CustomTextBoxUser
           placeholder={"Escribe tu usuario o correo"}
           value={userInput}
           onChangeText={setUserInput}
@@ -134,11 +135,6 @@ export function LoginScreen() {
           value={passInput}
           onChangeText={setPassInput}
         />
-
-        <Pressable onPress={() => !setChecked(!checked)} style={styles.row}>
-          <CheckboxIcon size={32} checked={checked} />
-          <Text style={viewStyles.h5}>Recuérdame</Text>
-        </Pressable>
       </View>
 
       <View style={styles.buttonsContainer}>

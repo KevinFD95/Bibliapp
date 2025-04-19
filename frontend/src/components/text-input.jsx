@@ -21,6 +21,22 @@ export function CustomTextBox({ value, onChangeText, placeholder }) {
   );
 }
 
+export function CustomTextBoxUser({ value, onChangeText, placeholder }) {
+  const [isFocused, setIsFocused] = useState(false);
+
+  return (
+    <TextInput
+      style={[styles.input, isFocused && styles.inputFocused]}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+      autoCapitalize="none"
+    />
+  );
+}
+
 export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
   const [isFocused, setIsFocused] = useState(false);
 

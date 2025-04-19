@@ -1,42 +1,109 @@
-import React from "react";
-import { Text, StyleSheet, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  View,
+  Text,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import { WebView } from "react-native-webview";
+import { epubToHtml } from "../services/epub_service.js";
+import { getEpub } from "../api/documents.js";
 
-export default function BookView({ route }) {
-  const { bookId } = route.params;
-  const bookUrl =
-    "https://www.mercaba.org/SANLUIS/ALiteratura/Literatura%20contempor%C3%A1nea/Tolkien%20J.%20R.%20R/El%20se%C3%B1or%20de%20los%20anillos%203%20El%20retorno%20del%20Rey.pdf";
+import { IconButton } from "../components/button.jsx";
+import { Popup } from "../components/popup.jsx";
+import CloseIcon from "../../assets/icons/close-icon.jsx";
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.titleStyle}>Lectura de Libro</Text>
-      <Text>{bookId}</Text>
+import colors from "../config/colors.json";
 
-      <WebView source={{ uri: bookUrl }} style={{ flex: 1 }} />
+const { width } = Dimensions.get("window");
+
+export default function BookView({ navigation, route }) {
+  const { document } = route.params;
+  const [htmlContent, setHtmlContent] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchBookContent = async () => {
+      try {
+        const response = await getEpub(document.document_id);
+        const { ok, status, data } = response;
+
+        if (ok || status === 200) {
+          const chaptersHtml = data.chapters.map((chapter) => {
+            return epubToHtml({
+              title: chapter.title,
+              styles: chapter.styles,
+              body: chapter.body,
+            });
+          });
+
+          setHtmlContent(chaptersHtml);
+        }
+      } catch {
+        setAlertMessage("No se ha podido abrir el libro");
+        setAlertVisible(true);
+      }
+    };
+
+    fetchBookContent();
+  }, [document.document_id]);
+
+  const renderChapter = ({ item }) => (
+    <View style={{ width, flex: 1 }}>
+      <WebView
+        originWhitelist={["*"]}
+        source={{ html: item }}
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={true}
+        nestedScrollEnabled={true}
+      />
     </View>
   );
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{
+          backgroundColor: colors["app-background"],
+          flex: 1,
+        }}
+      >
+        <View
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 10,
+            zIndex: 1,
+          }}
+        >
+          <IconButton
+            icon={<CloseIcon size={32} />}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+        {alertVisible && <Text>{alertMessage}</Text>}
+        {htmlContent.length > 0 ? (
+          <FlatList
+            data={htmlContent}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={renderChapter}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+          />
+        ) : (
+          <ActivityIndicator size={"large"} />
+        )}
+        <Popup
+          title={"Aviso"}
+          message={alertMessage}
+          visible={alertVisible}
+          onClose={() => setAlertVisible(false)}
+        />
+      </View>
+    </SafeAreaView>
+  );
 }
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: "#fff",
-    flex: 1,
-  },
-  image: {
-    width: 200,
-    height: 300,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  content: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "justify",
-  },
-});

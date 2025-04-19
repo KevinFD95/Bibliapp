@@ -3,7 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from config import Config
-from .routes import document_bp, user_bp, auth_bp, cart_bp
+from .routes import document_bp, user_bp, auth_bp, cart_bp, epub_bp
 from datetime import timedelta
 from commands import (
     apply_migrations,
@@ -11,7 +11,7 @@ from commands import (
     migration_status,
     rollback_migration,
 )
-import click
+import click, warnings
 
 
 def create_app():
@@ -27,8 +27,12 @@ def create_app():
     app.register_blueprint(document_bp, url_prefix="/api")
     app.register_blueprint(cart_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api")
+    app.register_blueprint(epub_bp, url_prefix="/api")
 
     cli_commands(app)
+
+    warnings.filterwarnings("ignore", category=UserWarning)
+    warnings.filterwarnings("ignore", category=FutureWarning)
 
     return app
 

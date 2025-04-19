@@ -7,7 +7,6 @@ from app.validations import (
     user_validation,
     user_name_validation,
     user_lastname_validation,
-    username_validation,
     email_validation,
 )
 from app.services import ApiResponse
