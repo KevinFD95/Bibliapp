@@ -12,6 +12,10 @@ export function getCart(username) {
   return customFetch("/cart/" + username);
 }
 
+export function buy_doc_cart(username) {
+  return customFetch("/cart/" + username);
+}
+
 export const deleteCart = async (username, documentId) => {
   try {
     const response = await customFetch(`/cart/${username}/${documentId}`, {

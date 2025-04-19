@@ -11,8 +11,9 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 import { BookLiteCart } from "../components/card.jsx";
+import { CustomButton } from "../components/button.jsx";
 import viewStyles from "../styles/view-styles";
-import { getCart, deleteCart } from "../api/documents.js";
+import { getCart, deleteCart, buy_doc_cart } from "../api/documents.js";
 import { Popup } from "../components/popup.jsx";
 
 function Cart() {
@@ -23,6 +24,7 @@ function Cart() {
   const navigation = useNavigation();
   const [deleteAlertVisible, setDeleteAlertVisible] = useState(false);
   const [deletedBookTitle, setDeletedBookTitle] = useState("");
+  const [purchaseAlertVisible, setPurchaseAlertVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -96,6 +98,30 @@ function Cart() {
     }
   };
 
+  const handlePurchase = async () => {
+    try {
+      setLoading(true);
+      const username = "franusaurio";
+      const purchaseResponse = await buy_doc_cart(username);
+
+      if (purchaseResponse && purchaseResponse.ok) {
+        setBooks([]);
+        setPurchaseAlertVisible(true);
+      } else {
+        const errorData = await purchaseResponse.json();
+        setError(errorData?.message || "Hubo un error al realizar la compra.");
+        console.error("Error al realizar la compra:", purchaseResponse);
+      }
+    } catch (error) {
+      setError(
+        "Hubo un error al comunicarse con el servidor para realizar la compra.",
+      );
+      console.error("Error al realizar la compra:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -151,6 +177,7 @@ function Cart() {
         <View style={styles.totalContainer}>
           <Text style={styles.totalText}>Total:</Text>
           <Text style={styles.priceText}>{totalPrice}€</Text>
+          <CustomButton title="Realizar Compra" onPress={handlePurchase} />
         </View>
       </View>
       <Popup
@@ -158,6 +185,12 @@ function Cart() {
         message={`'${deletedBookTitle}' ha sido eliminado del carrito.`}
         visible={deleteAlertVisible}
         onClose={() => setDeleteAlertVisible(false)}
+      />
+      <Popup
+        title={"Compra Realizada"}
+        message={"Su compra se ha realizado con éxito."}
+        visible={purchaseAlertVisible}
+        onClose={() => setPurchaseAlertVisible(false)}
       />
     </View>
   );

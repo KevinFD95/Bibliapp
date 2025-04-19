@@ -27,7 +27,6 @@ class CartController:
         try:
             data = request.get_json()
             received_document_id = data.get('document_id')
-            print(f"CartController.set_doc_cart - Document ID recibido del frontend: {received_document_id}")
             if not received_document_id:
                 return jsonify({"error": "document_id no proporcionado en el cuerpo de la petición"}), 400
             cart = Cart.set_doc_cart(username, received_document_id)
@@ -35,7 +34,6 @@ class CartController:
                 return jsonify({"error": "No se ha podido agregar a tu carrito"}), 404
             return jsonify({"message": "Libro añadido al carrito"})
         except Exception as e:
-            print(f"Error en CartController.set_doc_cart: {e}")
             return jsonify({"error": str(e)}), 500
         
     def delete_doc_cart(username, document_id):
