@@ -27,7 +27,7 @@ class Cart:
             return exists
         except Exception as e:
             print(f"Error checking doc in cart: {e}")
-            return False
+            raise
         
     @staticmethod
     def set_doc_cart(username, document_id):

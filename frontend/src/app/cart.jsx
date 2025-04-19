@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { BookLiteCart } from "../components/card.jsx";
 import { CustomButton } from "../components/button.jsx";
 import viewStyles from "../styles/view-styles";
-import { getCart, deleteCart, buy_doc_cart } from "../api/documents.js";
+import { getCart, deleteCart, buyDocCart } from "../api/cart.js";
 import { Popup } from "../components/popup.jsx";
 
 function Cart() {
@@ -30,12 +30,14 @@ function Cart() {
     const unsubscribe = navigation.addListener("focus", () => {
       const fetchBooks = async () => {
         try {
-          const username = "franusaurio";
-          const data = await getCart(username);
-          if (data && data.error) {
-            setError(data.error);
+          //const username = "franusaurio";
+
+          const response = await getCart();
+          const { ok, status, data } = response;
+          if (!ok && status === 404) {
+            setError(response.error);
           } else {
-            setBooks(data && data.data ? data.data : []);
+            setBooks(data.cart);
           }
         } catch (err) {
           setError("Hubo un error al cargar los libros.");
@@ -101,8 +103,8 @@ function Cart() {
   const handlePurchase = async () => {
     try {
       setLoading(true);
-      const username = "franusaurio";
-      const purchaseResponse = await buy_doc_cart(username);
+      const username = "";
+      const purchaseResponse = await buyDocCart(username);
 
       if (purchaseResponse && purchaseResponse.ok) {
         setBooks([]);

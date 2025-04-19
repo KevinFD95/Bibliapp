@@ -1,40 +1,43 @@
 # app/controllers/cart_controller.py
 from flask import jsonify, request
+from flask_jwt_extended import get_jwt_identity
 from app.models import Cart
+from app.services import ApiResponse
+
 
 class CartController:
-    def get_cart(username):
+    def get_cart():
         try:
+            username = get_jwt_identity()
             cart = Cart.get_cart(username)
             if not cart:
-                return jsonify({"error": "Carrito vacío"}), 404
-            return jsonify(cart)
+                return ApiResponse.error(message="Carrito vacío", status_code=404)
+            return ApiResponse.success(data={"cart": cart})
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return ApiResponse.error(message="Error en conexión", status_code=500)
     
-    def get_cart_doc(username, document_id):
+    def get_cart_doc(document_id):
         try:
+            username = get_jwt_identity()
             exists = Cart.check_doc_cart(username, document_id)
             if exists:
-                return jsonify({"exists": True}), 200
+                return ApiResponse.success(message="Existe documento en el carrito")
             else:
-                return jsonify({"exists": False}), 404
+                return ApiResponse.error(message="No existe el documento en el carrito", status_code= 404)
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return ApiResponse.error(message=str(e), status_code=500)
         
-    def set_doc_cart(username):
-        print(f"CartController.set_doc_cart llamado para el usuario: {username}")
+    def set_doc_cart(document_id):
         try:
-            data = request.get_json()
-            received_document_id = data.get('document_id')
-            if not received_document_id:
-                return jsonify({"error": "document_id no proporcionado en el cuerpo de la petición"}), 400
-            cart = Cart.set_doc_cart(username, received_document_id)
+            username = get_jwt_identity()
+            if not document_id:
+                return ApiResponse.error(message="document_id no proporcionado en el cuerpo de la petición", status_code=400)
+            cart = Cart.set_doc_cart(username, document_id)
             if not cart:
-                return jsonify({"error": "No se ha podido agregar a tu carrito"}), 404
-            return jsonify({"message": "Libro añadido al carrito"})
+                return ApiResponse.error(message="No se ha podido agregar a tu carrito", status_code=404)
+            return ApiResponse.success(message="Libro añadido al carrito")
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return ApiResponse.error(message=str(e), status_code=500)
         
     def delete_doc_cart(username, document_id):
         try:

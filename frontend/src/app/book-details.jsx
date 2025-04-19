@@ -6,48 +6,40 @@ import viewStyles from "../styles/view-styles.jsx";
 import { IconButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";
-import { customFetch } from "../api";
-import { getCart } from "../api/documents.js";
+import { getCartDoc, addCart } from "../api/cart.js";
 
 export default function BookDetails({ route, navigation }) {
   const { document } = route.params;
   const [alertVisible, setAlertVisible] = useState(false);
-  const [alreadyInCartVisible, setAlreadyInCartVisible] = useState(false);
-  const [bookAlreadyInCartTitle, setBookAlreadyInCartTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState();
+  const [alertTitle, setAlertTitle] = useState();
 
   const handleAddToCart = async () => {
-    const username = "franusaurio";
-    const bookTitle = document.title;
-    const documentIdToAdd = document.document_id;
-
     try {
-      const checkResponse = await getCart(username);
-
-      if (checkResponse && checkResponse.ok) {
-        setBookAlreadyInCartTitle(bookTitle);
-        setAlreadyInCartVisible(true);
+      const check = await getCartDoc(document.document_id);
+      const { ok, status } = check;
+      if (ok && status === 200) {
+        setAlertMessage(`${document.title} ya está añadido en el carrito`);
+        setAlertTitle("Añadir Documento");
+        setAlertVisible(true);
         return;
-      } else if (checkResponse && checkResponse.status === 404) {
-        const addResponse = await customFetch(`/cart/${username}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ document_id: documentIdToAdd }),
-        });
+      } else if (status === 404) {
+        const response = await addCart(document.document_id);
+        const { okAdd, statusCode } = response;
 
-        if (addResponse && addResponse.ok) {
+        if (okAdd && statusCode === 200) {
+          setAlertMessage(`${document.title} se ha añadido al carrito`);
+          setAlertTitle("Añadir Documento");
           setAlertVisible(true);
         } else {
-          const errorData = await addResponse;
-          console.error("Error al añadir al carrito", errorData);
+          setAlertMessage("No se ha podido añadir al carrito");
+          setAlertTitle("Añadir Documento");
+          setAlertVisible(true);
         }
       } else {
-        const errorData = await checkResponse;
-        console.error(
-          "Error al verificar si el libro existe en el carrito",
-          errorData,
-        );
+        setAlertMessage("Error al añadir al carrito");
+        setAlertTitle("Aviso");
+        setAlertVisible(true);
       }
     } catch (error) {
       console.error("Error al añadir al carrito:", error);
@@ -86,16 +78,10 @@ export default function BookDetails({ route, navigation }) {
         </View>
         <Text style={styles.synopsisContent}>{document.synopsis}</Text>
         <Popup
-          title={"Añadir Libro"}
-          message={"Añadido al Carrito"}
+          title={alertTitle}
+          message={alertMessage}
           visible={alertVisible}
           onClose={() => setAlertVisible(false)}
-        />
-        <Popup
-          title={"Libro ya en el carrito"}
-          message={`'${bookAlreadyInCartTitle}' ya existe en tu carrito.`}
-          visible={alreadyInCartVisible}
-          onClose={() => setAlreadyInCartVisible(false)}
         />
       </View>
     </ScrollView>
