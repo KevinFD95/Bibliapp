@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
-import { CustomTextBox } from "../components/text-input.jsx";
+import { CustomTextBox, CustomTextBoxUser } from "../components/text-input.jsx";
 import { CustomButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 import AccountIcon from "../../assets/icons/account-icon.jsx";
@@ -57,7 +57,7 @@ export default function EditProfileScreen({ route }) {
       </View>
       <View style={styles.text}>
         <Text>Correo Electronico: </Text>
-        <CustomTextBox value={email} onChangeText={setEmail} />
+        <CustomTextBoxUser value={email} onChangeText={setEmail} />
       </View>
       <CustomButton text={"Guardar cambios"} onPress={handleSave} />
 

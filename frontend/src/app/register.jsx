@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-import { CustomTextBox } from "../components/text-input.jsx";
+import {
+  CustomTextBox,
+  CustomTextBoxUser,
+  CustomTextBoxPass,
+} from "../components/text-input.jsx";
 import { CustomButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 
@@ -18,6 +22,8 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { register } from "../api/auth.js";
+
 export default function RegisterScreen({ navigation }) {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
@@ -30,7 +36,15 @@ export default function RegisterScreen({ navigation }) {
   const [passInput, setPassInput] = useState();
   const [secondPassInput, setSecondPassInput] = useState();
 
-  const handleRegister = () => {
+  const user = {
+    user_name: nameInput,
+    user_lastname: lastnameInput,
+    username: userInput,
+    email: mailInput,
+    user_password: passInput,
+  };
+
+  const handleRegister = async () => {
     if (!nameInput || !userNameValidation(nameInput)) {
       setAlertMessage("Debe introducir un nombre válido");
       setAlertVisible(true);
@@ -68,8 +82,21 @@ export default function RegisterScreen({ navigation }) {
       setAlertVisible(true);
       return;
     }
-    setConfirmVisible(true);
-    // Añadir post request para registrar el usuario a la base de datos
+
+    try {
+      const response = await register(user);
+      const { ok, status } = response;
+
+      if (ok && status === 201) {
+        setConfirmVisible(true);
+      } else {
+        setAlertMessage("El usuario no ha podido ser registrado");
+        setAlertVisible(true);
+      }
+    } catch {
+      setAlertMessage("Imposible registrar el usuario, inténtelo más tarde.");
+      setAlertVisible(true);
+    }
   };
 
   return (
@@ -97,25 +124,25 @@ export default function RegisterScreen({ navigation }) {
           onChangeText={setLastnameInput}
         />
         <Text>Usuario:</Text>
-        <CustomTextBox
+        <CustomTextBoxUser
           placeholder={"Introduzca un nombre de usuario"}
           value={userInput}
           onChangeText={setUserInput}
         />
         <Text>Correo electrónico:</Text>
-        <CustomTextBox
+        <CustomTextBoxUser
           placeholder={"Introduzca un correo electrónico"}
           value={mailInput}
           onChangeText={setMailInput}
         />
         <Text>Contraseña:</Text>
-        <CustomTextBox
+        <CustomTextBoxPass
           placeholder={"Introduzca una contraseña"}
           value={passInput}
           onChangeText={setPassInput}
         />
         <Text>Repetir contraseña:</Text>
-        <CustomTextBox
+        <CustomTextBoxPass
           placeholder={"Repita la contraseña anterior"}
           value={secondPassInput}
           onChangeText={setSecondPassInput}

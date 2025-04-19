@@ -6,7 +6,10 @@ import * as SecureStore from "expo-secure-store";
 import { login, validateToken } from "../api/auth.js";
 
 import { CustomButton } from "../components/button.jsx";
-import { CustomTextBox, CustomTextBoxPass } from "../components/text-input.jsx";
+import {
+  CustomTextBoxUser,
+  CustomTextBoxPass,
+} from "../components/text-input.jsx";
 import { Popup } from "../components/popup.jsx";
 
 import TabNavigator from "../components/tab-navigator.jsx";
@@ -120,7 +123,7 @@ export function LoginScreen() {
 
       <View style={styles.inputContainer}>
         <Text style={viewStyles.p}>Usuario o correo electrónico:</Text>
-        <CustomTextBox
+        <CustomTextBoxUser
           placeholder={"Escribe tu usuario o correo"}
           value={userInput}
           onChangeText={setUserInput}

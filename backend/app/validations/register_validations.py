@@ -62,32 +62,20 @@ def password_validation(password):
 # Verifica que todos los datos de registro sean correctos
 def user_validation(user):
     if not user_name_validation(user.get("user_name", "")):
-        return (jsonify({"error": f"Nombre '{user['user_name']}' no válido"})), 400
+        return {"error": f"Nombre '{user['user_name']}' no válido"}
 
     if not user_lastname_validation(user.get("user_lastname", "")):
-        return (
-            jsonify({"error": f"Apellido(s) '{user['user_lastname']}' no válido"}),
-            400,
-        )
+        return {"error": f"Apellido(s) '{user['user_lastname']}' no válido"}
 
     if not username_validation(user.get("username", "")):
-        return (
-            jsonify({"error": f"Usuario '{user['username']}' no válido"}),
-            400,
-        )
+        return {"error": f"Usuario '{user['username']}' no válido"}
 
     if not email_validation(user.get("email", "")):
-        return (
-            jsonify({"error": f"Correo electrónico '{user['email']}' no válido"}),
-            400,
-        )
+        return {"error": f"Correo electrónico '{user['email']}' no válido"}
 
     if not password_validation(user.get("user_password", "")):
-        return (
-            jsonify(
-                {
-                    "error": "La contraseña debe contener una minúscula, mayúscula, número y carácter especial"
-                }
-            ),
-            400,
-        )
+        return {
+            "error": "La contraseña debe contener una minúscula, mayúscula, número y carácter especial"
+        }
+
+    return None

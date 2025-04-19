@@ -1,5 +1,4 @@
 # tests/test_users.py
-from app.database import Connection
 
 
 def test_user_register(client):
@@ -33,35 +32,22 @@ def test_user_login(client):
     assert access_token is not None
 
 
+def get_token_for_user(client, identifier, password):
+    response = client.post("/api/login", json={
+        "identifier": identifier,
+        "user_password": password,
+    })
+    return response.get_json()["access_token"]
+
+
 def test_user_profile_update(client):
+    token = get_token_for_user(client, "testuser", "Password123!")
+    auth_header = {"Authorization": f"Bearer {token}"}
     data = {
         "user_name": "User",
         "user_lastname": "Test",
         "email": "test@example.com",
         "username": "testuser",
-    }
-
-    token = None
-
-    try:
-        conn = Connection.get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT token FROM tokens WHERE username = %s", (data["username"],)
-        )
-        result = cursor.fetchone()
-
-        if result:
-            token = result[0]
-        conn.close()
-
-    except Exception as e:
-        print("No se han obtenido datos de la base de datos", e)
-    
-    assert token is not None, "No se encontró un token válido para el usuario."
-
-    auth_header = {
-        "Authorization": f"Bearer {token}"
     }
 
     response = client.patch("/api/users/testuser", json=data, headers=auth_header)
