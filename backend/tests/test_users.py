@@ -1,10 +1,13 @@
 # tests/test_users.py
+import pytest
 
 
+@pytest.mark.order(1)
 def test_user_register(client):
+    print("TEST: REGISTRANDO USUARIO")
     user_data = {
-        "user_name": "Test",
-        "user_lastname": "User",
+        "user_name": "User",
+        "user_lastname": "Test",
         "username": "testuser",
         "email": "testuser@example.com",
         "user_password": "Password123!",
@@ -14,8 +17,27 @@ def test_user_register(client):
     assert response.status_code == 201
     assert response.get_json()["message"] == "Usuario creado exitosamente."
 
+@pytest.mark.order(1)
+def test_user_no_register(client):
+    print("TEST: NO REGISTRANDO USUARIO")
+    user_data = {
+        "user_name": "User",
+        "user_lastname": "Test",
+        "username": "testuser",
+        "email": "testuser@example.com",
+        "user_password": "Password123!",
+    }
 
+    response = client.post("/api/register", json=user_data)
+    response_json = response.get_json()
+
+    assert response.status_code == 400
+    assert response_json["message"] == "El usuario no ha sido creado."
+
+
+@pytest.mark.order(2)
 def test_user_login(client):
+    print("TEST: LOGUEANDO USUARIO")
     user_data = {
         "identifier": "testuser",
         "user_password": "Password123!",
@@ -40,7 +62,9 @@ def get_token_for_user(client, identifier, password):
     return response.get_json()["access_token"]
 
 
+@pytest.mark.order(3)
 def test_user_profile_update(client):
+    print("TEST: ACTUALIZANDO USUARIO")
     token = get_token_for_user(client, "testuser", "Password123!")
     auth_header = {"Authorization": f"Bearer {token}"}
     data = {

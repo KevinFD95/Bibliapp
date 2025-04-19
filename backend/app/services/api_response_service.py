@@ -9,8 +9,8 @@ class ApiResponse:
             "message": message,
         }
 
-        if (data != None):
-            if (data, dict):
+        if data is not None:
+            if isinstance(data, dict):
                 response.update(data)
 
         return jsonify(response), status_code
