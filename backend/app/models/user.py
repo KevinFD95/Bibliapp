@@ -1,5 +1,6 @@
 # app/models/user.py
 from app.database import Queries, Connection
+from app.services import ApiResponse
 
 
 class User:
@@ -95,9 +96,9 @@ class User:
             conn.commit()
             conn.close()
 
-            return {"message": "Usuario creado exitosamente."}
+            return ApiResponse.success(message="Usuario creado exitosamente.", status_code=201)
         except Exception:
-            return {"error": "El usuario no ha sido creado."}
+            return ApiResponse.error(message="El usuario no ha sido creado.")
 
     @staticmethod
     def update(user):

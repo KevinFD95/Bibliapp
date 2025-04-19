@@ -6,8 +6,8 @@ import pytest
 def test_user_register(client):
     print("TEST: REGISTRANDO USUARIO")
     user_data = {
-        "user_name": "Test",
-        "user_lastname": "User",
+        "user_name": "User",
+        "user_lastname": "Test",
         "username": "testuser",
         "email": "testuser@example.com",
         "user_password": "Password123!",
@@ -16,6 +16,23 @@ def test_user_register(client):
     response = client.post("/api/register", json=user_data)
     assert response.status_code == 201
     assert response.get_json()["message"] == "Usuario creado exitosamente."
+
+@pytest.mark.order(1)
+def test_user_no_register(client):
+    print("TEST: NO REGISTRANDO USUARIO")
+    user_data = {
+        "user_name": "User",
+        "user_lastname": "Test",
+        "username": "testuser",
+        "email": "testuser@example.com",
+        "user_password": "Password123!",
+    }
+
+    response = client.post("/api/register", json=user_data)
+    response_json = response.get_json()
+
+    assert response.status_code == 400
+    assert response_json["message"] == "El usuario no ha sido creado."
 
 
 @pytest.mark.order(2)

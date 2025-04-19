@@ -53,7 +53,7 @@ class UserController:
 
         try:
             users_created = User.create(validated_users)
-            return jsonify(users_created), 201 if users_created else 400
+            return users_created
         except Exception as e:
             return jsonify({"error": str(e)}), 400
 
