@@ -25,9 +25,9 @@ export default function BookDetails({ route, navigation }) {
         return;
       } else if (status === 404) {
         const response = await addCart(document.document_id);
-        const { okAdd, statusCode } = response;
+        const { ok, status } = response;
 
-        if (okAdd && statusCode === 200) {
+        if (ok && status === 200) {
           setAlertMessage(`${document.title} se ha añadido al carrito`);
           setAlertTitle("Añadir Documento");
           setAlertVisible(true);

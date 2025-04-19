@@ -22,16 +22,14 @@ function Cart() {
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0.0);
   const navigation = useNavigation();
-  const [deleteAlertVisible, setDeleteAlertVisible] = useState(false);
-  const [deletedBookTitle, setDeletedBookTitle] = useState("");
-  const [purchaseAlertVisible, setPurchaseAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState();
+  const [alertMessage, setAlertMessage] = useState();
+  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       const fetchBooks = async () => {
         try {
-          //const username = "franusaurio";
-
           const response = await getCart();
           const { ok, status, data } = response;
           if (!ok && status === 404) {
@@ -68,32 +66,32 @@ function Cart() {
     calculateTotal();
   }, [books]);
 
-  const handleBookPress = (document) => {
-    navigation.navigate("BookDetails", { document });
-  };
-
-  const handleRemoveBook = async (documentId, bookTitle) => {
+  const handleRemoveBook = async (document) => {
     try {
       setLoading(true);
-
-      const username = "franusaurio";
-      const response = await deleteCart(username, documentId);
-
-      if (response && response.ok) {
+      const response = await deleteCart(document.document_id);
+      const { ok, status } = response;
+      if (ok && status === 200) {
         const updatedBooks = books.filter(
-          (book) => book.document_id !== documentId,
+          (book) => book.document_id !== document.document_id,
         );
         setBooks(updatedBooks);
-        setDeletedBookTitle(bookTitle);
-        setDeleteAlertVisible(true);
+        setAlertMessage(`${document.title} se ha eliminado del carrito`);
+        setAlertTitle("Eliminar Documento");
+        setAlertVisible(true);
       } else {
-        setError("Hubo un error al eliminar el libro del carrito.");
-        console.error("Error al eliminar el libro:", response);
+        setAlertMessage(
+          `Error: ${document.title} no se ha podido eliminar del carrito`,
+        );
+        setAlertTitle("Eliminar Documento");
+        setAlertVisible(true);
       }
     } catch (err) {
-      setError(
-        "Hubo un error al comunicarse con el servidor para eliminar el libro.",
+      setAlertMessage(
+        "Error: Hubo un error al comunicarse con el servidor para eliminar el libro.",
       );
+      setAlertTitle("Eliminar Documento");
+      setAlertVisible(true);
       console.error("Error al eliminar el libro:", err);
     } finally {
       setLoading(false);
@@ -108,7 +106,9 @@ function Cart() {
 
       if (purchaseResponse && purchaseResponse.ok) {
         setBooks([]);
-        setPurchaseAlertVisible(true);
+        setAlertMessage("Se ha/han comprado el/los documento/s del carrito");
+        setAlertTitle("Documentos comprados");
+        setAlertVisible(true);
       } else {
         const errorData = await purchaseResponse.json();
         setError(errorData?.message || "Hubo un error al realizar la compra.");
@@ -149,18 +149,10 @@ function Cart() {
         {books.map((item) => (
           <View key={item.document_id} style={styles.bookItem}>
             <View style={styles.bookRow}>
-              <BookLiteCart
-                key={item.document_id}
-                image={item.url_image}
-                onPress={() => handleBookPress(item)}
-              />
+              <BookLiteCart key={item.document_id} image={item.url_image} />
               <View style={styles.bookDetails}>
                 <View style={styles.removeIconContainer}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      handleRemoveBook(item.document_id, item.title)
-                    }
-                  >
+                  <TouchableOpacity onPress={() => handleRemoveBook(item)}>
                     <Text style={styles.removeIcon}>X</Text>
                   </TouchableOpacity>
                 </View>
@@ -189,16 +181,10 @@ function Cart() {
         </View>
       </View>
       <Popup
-        title={"Libro Eliminado"}
-        message={`'${deletedBookTitle}' ha sido eliminado del carrito.`}
-        visible={deleteAlertVisible}
-        onClose={() => setDeleteAlertVisible(false)}
-      />
-      <Popup
-        title={"Compra Realizada"}
-        message={"Su compra se ha realizado con éxito."}
-        visible={purchaseAlertVisible}
-        onClose={() => setPurchaseAlertVisible(false)}
+        title={alertTitle}
+        message={alertMessage}
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
       />
     </View>
   );

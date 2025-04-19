@@ -25,6 +25,7 @@ class CartController:
             else:
                 return ApiResponse.error(message="No existe el documento en el carrito", status_code= 404)
         except Exception as e:
+            print(f"Error en CartController: {e}")
             return ApiResponse.error(message=str(e), status_code=500)
         
     def set_doc_cart(document_id):
@@ -39,24 +40,25 @@ class CartController:
         except Exception as e:
             return ApiResponse.error(message=str(e), status_code=500)
         
-    def delete_doc_cart(username, document_id):
+    def delete_doc_cart(document_id):
         try:
+            username = get_jwt_identity()
             deleted = Cart.delete_doc_cart(username, document_id)
             if deleted:
-                return jsonify({"message": f"Libro {document_id} eliminado del carrito"})
+                return ApiResponse.success(message=f"Libro {document_id} eliminado del carrito")
             else:
-                return jsonify({"error": "No se pudo eliminar el libro del carrito"}), 404
+                return ApiResponse.error(message="No se pudo eliminar el libro del carrito", status_code=400)
         except Exception as e:
             print(f"Error en CartController.delete_doc_cart: {e}")
-            return jsonify({"error": str(e)}), 500
+            return ApiResponse.error(message=str(e), status_code=500)
         
-    def buy_doc_cart(username):
+    def buy_doc_cart():
         try:
+            username = get_jwt_identity()
             buy = Cart.buy_doc_cart(username)
             if buy:
-                return jsonify({"message": f"Compra realizada"})
+                return ApiResponse.success(message="Compra realizada")
             else:
-                return jsonify({"error": "No se pudo hacer la compra de tus libros"}), 404
+                return ApiResponse.error(message="No se pudo hacer la compra de tus libros", status_code=400)
         except Exception as e:
-            print(f"Error en CartController.delete__all_doc_cart: {e}")
-            return jsonify({"error": str(e)}), 500
+            return ApiResponse.error(message=str(e), status_code=500)

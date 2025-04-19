@@ -20,17 +20,8 @@ export function buyDocCart(username) {
   return customFetch("/cart/" + username);
 }
 
-export const deleteCart = async (username, documentId) => {
-  try {
-    const response = await customFetch(`/cart/${username}/${documentId}`, {
-      method: "DELETE",
-    });
-    return response;
-  } catch (error) {
-    console.error(
-      `Error eliminando Documento: ${documentId} de la Tabla:`,
-      error,
-    );
-    return { error: "Error al eliminar el libro del carrito." };
-  }
-};
+export function deleteCart(documentId) {
+  return customFetch(`/cart/${documentId}`, {
+    method: "DELETE",
+  });
+}
