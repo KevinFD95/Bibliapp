@@ -9,7 +9,7 @@ def upgrade(cursor):
     cursor.execute(
         """
         CREATE TABLE cart (
-        category_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        cart_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(30) NOT NULL,
         document_id INT NOT NULL,
         CONSTRAINT cart_username FOREIGN KEY (username) REFERENCES users(username)
