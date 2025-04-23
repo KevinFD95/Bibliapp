@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Text, StyleSheet, View, Pressable } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
-import SwitchComponent from "../components/switch.jsx";
+import CustomSwitch from "../components/switch.jsx";
 
 import { IconButton } from "../components/button.jsx";
 
@@ -11,12 +11,6 @@ import DarkModeIcon from "../../assets/icons/dark-mode-icon.jsx";
 export default function HomeStackNavigator() {
   const [lightmode, setLightmode] = useState(true);
   const [darkmode, setDarkmode] = useState(false);
-  const [setSwitchState] = useState(false);
-
-  const handleSwitchChange = (newState) => {
-    setSwitchState(newState);
-    console.log("Nuevo estado del switch:", newState);
-  };
 
   return (
     <View style={viewStyle.mainContainer}>
@@ -49,15 +43,15 @@ export default function HomeStackNavigator() {
       <View style={styles.box}>
         <View style={styles.row}>
           <Text style={viewStyle.h5}>Notificaciones</Text>
-          <SwitchComponent onChange={handleSwitchChange} />
+          <CustomSwitch onValueChange={() => alert("Cambio de switch")} />
         </View>
         <View style={styles.row}>
           <Text style={viewStyle.h5}>Recordatorio de lectura</Text>
-          <SwitchComponent onChange={handleSwitchChange} />
+          <CustomSwitch onValueChange={() => alert("Cambio de switch")} />
         </View>
         <View style={styles.row}>
           <Text style={viewStyle.h5}>Recomendaciones de libros</Text>
-          <SwitchComponent onChange={handleSwitchChange} />
+          <CustomSwitch onValueChange={() => alert("Cambio de switch")} />
         </View>
         <View style={styles.linkContainer}>
           <Pressable onPress={() => alert("Método de pago")}>
@@ -80,6 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: 20,
   },
 
   icons: {

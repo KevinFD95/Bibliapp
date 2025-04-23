@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, Alert } from "react-native";
 import viewStyle from "../styles/view-styles.jsx";
 
 import * as SecureStore from "expo-secure-store";
@@ -15,9 +15,10 @@ import SettingsIcon from "../../assets/icons/settings-icon.jsx";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import ProfileEdit from "./profile-edit.jsx";
-import Config from "./config.jsx";
+import Config from "../views/config-view.jsx";
 import { useNavigation } from "@react-navigation/native";
 import { getProfile } from "../api/users.js";
+import RefreshableView from "../components/refreshable.jsx";
 
 const Stack = createStackNavigator();
 
@@ -53,32 +54,34 @@ function ProfileScreen() {
     username: username,
   };
 
+  const onRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await getUserData();
+    Alert.alert("Refrescando", "La vista se ha actualizado");
+  };
+
+  const getUserData = async () => {
+    const response = await getProfile();
+    const { ok, status, data } = response;
+
+    if (ok || status === 200) {
+      setUser_name(data.user.user_name);
+      setUser_lastname(data.user.user_lastname);
+      setUsername(data.user.username);
+      setEmail(data.user.email);
+      setSubscription(data.user.user_sub);
+    } else if (status === 404) {
+      setAlertMessage("Hubo un error al buscar el usuario");
+      setAlertVisible(true);
+    } else {
+      setAlertMessage("Hubo un error al buscar el usuario");
+      setAlertVisible(true);
+    }
+  };
+
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      const getUserData = async () => {
-        const response = await getProfile();
-        const { ok, status, data } = response;
-
-        if (ok || status === 200) {
-          setUser_name(data.user.user_name);
-          setUser_lastname(data.user.user_lastname);
-          setUsername(data.user.username);
-          setEmail(data.user.email);
-          setSubscription(data.user.user_sub);
-        } else if (status === 404) {
-          setAlertMessage("Hubo un error al buscar el usuario");
-          setAlertVisible(true);
-        } else {
-          setAlertMessage("Hubo un error al buscar el usuario");
-          setAlertVisible(true);
-        }
-      };
-
-      getUserData();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+    getUserData();
+  }, []);
 
   const handleEditProfile = (user) => {
     navigation.navigate("EditProfile", { user });
@@ -105,75 +108,80 @@ function ProfileScreen() {
 
   return (
     <View style={viewStyle.mainContainer}>
-      <View style={styles.iconsBox}>
-        <IconButton
-          onPress={() => handleEditProfile(user)}
-          icon={<EditIcon size={52} />}
-        />
-        <AccountIcon size={200} />
-        <IconButton onPress={handleConfig} icon={<SettingsIcon size={52} />} />
-      </View>
+      <RefreshableView onRefresh={onRefresh}>
+        <View style={styles.iconsBox}>
+          <IconButton
+            onPress={() => handleEditProfile(user)}
+            icon={<EditIcon size={52} />}
+          />
+          <AccountIcon size={200} />
+          <IconButton
+            onPress={handleConfig}
+            icon={<SettingsIcon size={52} />}
+          />
+        </View>
 
-      <View
-        style={{
-          flexWrap: "wrap",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
+        <View
+          style={{
+            flexWrap: "wrap",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={viewStyle.h5}>Nombre: </Text>
+            <Text style={viewStyle.p}>{user_name}</Text>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={viewStyle.h5}>Nivel: </Text>
+            <Text style={viewStyle.p}>{subscription}</Text>
+          </View>
+        </View>
+
         <View style={styles.textContainer}>
-          <Text style={viewStyle.h5}>Nombre: </Text>
-          <Text style={viewStyle.p}>{user_name}</Text>
+          <Text style={viewStyle.h5}>Apellido: </Text>
+          <Text style={viewStyle.p}>{user_lastname}</Text>
         </View>
         <View style={styles.textContainer}>
-          <Text style={viewStyle.h5}>Nivel: </Text>
-          <Text style={viewStyle.p}>{subscription}</Text>
+          <Text style={viewStyle.h5}>Usuario: </Text>
+          <Text style={viewStyle.p}>{username}</Text>
         </View>
-      </View>
+        <View style={styles.textContainer}>
+          <Text style={viewStyle.h5}>Correo Electronico: </Text>
+          <Text style={viewStyle.p}>{email}</Text>
+        </View>
 
-      <View style={styles.textContainer}>
-        <Text style={viewStyle.h5}>Apellido: </Text>
-        <Text style={viewStyle.p}>{user_lastname}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={viewStyle.h5}>Usuario: </Text>
-        <Text style={viewStyle.p}>{username}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={viewStyle.h5}>Correo Electronico: </Text>
-        <Text style={viewStyle.p}>{email}</Text>
-      </View>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 20,
+            marginBottom: 20,
+          }}
+        >
+          <IconButton
+            onPress={() => setConfirmVisible(true)}
+            icon={<LogoutIcon size={52} />}
+          />
+        </View>
 
-      <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          right: 20,
-          marginBottom: 20,
-        }}
-      >
-        <IconButton
-          onPress={() => setConfirmVisible(true)}
-          icon={<LogoutIcon size={52} />}
+        <Popup
+          title={"Aviso"}
+          message={alertMessage}
+          visible={alertVisible}
+          onClose={() => setAlertVisible(false)}
         />
-      </View>
-
-      <Popup
-        title={"Aviso"}
-        message={alertMessage}
-        visible={alertVisible}
-        onClose={() => setAlertVisible(false)}
-      />
-      <ConfirmPopup
-        title={"Cerrando sesión"}
-        message={"¿Desea realmente cerrar sesión y salir de la aplicación?"}
-        visible={confirmVisible}
-        onConfirm={() => {
-          handleLogout();
-          setConfirmVisible(false);
-        }}
-        onClose={() => setConfirmVisible(false)}
-      />
+        <ConfirmPopup
+          title={"Cerrando sesión"}
+          message={"¿Desea realmente cerrar sesión y salir de la aplicación?"}
+          visible={confirmVisible}
+          onConfirm={() => {
+            handleLogout();
+            setConfirmVisible(false);
+          }}
+          onClose={() => setConfirmVisible(false)}
+        />
+      </RefreshableView>
     </View>
   );
 }
