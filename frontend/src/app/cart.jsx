@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,12 +8,12 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
+import { useFocusEffect } from "@react-navigation/native";
 import { BookLiteCart } from "../components/card.jsx";
 import { CustomButton } from "../components/button.jsx";
 import viewStyles from "../styles/view-styles";
-import { getCart, deleteCart, buyDocCart } from "../api/cart.js";
+import { getCart, deleteCart, finalizePurchaseApi } from "../api/cart.js";
 import { Popup } from "../components/popup.jsx";
 
 function Cart() {
@@ -21,33 +21,38 @@ function Cart() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0.0);
-  const navigation = useNavigation();
   const [alertTitle, setAlertTitle] = useState();
   const [alertMessage, setAlertMessage] = useState();
   const [alertVisible, setAlertVisible] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      const fetchBooks = async () => {
-        try {
-          const response = await getCart();
-          const { ok, status, data } = response;
-          if (!ok && status === 404) {
-            setError(response.error);
-          } else {
-            setBooks(data.cart);
-          }
-        } catch (err) {
-          setError("Hubo un error al cargar los libros.");
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const response = await getCart();
+      const { ok, status, data } = response;
+      if (!ok && status === 404) {
+        setBooks([]);
+        setError(null);
+      } else if (ok && status === 200) {
+        setBooks(data.cart);
+        setError(null);
+      } else {
+        setError(response.error || "Hubo un error al cargar los libros.");
+      }
+    } catch (err) {
+      setError("Hubo un error al cargar los libros.");
+      console.error("Error fetching cart:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
       fetchBooks();
-    });
-    return unsubscribe;
-  }, [navigation]);
+      return () => setBooks([]);
+    }, []),
+  );
 
   useEffect(() => {
     const calculateTotal = () => {
@@ -72,10 +77,7 @@ function Cart() {
       const response = await deleteCart(document.document_id);
       const { ok, status } = response;
       if (ok && status === 200) {
-        const updatedBooks = books.filter(
-          (book) => book.document_id !== document.document_id,
-        );
-        setBooks(updatedBooks);
+        await fetchBooks();
         setAlertMessage(`${document.title} se ha eliminado del carrito`);
         setAlertTitle("Eliminar Documento");
         setAlertVisible(true);
@@ -101,24 +103,27 @@ function Cart() {
   const handlePurchase = async () => {
     try {
       setLoading(true);
-      const username = "";
-      const purchaseResponse = await buyDocCart(username);
+      const purchaseResponse = await finalizePurchaseApi();
 
       if (purchaseResponse && purchaseResponse.ok) {
         setBooks([]);
         setAlertMessage("Se ha/han comprado el/los documento/s del carrito");
-        setAlertTitle("Documentos comprados");
+        setAlertTitle("Compra Finalizada");
         setAlertVisible(true);
       } else {
-        const errorData = await purchaseResponse.json();
-        setError(errorData?.message || "Hubo un error al realizar la compra.");
+        const errorData = purchaseResponse?.error;
+        setAlertMessage(errorData || "Hubo un error al realizar la compra.");
+        setAlertTitle("Error de Compra");
+        setAlertVisible(true);
         console.error("Error al realizar la compra:", purchaseResponse);
       }
     } catch (error) {
-      setError(
+      setAlertMessage(
         "Hubo un error al comunicarse con el servidor para realizar la compra.",
       );
-      console.error("Error al realizar la compra:", error);
+      setAlertTitle("Error de Comunicación");
+      setAlertVisible(true);
+      console.error("Error de red en la compra:", error);
     } finally {
       setLoading(false);
     }
@@ -131,11 +136,17 @@ function Cart() {
       </View>
     );
   }
-  if (error) {
+
+  if (error && (!books || books.length === 0)) {
     return <Text>{error}</Text>;
   }
-  if (!Array.isArray(books)) {
-    return <Text>No se encontraron libros disponibles</Text>;
+
+  if (!Array.isArray(books) || books.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>El carrito está vacío.</Text>
+      </View>
+    );
   }
 
   return (
@@ -158,33 +169,40 @@ function Cart() {
                 </View>
                 <Text style={styles.bookTitle}>{item.title}</Text>
                 <Text style={styles.bookAuthor}>Autor: {item.author}</Text>
-                <Text style={styles.bookDate}>
-                  Modificado: {new Date(item.updated_at).toLocaleDateString()}
-                </Text>
+                {item.updated_at && (
+                  <Text style={styles.bookDate}>
+                    Añadido:
+                    {new Date(item.updated_at).toLocaleDateString()}
+                  </Text>
+                )}
                 <Text style={styles.bookPrice}>{item.price}€</Text>
               </View>
             </View>
           </View>
         ))}
       </ScrollView>
-      <View style={styles.footer}>
-        <View style={styles.totalContainer}>
-          <View style={styles.totalPriceContainer}>
-            <Text style={styles.totalText}>Total: </Text>
-            <Text style={styles.priceText}>{totalPrice}€</Text>
+      {books && books.length > 0 && (
+        <View style={styles.footer}>
+          <View style={styles.totalContainer}>
+            <View style={styles.totalPriceContainer}>
+              <Text style={styles.totalText}>Total: </Text>
+              <Text style={styles.priceText}>{totalPrice}€</Text>
+            </View>
+            <CustomButton
+              title="Comprar"
+              text={"Realizar compra"}
+              onPress={handlePurchase}
+            />
           </View>
-          <CustomButton
-            title="Comprar"
-            text={"Realizar compra"}
-            onPress={handlePurchase}
-          />
         </View>
-      </View>
+      )}
       <Popup
         title={alertTitle}
         message={alertMessage}
         visible={alertVisible}
-        onClose={() => setAlertVisible(false)}
+        onClose={() => {
+          setAlertVisible(false);
+        }}
       />
     </View>
   );
@@ -222,27 +240,27 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#eee",
     padding: 15,
+    width: "100%",
   },
   totalContainer: {
     flexDirection: "column",
-    alignItems: "space-between",
+    alignItems: "stretch",
   },
   totalPriceContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingLeft: 20,
+    paddingHorizontal: 20,
+    marginBottom: 10,
   },
   totalText: {
     fontSize: 18,
     fontWeight: "bold",
-    paddingLeft: 20,
   },
   priceText: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#2e86de",
-    paddingRight: 20,
   },
   bookItem: {
     marginBottom: 15,

@@ -1,5 +1,4 @@
 # app/controllers/cart_controller.py
-from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity
 from app.models import Cart
 from app.services import ApiResponse
@@ -61,4 +60,5 @@ class CartController:
             else:
                 return ApiResponse.error(message="No se pudo hacer la compra de tus libros", status_code=400)
         except Exception as e:
+            print(f"Error en CartController.buy_doc_cart: {e}")
             return ApiResponse.error(message=str(e), status_code=500)

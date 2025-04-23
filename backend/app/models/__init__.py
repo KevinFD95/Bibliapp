@@ -2,3 +2,4 @@
 from .user import User
 from .document import Document
 from .cart import Cart
+from .registers import Registers
