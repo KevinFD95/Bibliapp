@@ -14,7 +14,7 @@ import { BookLiteCart } from "../components/card.jsx";
 import { CustomButton } from "../components/button.jsx";
 import viewStyles from "../styles/view-styles";
 import { getCart, deleteCart, finalizePurchaseApi } from "../api/cart.js";
-import { Popup } from "../components/popup.jsx";
+import { ConfirmPopup, Popup } from "../components/popup.jsx";
 
 function Cart() {
   const [books, setBooks] = useState([]);
@@ -24,6 +24,7 @@ function Cart() {
   const [alertTitle, setAlertTitle] = useState();
   const [alertMessage, setAlertMessage] = useState();
   const [alertVisible, setAlertVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const fetchBooks = async () => {
     try {
@@ -37,7 +38,11 @@ function Cart() {
         setBooks(data.cart);
         setError(null);
       } else {
-        setError(response.error || "Hubo un error al cargar los libros.");
+        const errorMessage =
+          response?.error?.message ||
+          response?.error ||
+          "Hubo un error al cargar los libros.";
+        setError(errorMessage);
       }
     } catch (err) {
       setError("Hubo un error al cargar los libros.");
@@ -50,7 +55,11 @@ function Cart() {
   useFocusEffect(
     useCallback(() => {
       fetchBooks();
-      return () => setBooks([]);
+      return () => {
+        setAlertVisible(false);
+        setAlertTitle(undefined);
+        setAlertMessage(undefined);
+      };
     }, []),
   );
 
@@ -82,9 +91,11 @@ function Cart() {
         setAlertTitle("Eliminar Documento");
         setAlertVisible(true);
       } else {
-        setAlertMessage(
-          `Error: ${document.title} no se ha podido eliminar del carrito`,
-        );
+        const errorMessage =
+          response?.error?.message ||
+          response?.error ||
+          `Error: ${document.title} no se ha podido eliminar del carrito`;
+        setAlertMessage(errorMessage);
         setAlertTitle("Eliminar Documento");
         setAlertVisible(true);
       }
@@ -101,31 +112,56 @@ function Cart() {
   };
 
   const handlePurchase = async () => {
+    console.log("handlePurchase started");
     try {
       setLoading(true);
+      console.log("Calling finalizePurchaseApi...");
       const purchaseResponse = await finalizePurchaseApi();
+      console.log("finalizePurchaseApi response:", purchaseResponse);
 
       if (purchaseResponse && purchaseResponse.ok) {
+        console.log("Purchase API call successful.");
         setBooks([]);
         setAlertMessage("Se ha/han comprado el/los documento/s del carrito");
         setAlertTitle("Compra Finalizada");
-        setAlertVisible(true);
+        console.log("Setting alert state for success popup...");
+        setTimeout(() => {
+          setAlertVisible(true);
+          console.log(
+            "setTimeout inside handlePurchase success fired. setAlertVisible(true)",
+          );
+        }, 500);
       } else {
+        console.log("Purchase API call failed or not OK.");
         const errorData = purchaseResponse?.error;
         setAlertMessage(errorData || "Hubo un error al realizar la compra.");
         setAlertTitle("Error de Compra");
-        setAlertVisible(true);
+        console.log("Setting alert state for error popup...");
+        setTimeout(() => {
+          setAlertVisible(true);
+          console.log(
+            "setTimeout inside handlePurchase error fired. setAlertVisible(true)",
+          );
+        }, 500);
         console.error("Error al realizar la compra:", purchaseResponse);
       }
     } catch (error) {
+      console.log("handlePurchase caught an exception.");
       setAlertMessage(
         "Hubo un error al comunicarse con el servidor para realizar la compra.",
       );
       setAlertTitle("Error de Comunicación");
-      setAlertVisible(true);
+      console.log("Setting alert state for catch popup...");
+      setTimeout(() => {
+        setAlertVisible(true);
+        console.log(
+          "setTimeout inside handlePurchase catch fired. setAlertVisible(true)",
+        );
+      }, 500);
       console.error("Error de red en la compra:", error);
     } finally {
       setLoading(false);
+      console.log("handlePurchase finished (finally block).");
     }
   };
 
@@ -191,7 +227,7 @@ function Cart() {
             <CustomButton
               title="Comprar"
               text={"Realizar compra"}
-              onPress={handlePurchase}
+              onPress={() => setConfirmVisible(true)}
             />
           </View>
         </View>
@@ -201,7 +237,26 @@ function Cart() {
         message={alertMessage}
         visible={alertVisible}
         onClose={() => {
+          console.log("Popup onClose triggered!");
           setAlertVisible(false);
+          setAlertTitle(undefined);
+          setAlertMessage(undefined);
+        }}
+      />
+      <ConfirmPopup
+        title={"Confirmación de compra"}
+        message={"¿Desea realmente realizar la compra?"}
+        visible={confirmVisible}
+        onConfirm={() => {
+          console.log(
+            "ConfirmPopup onConfirm: Calling handlePurchase and setting confirmVisible(false)",
+          );
+          handlePurchase();
+          setConfirmVisible(false);
+        }}
+        onClose={() => {
+          console.log("ConfirmPopup onClose: Setting confirmVisible(false)");
+          setConfirmVisible(false);
         }}
       />
     </View>
