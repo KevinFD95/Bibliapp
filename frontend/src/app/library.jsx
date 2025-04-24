@@ -1,5 +1,5 @@
-import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import React, { useContext } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
@@ -8,7 +8,8 @@ import BookView from "./book-view.jsx";
 
 import BookLite from "../components/card.jsx";
 
-import viewStyles from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/view-styles.jsx";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();
 
@@ -84,6 +85,8 @@ export default function LibraryStackNavigator() {
 }
 
 function Library() {
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
   const navigation = useNavigation();
 
   const handleNavigation = (book) =>
@@ -101,18 +104,18 @@ function Library() {
     });
 
   return (
-    <ScrollView
-      contentContainerStyle={[viewStyles.mainContainer, styles.vistaTarjeta]}
-    >
-      {books.map((item) => (
-        <BookLite
-          key={item.document_id}
-          title={item.title}
-          image={item.url_image}
-          onPress={() => handleNavigation(item)}
-        />
-      ))}
-    </ScrollView>
+    <View style={themeStyles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.vistaTarjeta}>
+        {books.map((item) => (
+          <BookLite
+            key={item.document_id}
+            title={item.title}
+            image={item.url_image}
+            onPress={() => handleNavigation(item)}
+          />
+        ))}
+      </ScrollView>
+    </View>
   );
 }
 

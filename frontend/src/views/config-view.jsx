@@ -1,28 +1,29 @@
-import { useState } from "react";
+import { useContext } from "react";
 import { Text, StyleSheet, View, Pressable } from "react-native";
-import viewStyle from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/view-styles.jsx";
 import CustomSwitch from "../components/switch.jsx";
 
 import { IconButton } from "../components/button.jsx";
 
 import LightModeIcon from "../../assets/icons/light-mode-icon.jsx";
 import DarkModeIcon from "../../assets/icons/dark-mode-icon.jsx";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function HomeStackNavigator() {
-  const [lightmode, setLightmode] = useState(true);
-  const [darkmode, setDarkmode] = useState(false);
+  const { theme, mode, toggleTheme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
+  const lightmode = mode === "light";
+  const darkmode = mode === "dark";
 
   return (
-    <View style={viewStyle.mainContainer}>
+    <View style={themeStyles.mainContainer}>
       <View style={styles.row}>
-        <Text style={viewStyle.h5}>Tema</Text>
+        <Text style={themeStyles.h5}>Tema</Text>
         <View style={styles.icons}>
           <IconButton
             onPress={() => {
               if (!lightmode) {
-                alert("Tema claro");
-                setLightmode(!lightmode);
-                setDarkmode(!darkmode);
+                if (!lightmode) toggleTheme("light");
               }
             }}
             icon={<LightModeIcon size={48} filled={lightmode} />}
@@ -30,9 +31,7 @@ export default function HomeStackNavigator() {
           <IconButton
             onPress={() => {
               if (!darkmode) {
-                alert("Tema oscuro");
-                setDarkmode(!darkmode);
-                setLightmode(!lightmode);
+                if (!darkmode) toggleTheme("dark");
               }
             }}
             icon={<DarkModeIcon size={48} filled={darkmode} />}
@@ -42,26 +41,26 @@ export default function HomeStackNavigator() {
 
       <View style={styles.box}>
         <View style={styles.row}>
-          <Text style={viewStyle.h5}>Notificaciones</Text>
+          <Text style={themeStyles.h5}>Notificaciones</Text>
           <CustomSwitch onValueChange={() => alert("Cambio de switch")} />
         </View>
         <View style={styles.row}>
-          <Text style={viewStyle.h5}>Recordatorio de lectura</Text>
+          <Text style={themeStyles.h5}>Recordatorio de lectura</Text>
           <CustomSwitch onValueChange={() => alert("Cambio de switch")} />
         </View>
         <View style={styles.row}>
-          <Text style={viewStyle.h5}>Recomendaciones de libros</Text>
+          <Text style={themeStyles.h5}>Recomendaciones de libros</Text>
           <CustomSwitch onValueChange={() => alert("Cambio de switch")} />
         </View>
         <View style={styles.linkContainer}>
           <Pressable onPress={() => alert("Método de pago")}>
-            <Text style={viewStyle.h4}>Modificar método de pago</Text>
+            <Text style={themeStyles.h4}>Modificar método de pago</Text>
           </Pressable>
           <Pressable onPress={() => alert("Suscripción")}>
-            <Text style={viewStyle.h4}>Suscripción premium</Text>
+            <Text style={themeStyles.h4}>Suscripción premium</Text>
           </Pressable>
           <Pressable onPress={() => alert("Historial")}>
-            <Text style={viewStyle.h4}>Historial de compras</Text>
+            <Text style={themeStyles.h4}>Historial de compras</Text>
           </Pressable>
         </View>
       </View>

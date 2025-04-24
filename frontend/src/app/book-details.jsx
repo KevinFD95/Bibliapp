@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import React from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import BookLite from "../components/card.jsx";
-import viewStyles from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/view-styles.jsx";
 import { IconButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";
 import { getCartDoc, addCart } from "../api/cart.js";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function BookDetails({ route, navigation }) {
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
+
   const { document } = route.params;
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
@@ -51,40 +55,44 @@ export default function BookDetails({ route, navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={viewStyles.mainContainer}>
-      <View style={{ gap: 20 }}>
-        <Text style={styles.title}>{document.title}</Text>
-        <View style={styles.rowContainer}>
-          <BookLite
-            style={styles.title}
-            title="Pulsa para abrir"
-            onPress={handleNavigation}
-            image={document.url_image}
-          />
-          <View style={styles.detailsContainer}>
-            <Text style={styles.content}>Autor: {document.author}</Text>
-            <Text style={styles.content}>Categoría: {document.category}</Text>
-            <Text style={styles.content}>Páginas: {document.num_pages}</Text>
-            <Text style={styles.content}>Año: {document.publication_year}</Text>
-            <Text style={styles.content}>Tipo: {document.document_type}</Text>
-            <Text style={[styles.content, { paddingBottom: 30 }]}>
-              Precio: {document.price}€
-            </Text>
-            <IconButton
-              onPress={handleAddToCart}
-              icon={<AddCartIcon size={30} />}
+    <View style={themeStyles.mainContainer}>
+      <ScrollView>
+        <View style={{ gap: 20 }}>
+          <Text style={[themeStyles.h1, { textAlign: "center" }]}>
+            {document.title}
+          </Text>
+          <View style={styles.rowContainer}>
+            <BookLite
+              style={styles.title}
+              title="Pulsa para abrir"
+              onPress={handleNavigation}
+              image={document.url_image}
             />
+            <View style={styles.detailsContainer}>
+              <Text style={themeStyles.p}>Autor: {document.author}</Text>
+              <Text style={themeStyles.p}>Categoría: {document.category}</Text>
+              <Text style={themeStyles.p}>Páginas: {document.num_pages}</Text>
+              <Text style={themeStyles.p}>
+                Año: {document.publication_year}
+              </Text>
+              <Text style={themeStyles.p}>Tipo: {document.document_type}</Text>
+              <Text style={themeStyles.p}>Precio: {document.price}€</Text>
+              <IconButton
+                onPress={handleAddToCart}
+                icon={<AddCartIcon size={30} />}
+              />
+            </View>
           </View>
+          <Text style={themeStyles.p}>{document.synopsis}</Text>
+          <Popup
+            title={alertTitle}
+            message={alertMessage}
+            visible={alertVisible}
+            onClose={() => setAlertVisible(false)}
+          />
         </View>
-        <Text style={styles.synopsisContent}>{document.synopsis}</Text>
-        <Popup
-          title={alertTitle}
-          message={alertMessage}
-          visible={alertVisible}
-          onClose={() => setAlertVisible(false)}
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -125,5 +133,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingVertical: 5,
     paddingLeft: 20,
+    gap: 10,
   },
 });

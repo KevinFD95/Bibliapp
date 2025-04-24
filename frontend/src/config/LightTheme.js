@@ -1,0 +1,15 @@
+export default {
+  "status-bar-color": "#000000",
+  "app-background": "#EAF2F8",
+  "splash-background": "#1B4F72",
+  "dark-text": "#17202A",
+  "button-text": "#FFFFFF",
+  "button-background": "#1B4F72",
+  "nav-background": "#A9CCE3",
+  "selected-icons": "#1B4F72",
+  "unselected-icons": "#7FB3D5",
+  "input-background": "#FFFFFF",
+  "input-border": "#7FB3D5",
+  "input-border-onFocus": "#1B4F72",
+  "input-text": "#17202A",
+};

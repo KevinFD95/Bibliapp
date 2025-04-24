@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Text,
   View,
@@ -8,11 +8,12 @@ import {
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getDocuments } from "../api/documents.js";
-import viewStyles from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/view-styles.jsx";
 import BookDetails from "./book-details.jsx";
 import BookView from "./book-view.jsx";
 import BookLite from "../components/card.jsx";
 import { CustomTextBoxFind } from "../components/text-input.jsx";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,9 @@ export default function SearchStackNavigator() {
 }
 
 function SearchView({ navigation }) {
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
+
   const [searchText, setSearchText] = useState("");
   const [filteredDocuments, setFilteredDocuments] = useState();
   const [allDocuments, setAllDocuments] = useState([]);
@@ -100,46 +104,48 @@ function SearchView({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={viewStyles.mainContainer}>
-      <CustomTextBoxFind
-        placeholder="Buscar"
-        value={searchText}
-        onChangeText={handleSearch}
-      />
-      <View style={styles.elements}>
-        {filteredDocuments.map((item) => (
-          <View key={item.document_id} style={styles.bookContainer}>
-            <BookLite
-              title="Pulsa para abrir"
-              onPress={() => navigateToBookDetails(item)}
-              image={item.url_image}
-            />
-            <View style={styles.bookDescription}>
-              <View style={styles.itemLine}>
-                <Text style={viewStyles.h5}>Título: </Text>
-                <Text style={viewStyles.p}>{item.title}</Text>
-              </View>
-              <View style={styles.itemLine}>
-                <Text style={viewStyles.h5}>Categoría: </Text>
-                <Text style={viewStyles.p}>{item.category}</Text>
-              </View>
-              <View style={styles.itemLine}>
-                <Text style={viewStyles.h5}>Autor: </Text>
-                <Text style={viewStyles.p}>{item.author}</Text>
-              </View>
-              <View style={styles.itemLine}>
-                <Text style={viewStyles.h5}>Año: </Text>
-                <Text style={viewStyles.p}>{item.publication_year}</Text>
-              </View>
-              <View style={styles.itemLine}>
-                <Text style={viewStyles.h5}>Tipo: </Text>
-                <Text style={viewStyles.p}>{item.document_type}</Text>
+    <View style={themeStyles.mainContainer}>
+      <ScrollView>
+        <CustomTextBoxFind
+          placeholder="Buscar"
+          value={searchText}
+          onChangeText={handleSearch}
+        />
+        <View style={styles.elements}>
+          {filteredDocuments.map((item) => (
+            <View key={item.document_id} style={styles.bookContainer}>
+              <BookLite
+                title="Pulsa para abrir"
+                onPress={() => navigateToBookDetails(item)}
+                image={item.url_image}
+              />
+              <View style={styles.bookDescription}>
+                <View style={styles.itemLine}>
+                  <Text style={themeStyles.h5}>Título: </Text>
+                  <Text style={themeStyles.p}>{item.title}</Text>
+                </View>
+                <View style={styles.itemLine}>
+                  <Text style={themeStyles.h5}>Categoría: </Text>
+                  <Text style={themeStyles.p}>{item.category}</Text>
+                </View>
+                <View style={styles.itemLine}>
+                  <Text style={themeStyles.h5}>Autor: </Text>
+                  <Text style={themeStyles.p}>{item.author}</Text>
+                </View>
+                <View style={styles.itemLine}>
+                  <Text style={themeStyles.h5}>Año: </Text>
+                  <Text style={themeStyles.p}>{item.publication_year}</Text>
+                </View>
+                <View style={styles.itemLine}>
+                  <Text style={themeStyles.h5}>Tipo: </Text>
+                  <Text style={themeStyles.p}>{item.document_type}</Text>
+                </View>
               </View>
             </View>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 

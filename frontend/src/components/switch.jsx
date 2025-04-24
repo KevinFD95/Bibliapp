@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Pressable, Animated } from "react-native";
 
-import colors from "../config/colors.json";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function CustomSwitch({ value = false, onValueChange }) {
+  const { theme } = useContext(ThemeContext);
   const [isOn, setIsOn] = useState(value);
   const animation = useState(new Animated.Value(value ? 1 : 0))[0];
 
@@ -22,15 +23,12 @@ export default function CustomSwitch({ value = false, onValueChange }) {
 
   const backgroundColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [
-      colors.icons["unselected-icons"],
-      colors.icons["selected-icons"],
-    ],
+    outputRange: [theme["nav-background"], theme["selected-icons"]],
   });
 
   const thumbColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [colors.icons["selected-icons"], colors["app-background"]],
+    outputRange: [theme["unselected-icons"], theme["nav-background"]],
   });
 
   const toggleSwitch = () => {

@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { Image, View, Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import color from "../config/colors.json";
+import { ThemeContext } from "../context/ThemeContext.jsx";
+
 import navLogo from "../../assets/bibliapp-logo-nav.png";
 
 // Vistas
@@ -21,11 +23,13 @@ const Tab = createBottomTabNavigator();
 const iconSize = 40;
 
 export default function TabNavigator() {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <Tab.Navigator
       screenOptions={({ navigation }) => ({
         headerStyle: {
-          backgroundColor: color.nav["nav-background"],
+          backgroundColor: theme["nav-background"],
         },
         headerTitleAlign: "center",
         headerLeft: () => (
@@ -47,7 +51,7 @@ export default function TabNavigator() {
           </View>
         ),
         tabBarStyle: {
-          backgroundColor: color.nav["nav-background"],
+          backgroundColor: theme["nav-background"],
           paddingTop: 5,
           justifyContent: "space-around",
         },
@@ -60,12 +64,7 @@ export default function TabNavigator() {
         options={{
           title: "Inicio",
           tabBarIcon: ({ focused }) => (
-            <HomeIcon
-              size={iconSize}
-              filled={focused}
-              selectedColor={color.icons["selected-icons"]}
-              unselectedColor={color.icons["unselected-icons"]}
-            />
+            <HomeIcon size={iconSize} filled={focused} />
           ),
         }}
       />
@@ -75,12 +74,7 @@ export default function TabNavigator() {
         options={{
           title: "Mi biblioteca",
           tabBarIcon: ({ focused }) => (
-            <LibraryIcon
-              size={iconSize}
-              filled={focused}
-              selectedColor={color.icons["selected-icons"]}
-              unselectedColor={color.icons["unselected-icons"]}
-            />
+            <LibraryIcon size={iconSize} filled={focused} />
           ),
         }}
       />
@@ -90,12 +84,7 @@ export default function TabNavigator() {
         options={{
           title: "Buscar",
           tabBarIcon: ({ focused }) => (
-            <SearchIcon
-              size={iconSize}
-              filled={focused}
-              selectedColor={color.icons["selected-icons"]}
-              unselectedColor={color.icons["unselected-icons"]}
-            />
+            <SearchIcon size={iconSize} filled={focused} />
           ),
         }}
       />
@@ -105,12 +94,7 @@ export default function TabNavigator() {
         options={{
           title: "Perfil",
           tabBarIcon: ({ focused }) => (
-            <ProfileIcon
-              size={iconSize}
-              filled={focused}
-              selectedColor={color.icons["selected-icons"]}
-              unselectedColor={color.icons["unselected-icons"]}
-            />
+            <ProfileIcon size={iconSize} filled={focused} />
           ),
         }}
       />

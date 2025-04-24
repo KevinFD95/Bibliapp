@@ -1,17 +1,21 @@
+import React, { useContext } from "react";
 import { useState } from "react";
 import { TextInput, StyleSheet, View, Pressable } from "react-native";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
-import color from "../config/colors.json";
+import color from "../config/LightTheme.js";
 
 import SearchIcon from "../../assets/icons/search-icon.jsx";
 import VisibilityIcon from "../../assets/icons/visibility-icon.jsx";
 
 export function CustomTextBox({ value, onChangeText, placeholder }) {
+  const { theme } = useContext(ThemeContext);
+  const currentStyles = styles(theme);
   const [isFocused, setIsFocused] = useState(false);
 
   return (
     <TextInput
-      style={[styles.input, isFocused && styles.inputFocused]}
+      style={[currentStyles.input, isFocused && currentStyles.inputFocused]}
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
@@ -22,11 +26,13 @@ export function CustomTextBox({ value, onChangeText, placeholder }) {
 }
 
 export function CustomTextBoxUser({ value, onChangeText, placeholder }) {
+  const { theme } = useContext(ThemeContext);
+  const currentStyles = styles(theme);
   const [isFocused, setIsFocused] = useState(false);
 
   return (
     <TextInput
-      style={[styles.input, isFocused && styles.inputFocused]}
+      style={[currentStyles.input, isFocused && currentStyles.inputFocused]}
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
@@ -38,20 +44,25 @@ export function CustomTextBoxUser({ value, onChangeText, placeholder }) {
 }
 
 export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
+  const { theme } = useContext(ThemeContext);
+  const currentStyles = styles(theme);
   const [isFocused, setIsFocused] = useState(false);
 
   return (
     <View
-      style={[styles.inputFindView, isFocused && styles.inputFindFocusedView]}
+      style={[
+        currentStyles.inputFindView,
+        isFocused && currentStyles.inputFindFocusedView,
+      ]}
     >
       <SearchIcon
         size={32}
         filled={isFocused}
-        selectedColor={color.icons["selected-icons"]}
-        unselectedColor={color.icons["unselected-icons"]}
+        selectedColor={color["selected-icons"]}
+        unselectedColor={color["unselected-icons"]}
       />
       <TextInput
-        style={styles.textInput}
+        style={currentStyles.textInput}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -63,15 +74,20 @@ export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
 }
 
 export function CustomTextBoxPass({ value, onChangeText, placeholder }) {
+  const { theme } = useContext(ThemeContext);
+  const currentStyles = styles(theme);
   const [isFocused, setIsFocused] = useState(false);
   const [visibility, setVisibility] = useState(true);
 
   return (
     <View
-      style={[styles.inputPassView, isFocused && styles.inputPassFocusedView]}
+      style={[
+        currentStyles.inputPassView,
+        isFocused && currentStyles.inputPassFocusedView,
+      ]}
     >
       <TextInput
-        style={styles.textInput}
+        style={currentStyles.textInput}
         secureTextEntry={visibility}
         value={value}
         onChangeText={onChangeText}
@@ -86,70 +102,71 @@ export function CustomTextBoxPass({ value, onChangeText, placeholder }) {
   );
 }
 
-const styles = StyleSheet.create({
-  textInput: {
-    flex: 1,
-    height: "100%",
-    padding: 0,
-    color: color["black"],
-    fontSize: 16,
-  },
-  input: {
-    width: "100%",
-    height: 45,
-    marginVertical: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
-    color: color["black"],
-    borderWidth: 1,
-    backgroundColor: "white",
-    borderColor: color.icons["unselected-icons"],
-    fontSize: 16,
-  },
+const styles = (theme) =>
+  StyleSheet.create({
+    textInput: {
+      flex: 1,
+      height: "100%",
+      padding: 0,
+      color: theme["black"],
+      fontSize: 16,
+    },
+    input: {
+      width: "100%",
+      height: 45,
+      marginVertical: 20,
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      borderRadius: 10,
+      color: theme["input-text"],
+      borderWidth: 1,
+      backgroundColor: theme["input-background"],
+      borderColor: theme["unselected-icons"],
+      fontSize: 16,
+    },
 
-  inputFocused: {
-    borderWidth: 3,
-    borderColor: color["button-background"],
-  },
+    inputFocused: {
+      borderWidth: 3,
+      borderColor: color["button-background"],
+    },
 
-  inputFindView: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    width: "100%",
-    height: 45,
-    marginVertical: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    borderWidth: 1,
-    backgroundColor: "white",
-    borderColor: color.icons["unselected-icons"],
-  },
+    inputFindView: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
+      width: "100%",
+      height: 45,
+      marginVertical: 20,
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      borderRadius: 20,
+      borderWidth: 1,
+      backgroundColor: "white",
+      borderColor: theme["unselected-icons"],
+    },
 
-  inputFindFocusedView: {
-    borderWidth: 3,
-    borderColor: color["button-background"],
-  },
+    inputFindFocusedView: {
+      borderWidth: 3,
+      borderColor: theme["button-background"],
+    },
 
-  inputPassView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    height: 45,
-    marginVertical: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
-    borderWidth: 1,
-    backgroundColor: "white",
-    borderColor: color.icons["unselected-icons"],
-  },
+    inputPassView: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+      height: 45,
+      marginVertical: 20,
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      borderRadius: 10,
+      borderWidth: 1,
+      backgroundColor: "white",
+      borderColor: theme["unselected-icons"],
+    },
 
-  inputPassFocusedView: {
-    borderWidth: 3,
-    borderColor: color["button-background"],
-  },
-});
+    inputPassFocusedView: {
+      borderWidth: 3,
+      borderColor: theme["button-background"],
+    },
+  });

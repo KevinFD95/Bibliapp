@@ -15,7 +15,7 @@ import { IconButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 import CloseIcon from "../../assets/icons/close-icon.jsx";
 
-import colors from "../config/colors.json";
+import colors from "../config/LightTheme.js";
 
 const { width } = Dimensions.get("window");
 

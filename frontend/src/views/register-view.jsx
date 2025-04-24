@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 
 import {
@@ -9,13 +10,17 @@ import { CustomButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 
 import RegisterImage from "../../assets/icons/account-icon.jsx";
-import viewStyles from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/view-styles.jsx";
 
 import { RegisterController } from "../controllers/UserController.js";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function RegisterScreen({ navigation }) {
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
+
   const {
     nameInput,
     lastnameInput,
@@ -39,7 +44,7 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <SafeAreaView
-      style={[viewStyles.mainContainer, { justifyContent: "center", flex: 1 }]}
+      style={[themeStyles.mainContainer, { justifyContent: "center", flex: 1 }]}
     >
       <View style={styles.image}>
         <RegisterImage size={200} />

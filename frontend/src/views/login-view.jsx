@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Image, View, Text, Pressable, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { ThemeContext } from "../context/ThemeContext.jsx";
+
+import { viewStyles } from "../styles/view-styles.jsx";
 
 import { CustomButton } from "../components/button.jsx";
 import {
@@ -8,8 +11,6 @@ import {
   CustomTextBoxPass,
 } from "../components/text-input.jsx";
 import { Popup } from "../components/popup.jsx";
-
-import viewStyles from "../styles/view-styles.jsx";
 import logo from "../../assets/bibliapp-logo-inicio.png";
 import {
   handleLogin,
@@ -19,6 +20,8 @@ import * as SecureStore from "expo-secure-store";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
 
   const [userInput, setUserInput] = useState();
   const [passInput, setPassInput] = useState();
@@ -42,20 +45,20 @@ export default function LoginScreen() {
   }, [isViewReady, alertMessage]);
 
   return (
-    <View style={[viewStyles.mainContainer, styles.view]}>
+    <View style={[themeStyles.mainContainer, styles.view]}>
       <View style={styles.logoContainer}>
         <Image source={logo} style={styles.logo} />
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={viewStyles.p}>Usuario o correo electrónico:</Text>
+        <Text style={themeStyles.p}>Usuario o correo electrónico:</Text>
         <CustomTextBoxUser
           placeholder={"Escribe tu usuario o correo"}
           value={userInput}
           onChangeText={setUserInput}
         />
 
-        <Text style={viewStyles.p}>Contraseña:</Text>
+        <Text style={themeStyles.p}>Contraseña:</Text>
         <CustomTextBoxPass
           placeholder={"Escribe tu contraseña"}
           value={passInput}
@@ -77,7 +80,7 @@ export default function LoginScreen() {
           }
         />
         <Pressable onPress={() => handleRegister(navigation)}>
-          <Text style={viewStyles.h5}>
+          <Text style={themeStyles.h5}>
             ¿Todavía no tienes cuenta? ¡Entra aquí!
           </Text>
         </Pressable>

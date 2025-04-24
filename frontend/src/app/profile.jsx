@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Text, StyleSheet, View, Alert } from "react-native";
-import viewStyle from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/view-styles.jsx";
 
 import * as SecureStore from "expo-secure-store";
 import { logout } from "../api/auth.js";
@@ -19,6 +19,7 @@ import Config from "../views/config-view.jsx";
 import { useNavigation } from "@react-navigation/native";
 import { getProfile } from "../api/users.js";
 import RefreshableView from "../components/refreshable.jsx";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,9 @@ export default function ProfileStackNavigator() {
 }
 
 function ProfileScreen() {
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
+
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
   const [confirmVisible, setConfirmVisible] = useState(false);
@@ -107,7 +111,7 @@ function ProfileScreen() {
   };
 
   return (
-    <View style={viewStyle.mainContainer}>
+    <View style={themeStyles.mainContainer}>
       <RefreshableView onRefresh={onRefresh}>
         <View style={styles.iconsBox}>
           <IconButton
@@ -129,26 +133,26 @@ function ProfileScreen() {
           }}
         >
           <View style={styles.textContainer}>
-            <Text style={viewStyle.h5}>Nombre: </Text>
-            <Text style={viewStyle.p}>{user_name}</Text>
+            <Text style={themeStyles.h5}>Nombre: </Text>
+            <Text style={themeStyles.p}>{user_name}</Text>
           </View>
           <View style={styles.textContainer}>
-            <Text style={viewStyle.h5}>Nivel: </Text>
-            <Text style={viewStyle.p}>{subscription}</Text>
+            <Text style={themeStyles.h5}>Nivel: </Text>
+            <Text style={themeStyles.p}>{subscription}</Text>
           </View>
         </View>
 
         <View style={styles.textContainer}>
-          <Text style={viewStyle.h5}>Apellido: </Text>
-          <Text style={viewStyle.p}>{user_lastname}</Text>
+          <Text style={themeStyles.h5}>Apellido: </Text>
+          <Text style={themeStyles.p}>{user_lastname}</Text>
         </View>
         <View style={styles.textContainer}>
-          <Text style={viewStyle.h5}>Usuario: </Text>
-          <Text style={viewStyle.p}>{username}</Text>
+          <Text style={themeStyles.h5}>Usuario: </Text>
+          <Text style={themeStyles.p}>{username}</Text>
         </View>
         <View style={styles.textContainer}>
-          <Text style={viewStyle.h5}>Correo Electronico: </Text>
-          <Text style={viewStyle.p}>{email}</Text>
+          <Text style={themeStyles.h5}>Correo Electronico: </Text>
+          <Text style={themeStyles.p}>{email}</Text>
         </View>
 
         <View

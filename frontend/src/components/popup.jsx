@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Text, View, Pressable, StyleSheet } from "react-native";
-import color from "../config/colors.json";
+import color from "../config/LightTheme.js";
 
 export function Popup({ visible, title, message, onClose }) {
   return (
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     maxHeight: "70%",
     backgroundColor: color["app-background"],
     borderWidth: 1,
-    borderColor: color.icons["selected-icons"],
+    // borderColor: color["selected-icons"],
     padding: 20,
     borderRadius: 10,
     elevation: 5,

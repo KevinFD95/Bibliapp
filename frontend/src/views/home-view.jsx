@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -11,11 +11,15 @@ import { useNavigation } from "@react-navigation/native";
 
 import BookLite from "../components/card.jsx";
 
-import viewStyles from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/view-styles.jsx";
 import { fetchAllDocuments } from "../controllers/DocumentController.js";
 import RefreshableView from "../components/refreshable.jsx";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function HomeScreen() {
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
+
   const [documents, setDocuments] = useState();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +54,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={viewStyles.mainContainer}>
+    <View style={themeStyles.mainContainer}>
       <RefreshableView
         onRefresh={refreshView(
           loadDocuments,
@@ -59,7 +63,7 @@ export default function HomeScreen() {
           setLoading,
         )}
       >
-        <Text style={viewStyles.h1}>Novedades</Text>
+        <Text style={themeStyles.h1}>Novedades</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -76,7 +80,7 @@ export default function HomeScreen() {
             </View>
           ))}
         </ScrollView>
-        <Text style={viewStyles.h2}>Recomendados para ti</Text>
+        <Text style={themeStyles.h2}>Recomendados para ti</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}

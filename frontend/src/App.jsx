@@ -1,6 +1,6 @@
-import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -16,11 +16,12 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <LoginScreen />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <LoginScreen />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }
