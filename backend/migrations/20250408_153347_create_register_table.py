@@ -10,7 +10,7 @@ def upgrade(cursor):
         """
         CREATE TABLE registers (
         register_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
+        username VARCHAR(30) NOT NULL,
         document_id INT NOT NULL,
         favorite BOOLEAN DEFAULT FALSE,
         readed BOOLEAN DEFAULT FALSE,
@@ -18,7 +18,7 @@ def upgrade(cursor):
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
-        CONSTRAINT registers_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
+        CONSTRAINT registers_username FOREIGN KEY (username) REFERENCES users(username)
         ON DELETE RESTRICT ON UPDATE CASCADE,
         CONSTRAINT registers_document_id FOREIGN KEY (document_id) REFERENCES documents(document_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
@@ -29,7 +29,7 @@ def upgrade(cursor):
 
 def downgrade(cursor):
     # Aquí va el código para revertir la migración
-    cursor.execute("ALTER TABLE registers DROP FOREIGN KEY registers_user_id;")
+    cursor.execute("ALTER TABLE registers DROP FOREIGN KEY registers_username;")
     cursor.execute("ALTER TABLE registers DROP FOREIGN KEY registers_document_id;")
     cursor.execute("DROP TABLE IF EXISTS registers;")
     pass

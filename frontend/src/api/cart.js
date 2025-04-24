@@ -16,12 +16,14 @@ export function addCart(document_id) {
   });
 }
 
-export function buyDocCart(username) {
-  return customFetch("/cart/" + username);
-}
-
 export function deleteCart(documentId) {
   return customFetch(`/cart/${documentId}`, {
     method: "DELETE",
+  });
+}
+
+export function finalizePurchaseApi() {
+  return customFetch("/purchase", {
+    method: "POST",
   });
 }

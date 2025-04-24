@@ -35,3 +35,6 @@ class Queries:
     CART_ADD_DOC = "INSERT INTO cart (username, document_id) VALUES (%s, %s)"
     CART_DELETE_DOC = "DELETE FROM cart WHERE document_id = %s AND username = %s"
     CART_BUY_DOC = "DELETE FROM cart WHERE username = %s"
+
+    # Registers
+    REG_INSERT_DOCS = "INSERT INTO registers (document_id, username) VALUES (%s, %s)"
