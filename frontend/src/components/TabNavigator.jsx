@@ -6,18 +6,18 @@ import { ThemeContext } from "../context/ThemeContext.jsx";
 import navLogo from "../../assets/bibliapp-logo-nav.png";
 
 // Vistas
-import HomeScreen from "../app/home.jsx";
-import LibraryScreen from "../app/library.jsx";
-import SearchScreen from "../app/search.jsx";
-import ProfileScreen from "../app/profile.jsx";
-import CartScreen from "../app/cart.jsx";
+import HomeScreen from "../app/Home.jsx";
+import LibraryScreen from "../app/Library.jsx";
+import SearchScreen from "../app/Search.jsx";
+import ProfileScreen from "../app/Profile.jsx";
+import CartScreen from "../app/Cart.jsx";
 
 // Iconos
-import HomeIcon from "../../assets/icons/home-icon.jsx";
-import LibraryIcon from "../../assets/icons/library-icon.jsx";
-import SearchIcon from "../../assets/icons/search-icon.jsx";
-import ProfileIcon from "../../assets/icons/profile-icon.jsx";
-import CartIcon from "../../assets/icons/cart-icon.jsx";
+import HomeIcon from "../../assets/icons/HomeIcon.jsx";
+import LibraryIcon from "../../assets/icons/LibraryIcon.jsx";
+import SearchIcon from "../../assets/icons/SearchIcon.jsx";
+import ProfileIcon from "../../assets/icons/ProfileIcon.jsx";
+import CartIcon from "../../assets/icons/CartIcon.jsx";
 
 const Tab = createBottomTabNavigator();
 const iconSize = 40;

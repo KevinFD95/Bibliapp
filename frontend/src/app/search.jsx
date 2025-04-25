@@ -7,12 +7,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { getDocuments } from "../api/documents.js";
+import { getDocuments } from "../api/Documents.js";
 import { viewStyles } from "../styles/GlobalStyles.js";
-import BookDetails from "./book-details.jsx";
-import BookView from "./book-view.jsx";
-import BookLite from "../components/card.jsx";
-import { CustomTextBoxFind } from "../components/text-input.jsx";
+import BookDetails from "./BookDetails.jsx";
+import BookView from "./BookView.jsx";
+import BookLite from "../components/Card.jsx";
+import { CustomTextBoxFind } from "../components/TextInput.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();

@@ -5,11 +5,11 @@ import {
   CustomTextBox,
   CustomTextBoxUser,
   CustomTextBoxPass,
-} from "../components/text-input.jsx";
-import { CustomButton } from "../components/button.jsx";
-import { Popup } from "../components/popup.jsx";
+} from "../components/TextInput.jsx";
+import { CustomButton } from "../components/Button.jsx";
+import { Popup } from "../components/Popup.jsx";
 
-import RegisterImage from "../../assets/icons/account-icon.jsx";
+import RegisterImage from "../../assets/icons/AccountIcon.jsx";
 import { viewStyles } from "../styles/GlobalStyles.js";
 
 import { RegisterController } from "../controllers/UserController.js";

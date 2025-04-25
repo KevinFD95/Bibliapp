@@ -8,12 +8,12 @@ import {
   SafeAreaView,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import { epubToHtml } from "../services/epub_service.js";
-import { getEpub } from "../api/documents.js";
+import { epubToHtml } from "../services/EpubService.js";
+import { getEpub } from "../api/Documents.js";
 
-import { IconButton } from "../components/button.jsx";
-import { Popup } from "../components/popup.jsx";
-import CloseIcon from "../../assets/icons/close-icon.jsx";
+import { IconButton } from "../components/Button.jsx";
+import { Popup } from "../components/Popup.jsx";
+import CloseIcon from "../../assets/icons/CloseIcon.jsx";
 
 import colors from "../config/LightTheme.js";
 

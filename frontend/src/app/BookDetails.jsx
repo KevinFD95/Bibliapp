@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import React from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
-import BookLite from "../components/card.jsx";
+import BookLite from "../components/Card.jsx";
 import { viewStyles } from "../styles/GlobalStyles.js";
-import { IconButton } from "../components/button.jsx";
-import { Popup } from "../components/popup.jsx";
-import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";
-import { getCartDoc, addCart } from "../api/cart.js";
+import { IconButton } from "../components/Button.jsx";
+import { Popup } from "../components/Popup.jsx";
+import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
+import { getCartDoc, addCart } from "../api/Cart.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function BookDetails({ route, navigation }) {

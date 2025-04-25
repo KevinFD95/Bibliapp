@@ -3,10 +3,10 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
-import BookDetails from "./book-details.jsx";
-import BookView from "./book-view.jsx";
+import BookDetails from "./BookDetails.jsx";
+import BookView from "./BookView.jsx";
 
-import BookLite from "../components/card.jsx";
+import BookLite from "../components/Card.jsx";
 
 import { viewStyles } from "../styles/GlobalStyles.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";

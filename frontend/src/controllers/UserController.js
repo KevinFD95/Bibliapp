@@ -6,9 +6,9 @@ import {
   userValidation,
   emailValidation,
   passwordValidation,
-} from "../validators/register_validator.js";
+} from "../validators/RegisterValidation.js";
 
-import { register } from "../api/auth.js";
+import { register } from "../api/Auth.js";
 
 export function RegisterController(navigation) {
   const [alertVisible, setAlertVisible] = useState(false);

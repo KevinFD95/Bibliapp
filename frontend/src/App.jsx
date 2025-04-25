@@ -4,7 +4,7 @@ import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 
-import LoginScreen from "./app/login.jsx";
+import LoginScreen from "./app/Login.jsx";
 
 SplashScreen.preventAutoHideAsync();
 

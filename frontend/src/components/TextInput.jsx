@@ -5,8 +5,8 @@ import { ThemeContext } from "../context/ThemeContext.jsx";
 
 import color from "../config/LightTheme.js";
 
-import SearchIcon from "../../assets/icons/search-icon.jsx";
-import VisibilityIcon from "../../assets/icons/visibility-icon.jsx";
+import SearchIcon from "../../assets/icons/SearchIcon.jsx";
+import VisibilityIcon from "../../assets/icons/VisibilityIcon.jsx";
 
 export function CustomTextBox({ value, onChangeText, placeholder }) {
   const { theme } = useContext(ThemeContext);

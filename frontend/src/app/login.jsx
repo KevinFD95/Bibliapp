@@ -1,8 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import LoginScreen from "../views/login-view.jsx";
-import TabNavigator from "../components/tab-navigator.jsx";
-import RegisterScreen from "../views/register-view.jsx";
+import LoginScreen from "../views/LoginView.jsx";
+import TabNavigator from "../components/TabNavigator.jsx";
+import RegisterScreen from "../views/RegisterView.jsx";
 
 const Stack = createStackNavigator();
 

@@ -10,11 +10,11 @@ import {
 } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
-import { BookLiteCart } from "../components/card.jsx";
-import { CustomButton } from "../components/button.jsx";
+import { BookLiteCart } from "../components/Card.jsx";
+import { CustomButton } from "../components/Button.jsx";
 import { viewStyles } from "../styles/GlobalStyles.js";
-import { getCart, deleteCart, finalizePurchaseApi } from "../api/cart.js";
-import { ConfirmPopup, Popup } from "../components/popup.jsx";
+import { getCart, deleteCart, finalizePurchaseApi } from "../api/Cart.js";
+import { ConfirmPopup, Popup } from "../components/Popup.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 function Cart() {

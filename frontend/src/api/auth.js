@@ -1,4 +1,4 @@
-import { customFetch } from "./index.js";
+import { customFetch } from "./Index.js";
 
 export function login(user) {
   return customFetch("/login", {

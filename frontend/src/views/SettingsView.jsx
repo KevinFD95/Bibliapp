@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { Text, StyleSheet, View, Pressable } from "react-native";
 import { viewStyles } from "../styles/GlobalStyles.js";
-import CustomSwitch from "../components/switch.jsx";
+import CustomSwitch from "../components/Switch.jsx";
 
-import { IconButton } from "../components/button.jsx";
+import { IconButton } from "../components/Button.jsx";
 
-import LightModeIcon from "../../assets/icons/light-mode-icon.jsx";
-import DarkModeIcon from "../../assets/icons/dark-mode-icon.jsx";
+import LightModeIcon from "../../assets/icons/LightModeIcon.jsx";
+import DarkModeIcon from "../../assets/icons/DarkModeIcon.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function HomeStackNavigator() {

@@ -3,22 +3,22 @@ import { Text, StyleSheet, View, Alert } from "react-native";
 import { viewStyles } from "../styles/GlobalStyles.js";
 
 import * as SecureStore from "expo-secure-store";
-import { logout } from "../api/auth.js";
+import { logout } from "../api/Auth.js";
 
-import { IconButton } from "../components/button.jsx";
-import { ConfirmPopup, Popup } from "../components/popup.jsx";
+import { IconButton } from "../components/Button.jsx";
+import { ConfirmPopup, Popup } from "../components/Popup.jsx";
 
-import EditIcon from "../../assets/icons/edit-icon.jsx";
-import LogoutIcon from "../../assets/icons/logout-icon.jsx";
-import AccountIcon from "../../assets/icons/account-icon.jsx";
-import SettingsIcon from "../../assets/icons/settings-icon.jsx";
+import EditIcon from "../../assets/icons/EditIcon.jsx";
+import LogoutIcon from "../../assets/icons/LogoutIcon.jsx";
+import AccountIcon from "../../assets/icons/AccountIcon.jsx";
+import SettingsIcon from "../../assets/icons/SettingsIcon.jsx";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import ProfileEdit from "./profile-edit.jsx";
-import Config from "../views/config-view.jsx";
+import ProfileEdit from "./ProfileEditView.jsx";
+import Config from "../views/SettingsView.jsx";
 import { useNavigation } from "@react-navigation/native";
-import { getProfile } from "../api/users.js";
-import RefreshableView from "../components/refreshable.jsx";
+import { getProfile } from "../api/Users.js";
+import RefreshableView from "../components/Refreshable.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();
