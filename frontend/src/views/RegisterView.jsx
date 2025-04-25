@@ -5,9 +5,9 @@ import {
   CustomTextBox,
   CustomTextBoxUser,
   CustomTextBoxPass,
-} from "../components/TextInput.jsx";
-import { CustomButton } from "../components/Button.jsx";
-import { Popup } from "../components/opup.jsx";
+} from "../components/TextInputComponent.jsx";
+import { CustomButton } from "../components/ButtonComponent.jsx";
+import { Popup } from "../components/PopupComponent.jsx";
 
 import RegisterImage from "../../assets/icons/AccountIcon.jsx";
 import { viewStyles } from "../styles/globalStyles.js";

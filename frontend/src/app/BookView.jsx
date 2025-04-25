@@ -11,8 +11,8 @@ import { WebView } from "react-native-webview";
 import { epubToHtml } from "../services/epubService.js";
 import { getEpub } from "../api/documents.js";
 
-import { IconButton } from "../components/Button.jsx";
-import { Popup } from "../components/opup.jsx";
+import { IconButton } from "../components/ButtonComponent.jsx";
+import { Popup } from "../components/PopupComponent.jsx";
 import CloseIcon from "../../assets/icons/CloseIcon.jsx";
 
 import colors from "../config/lightTheme.js";

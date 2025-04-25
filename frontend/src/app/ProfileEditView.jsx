@@ -1,9 +1,12 @@
 import { useContext, useState } from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import { viewStyles } from "../styles/globalStyles.js";
-import { CustomTextBox, CustomTextBoxUser } from "../components/TextInput.jsx";
-import { CustomButton } from "../components/Button.jsx";
-import { Popup } from "../components/opup.jsx";
+import {
+  CustomTextBox,
+  CustomTextBoxUser,
+} from "../components/TextInputComponent.jsx";
+import { CustomButton } from "../components/ButtonComponent.jsx";
+import { Popup } from "../components/PopupComponent.jsx";
 import AccountIcon from "../../assets/icons/AccountIcon.jsx";
 import { updateProfile } from "../api/users.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";

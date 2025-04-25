@@ -5,8 +5,8 @@ import { viewStyles } from "../styles/globalStyles.js";
 import * as SecureStore from "expo-secure-store";
 import { logout } from "../api/auth.js";
 
-import { IconButton } from "../components/Button.jsx";
-import { ConfirmPopup, Popup } from "../components/opup.jsx";
+import { IconButton } from "../components/ButtonComponent.jsx";
+import { ConfirmPopup, Popup } from "../components/PopupComponent.jsx";
 
 import EditIcon from "../../assets/icons/EditIcon.jsx";
 import LogoutIcon from "../../assets/icons/LogoutIcon.jsx";
@@ -18,7 +18,7 @@ import ProfileEdit from "./ProfileEditView.jsx";
 import Config from "../views/SettingsView.jsx";
 import { useNavigation } from "@react-navigation/native";
 import { getProfile } from "../api/users.js";
-import RefreshableView from "../components/Refreshable.jsx";
+import RefreshableView from "../components/RefreshableViewComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();

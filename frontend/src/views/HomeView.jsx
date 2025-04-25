@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import BookLite from "../components/Card.jsx";
+import BookLite from "../components/CardComponent.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
 import { fetchAllDocuments } from "../controllers/documentController.js";
-import RefreshableView from "../components/Refreshable.jsx";
+import RefreshableView from "../components/RefreshableViewComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function HomeScreen() {

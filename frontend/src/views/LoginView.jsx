@@ -5,12 +5,12 @@ import { ThemeContext } from "../context/ThemeContext.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
 
-import { CustomButton } from "../components/Button.jsx";
+import { CustomButton } from "../components/ButtonComponent.jsx";
 import {
   CustomTextBoxUser,
   CustomTextBoxPass,
-} from "../components/TextInput.jsx";
-import { Popup } from "../components/opup.jsx";
+} from "../components/TextInputComponent.jsx";
+import { Popup } from "../components/PopupComponent.jsx";
 import logo from "../../assets/bibliapp-logo-inicio.png";
 import {
   handleLogin,

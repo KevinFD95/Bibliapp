@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 import React from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
-import BookLite from "../components/Card.jsx";
+import BookLite from "../components/CardComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
-import { IconButton } from "../components/Button.jsx";
-import { Popup } from "../components/opup.jsx";
+import { IconButton } from "../components/ButtonComponent.jsx";
+import { Popup } from "../components/PopupComponent.jsx";
 import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
 import { getCartDoc, addCart } from "../api/cart.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";

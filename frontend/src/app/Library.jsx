@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import BookDetails from "./BookDetails.jsx";
 import BookView from "./BookView.jsx";
 
-import BookLite from "../components/Card.jsx";
+import BookLite from "../components/CardComponent.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";

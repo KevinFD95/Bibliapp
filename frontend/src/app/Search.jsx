@@ -11,8 +11,8 @@ import { getDocuments } from "../api/documents.js";
 import { viewStyles } from "../styles/globalStyles.js";
 import BookDetails from "./BookDetails.jsx";
 import BookView from "./BookView.jsx";
-import BookLite from "../components/Card.jsx";
-import { CustomTextBoxFind } from "../components/TextInput.jsx";
+import BookLite from "../components/CardComponent.jsx";
+import { CustomTextBoxFind } from "../components/TextInputComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();
