@@ -1,5 +1,5 @@
 import * as SecureStore from "expo-secure-store";
-import { login, validateToken } from "../api/Aut.js";
+import { login, validateToken } from "../api/Auth.js";
 
 export async function handleLogin(user, navigation) {
   if (!user.identifier || !user.user_password) {

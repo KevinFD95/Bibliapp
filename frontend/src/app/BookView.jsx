@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { epubToHtml } from "../services/EpubService.js";
-import { getEpub } from "../api/Document.js";
+import { getEpub } from "../api/Documents.js";
 
 import { IconButton } from "../components/Button.jsx";
 import { Popup } from "../components/Popup.jsx";
