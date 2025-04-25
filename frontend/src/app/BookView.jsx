@@ -12,7 +12,7 @@ import { epubToHtml } from "../services/epubService.js";
 import { getEpub } from "../api/documents.js";
 
 import { IconButton } from "../components/Button.jsx";
-import { Popup } from "../components/Popup.jsx";
+import { Popup } from "../components/opup.jsx";
 import CloseIcon from "../../assets/icons/CloseIcon.jsx";
 
 import colors from "../config/lightTheme.js";

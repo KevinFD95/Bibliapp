@@ -14,7 +14,7 @@ import { BookLiteCart } from "../components/Card.jsx";
 import { CustomButton } from "../components/Button.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 import { getCart, deleteCart, finalizePurchaseApi } from "../api/cart.js";
-import { ConfirmPopup, Popup } from "../components/Popup.jsx";
+import { ConfirmPopup, Popup } from "../components/opup.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 function Cart() {

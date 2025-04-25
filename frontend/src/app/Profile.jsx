@@ -6,7 +6,7 @@ import * as SecureStore from "expo-secure-store";
 import { logout } from "../api/auth.js";
 
 import { IconButton } from "../components/Button.jsx";
-import { ConfirmPopup, Popup } from "../components/Popup.jsx";
+import { ConfirmPopup, Popup } from "../components/opup.jsx";
 
 import EditIcon from "../../assets/icons/EditIcon.jsx";
 import LogoutIcon from "../../assets/icons/LogoutIcon.jsx";

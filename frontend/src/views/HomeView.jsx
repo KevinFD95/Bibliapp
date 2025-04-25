@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import BookLite from "../components/Card.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
-import { fetchAllDocuments } from "../controllers/documentController.js";
+import { fetchAllDocuments } from "../controllers/ocumentController.js";
 import RefreshableView from "../components/Refreshable.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 

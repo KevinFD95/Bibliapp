@@ -4,7 +4,7 @@ import { ScrollView, Text, StyleSheet, View } from "react-native";
 import BookLite from "../components/Card.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 import { IconButton } from "../components/Button.jsx";
-import { Popup } from "../components/Popup.jsx";
+import { Popup } from "../components/opup.jsx";
 import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
 import { getCartDoc, addCart } from "../api/cart.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";

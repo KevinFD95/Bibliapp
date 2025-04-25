@@ -10,7 +10,7 @@ import {
   CustomTextBoxUser,
   CustomTextBoxPass,
 } from "../components/TextInput.jsx";
-import { Popup } from "../components/Popup.jsx";
+import { Popup } from "../components/opup.jsx";
 import logo from "../../assets/bibliapp-logo-inicio.png";
 import {
   handleLogin,

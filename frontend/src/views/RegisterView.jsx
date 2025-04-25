@@ -7,12 +7,12 @@ import {
   CustomTextBoxPass,
 } from "../components/TextInput.jsx";
 import { CustomButton } from "../components/Button.jsx";
-import { Popup } from "../components/Popup.jsx";
+import { Popup } from "../components/opup.jsx";
 
 import RegisterImage from "../../assets/icons/AccountIcon.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 
-import { RegisterController } from "../controllers/userController.js";
+import { RegisterController } from "../controllers/serController.js";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemeContext } from "../context/ThemeContext.jsx";
