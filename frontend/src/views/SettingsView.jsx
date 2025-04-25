@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Text, StyleSheet, View, Pressable } from "react-native";
-import { viewStyles } from "../styles/GlobalStyles.js";
+import { viewStyles } from "../styles/globalStyles.js";
 import CustomSwitch from "../components/Switch.jsx";
 
 import { IconButton } from "../components/Button.jsx";

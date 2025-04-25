@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Text, View, Pressable, StyleSheet } from "react-native";
-import color from "../config/LightTheme.js";
+import color from "../config/lightTheme.js";
 
 export function Popup({ visible, title, message, onClose }) {
   return (

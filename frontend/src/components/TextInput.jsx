@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TextInput, StyleSheet, View, Pressable } from "react-native";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
-import color from "../config/LightTheme.js";
+import color from "../config/lightTheme.js";
 
 import SearchIcon from "../../assets/icons/SearchIcon.jsx";
 import VisibilityIcon from "../../assets/icons/VisibilityIcon.jsx";

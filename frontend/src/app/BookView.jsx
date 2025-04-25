@@ -8,14 +8,14 @@ import {
   SafeAreaView,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import { epubToHtml } from "../services/EpubService.js";
-import { getEpub } from "../api/Documents.js";
+import { epubToHtml } from "../services/epubService.js";
+import { getEpub } from "../api/documents.js";
 
 import { IconButton } from "../components/Button.jsx";
 import { Popup } from "../components/Popup.jsx";
 import CloseIcon from "../../assets/icons/CloseIcon.jsx";
 
-import colors from "../config/LightTheme.js";
+import colors from "../config/lightTheme.js";
 
 const { width } = Dimensions.get("window");
 

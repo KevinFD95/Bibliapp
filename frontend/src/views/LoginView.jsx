@@ -3,7 +3,7 @@ import { Image, View, Text, Pressable, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
-import { viewStyles } from "../styles/GlobalStyles.js";
+import { viewStyles } from "../styles/globalStyles.js";
 
 import { CustomButton } from "../components/Button.jsx";
 import {
@@ -15,7 +15,7 @@ import logo from "../../assets/bibliapp-logo-inicio.png";
 import {
   handleLogin,
   validateUserToken,
-} from "../controllers/AuthController.js";
+} from "../controllers/authController.js";
 import * as SecureStore from "expo-secure-store";
 
 export default function LoginScreen() {

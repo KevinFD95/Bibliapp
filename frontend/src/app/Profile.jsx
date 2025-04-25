@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Text, StyleSheet, View, Alert } from "react-native";
-import { viewStyles } from "../styles/GlobalStyles.js";
+import { viewStyles } from "../styles/globalStyles.js";
 
 import * as SecureStore from "expo-secure-store";
-import { logout } from "../api/Auth.js";
+import { logout } from "../api/auth.js";
 
 import { IconButton } from "../components/Button.jsx";
 import { ConfirmPopup, Popup } from "../components/Popup.jsx";
@@ -17,7 +17,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ProfileEdit from "./ProfileEditView.jsx";
 import Config from "../views/SettingsView.jsx";
 import { useNavigation } from "@react-navigation/native";
-import { getProfile } from "../api/Users.js";
+import { getProfile } from "../api/users.js";
 import RefreshableView from "../components/Refreshable.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 

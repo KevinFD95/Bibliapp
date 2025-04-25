@@ -1,6 +1,6 @@
 import Svg, { Path } from "react-native-svg";
 
-import color from "../../src/config/LightTheme.js";
+import color from "../../src/config/lightTheme.js";
 
 const VisibilityIcon = ({ size, checked }) => {
   return (

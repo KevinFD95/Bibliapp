@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
-import { viewStyles } from "../styles/GlobalStyles.js";
+import { viewStyles } from "../styles/globalStyles.js";
 import { CustomTextBox, CustomTextBoxUser } from "../components/TextInput.jsx";
 import { CustomButton } from "../components/Button.jsx";
 import { Popup } from "../components/Popup.jsx";
 import AccountIcon from "../../assets/icons/AccountIcon.jsx";
-import { updateProfile } from "../api/Users.js";
+import { updateProfile } from "../api/users.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function EditProfileScreen({ route }) {
