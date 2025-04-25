@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { getDocuments } from "../api/Documents.js";
+import { getDocuments } from "../api/Document.js";
 import { viewStyles } from "../styles/GlobalStyles.js";
 import BookDetails from "./BookDetails.jsx";
 import BookView from "./BookView.jsx";

@@ -1,4 +1,4 @@
-import { getDocuments } from "../api/Documents.js";
+import { getDocuments } from "../api/Document.js";
 
 export async function fetchAllDocuments() {
   try {

@@ -6,7 +6,7 @@ import { viewStyles } from "../styles/GlobalStyles.js";
 import { IconButton } from "../components/Button.jsx";
 import { Popup } from "../components/Popup.jsx";
 import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
-import { getCartDoc, addCart } from "../api/Cart.js";
+import { getCartDoc, addCart } from "../api/Car.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function BookDetails({ route, navigation }) {

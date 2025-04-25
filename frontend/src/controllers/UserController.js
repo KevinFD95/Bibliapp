@@ -8,7 +8,7 @@ import {
   passwordValidation,
 } from "../validators/RegisterValidation.js";
 
-import { register } from "../api/Auth.js";
+import { register } from "../api/Aut.js";
 
 export function RegisterController(navigation) {
   const [alertVisible, setAlertVisible] = useState(false);

@@ -5,7 +5,7 @@ import { CustomTextBox, CustomTextBoxUser } from "../components/TextInput.jsx";
 import { CustomButton } from "../components/Button.jsx";
 import { Popup } from "../components/Popup.jsx";
 import AccountIcon from "../../assets/icons/AccountIcon.jsx";
-import { updateProfile } from "../api/Users.js";
+import { updateProfile } from "../api/User.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function EditProfileScreen({ route }) {

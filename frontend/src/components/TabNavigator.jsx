@@ -8,8 +8,8 @@ import navLogo from "../../assets/bibliapp-logo-nav.png";
 // Vistas
 import HomeScreen from "../app/Home.jsx";
 import LibraryScreen from "../app/Library.jsx";
-import SearchScreen from "../app/Search.jsx";
-import ProfileScreen from "../app/Profile.jsx";
+import SearchScreen from "../app/searc.jsx";
+import ProfileScreen from "../app/profil.jsx";
 import CartScreen from "../app/Cart.jsx";
 
 // Iconos
