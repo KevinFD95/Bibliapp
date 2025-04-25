@@ -5,3 +5,4 @@ from .cart_controller import CartController
 from .auth_controller import AuthController
 from .epub_controller import EpubController
 from .purchase_controller import PurchaseController
+from .register_controller import RegisterController

@@ -5,3 +5,4 @@ from .cart_routes import cart_bp
 from .auth_routes import auth_bp
 from .epub_routes import epub_bp
 from .purchase_routes import purchase_bp
+from .register_routes import register_bp

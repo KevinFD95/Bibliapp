@@ -37,4 +37,5 @@ class Queries:
     CART_BUY_DOC = "DELETE FROM cart WHERE username = %s"
 
     # Registers
+    REGISTER_GET_ALL = "SELECT documents.* FROM registers JOIN documents ON registers.document_id = documents.document_id WHERE username = %s"
     REG_INSERT_DOCS = "INSERT INTO registers (document_id, username) VALUES (%s, %s)"

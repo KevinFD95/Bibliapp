@@ -118,8 +118,6 @@ async function loadDocuments(setDocuments, setError, setLoading) {
     } else {
       setError(error);
     }
-
-    setLoading(false);
   } catch {
     setError("Error inesperado");
   } finally {
