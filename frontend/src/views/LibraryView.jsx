@@ -16,6 +16,7 @@ import { Popup } from "../components/PopupComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 import SearchIcon from "../../assets/icons/SearchIcon.jsx";
+import RefreshableView from "../components/RefreshableViewComponent.jsx";
 
 export default function Library() {
   const { theme } = useContext(ThemeContext);
@@ -27,6 +28,11 @@ export default function Library() {
   const [error, setError] = useState();
   const [documents, setDocuments] = useState();
   const [loading, setLoading] = useState(false);
+
+  const onRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await loadDocuments(setDocuments, setError, setLoading);
+  };
 
   useEffect(() => {
     loadDocuments(setDocuments, setLoading, setError);
@@ -69,16 +75,18 @@ export default function Library() {
 
   return (
     <View style={themeStyles.mainContainer}>
-      <ScrollView contentContainerStyle={styles.vistaTarjeta}>
-        {documents.map((item) => (
-          <BookLite
-            key={item.document_id}
-            title={item.title}
-            image={item.url_image}
-            onPress={() => handleNavigation(navigation, item)}
-          />
-        ))}
-      </ScrollView>
+      <RefreshableView onRefresh={onRefresh}>
+        <ScrollView contentContainerStyle={styles.vistaTarjeta}>
+          {documents.map((item) => (
+            <BookLite
+              key={item.document_id}
+              title={item.title}
+              image={item.url_image}
+              onPress={() => handleNavigation(navigation, item)}
+            />
+          ))}
+        </ScrollView>
+      </RefreshableView>
 
       <Popup message={error} onClose={() => setAlert(false)} visible={alert} />
     </View>
