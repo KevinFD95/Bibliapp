@@ -30,6 +30,22 @@ function Cart() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
 
+  useEffect(() => {
+    if (alertVisible) {
+      console.log("useEffect: alertVisible changed to TRUE");
+    } else {
+      console.log("useEffect: alertVisible changed to FALSE");
+    }
+  }, [alertVisible]);
+
+  useEffect(() => {
+    if (confirmVisible) {
+      console.log("useEffect: confirmVisible changed to TRUE");
+    } else {
+      console.log("useEffect: confirmVisible changed to FALSE");
+    }
+  }, [confirmVisible]);
+
   const fetchBooks = async () => {
     try {
       setLoading(true);
@@ -47,6 +63,7 @@ function Cart() {
           response?.error ||
           "Hubo un error al cargar los libros.";
         setError(errorMessage);
+        console.error("Error fetching cart API response:", response);
       }
     } catch (err) {
       setError("Hubo un error al cargar los libros.");
@@ -60,9 +77,11 @@ function Cart() {
     useCallback(() => {
       fetchBooks();
       return () => {
-        setAlertVisible(false);
-        setAlertTitle(undefined);
-        setAlertMessage(undefined);
+        console.log(
+          "useFocusEffect Cleanup: Screen blurred, resetting books/error state.",
+        );
+        setBooks([]);
+        setError(null);
       };
     }, []),
   );
@@ -91,9 +110,12 @@ function Cart() {
       const { ok, status } = response;
       if (ok && status === 200) {
         await fetchBooks();
+
         setAlertMessage(`${document.title} se ha eliminado del carrito`);
         setAlertTitle("Eliminar Documento");
-        setAlertVisible(true);
+        setTimeout(() => {
+          setAlertVisible(true);
+        }, 150);
       } else {
         const errorMessage =
           response?.error?.message ||
@@ -101,14 +123,18 @@ function Cart() {
           `Error: ${document.title} no se ha podido eliminar del carrito`;
         setAlertMessage(errorMessage);
         setAlertTitle("Eliminar Documento");
-        setAlertVisible(true);
+        setTimeout(() => {
+          setAlertVisible(true);
+        }, 150);
       }
     } catch (err) {
       setAlertMessage(
         "Error: Hubo un error al comunicarse con el servidor para eliminar el libro.",
       );
       setAlertTitle("Eliminar Documento");
-      setAlertVisible(true);
+      setTimeout(() => {
+        setAlertVisible(true);
+      }, 150);
       console.error("Error al eliminar el libro:", err);
     } finally {
       setLoading(false);
@@ -128,25 +154,27 @@ function Cart() {
         setBooks([]);
         setAlertMessage("Se ha/han comprado el/los documento/s del carrito");
         setAlertTitle("Compra Finalizada");
+
         console.log("Setting alert state for success popup...");
         setTimeout(() => {
           setAlertVisible(true);
           console.log(
             "setTimeout inside handlePurchase success fired. setAlertVisible(true)",
           );
-        }, 500);
+        }, 150);
       } else {
         console.log("Purchase API call failed or not OK.");
         const errorData = purchaseResponse?.error;
         setAlertMessage(errorData || "Hubo un error al realizar la compra.");
         setAlertTitle("Error de Compra");
+
         console.log("Setting alert state for error popup...");
         setTimeout(() => {
           setAlertVisible(true);
           console.log(
             "setTimeout inside handlePurchase error fired. setAlertVisible(true)",
           );
-        }, 500);
+        }, 150); // Retardo
         console.error("Error al realizar la compra:", purchaseResponse);
       }
     } catch (error) {
@@ -155,13 +183,15 @@ function Cart() {
         "Hubo un error al comunicarse con el servidor para realizar la compra.",
       );
       setAlertTitle("Error de Comunicación");
+
       console.log("Setting alert state for catch popup...");
       setTimeout(() => {
         setAlertVisible(true);
         console.log(
           "setTimeout inside handlePurchase catch fired. setAlertVisible(true)",
         );
-      }, 500);
+      }, 150);
+
       console.error("Error de red en la compra:", error);
     } finally {
       setLoading(false);
@@ -183,7 +213,16 @@ function Cart() {
   }
 
   if (error && (!books || books.length === 0)) {
-    return <Text>{error}</Text>;
+    return (
+      <View
+        style={[
+          themeStyles.mainContainer,
+          { flex: 1, justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <Text>{error}</Text>
+      </View>
+    );
   }
 
   if (!Array.isArray(books) || books.length === 0) {
@@ -200,13 +239,13 @@ function Cart() {
         <ScrollView
           contentContainerStyle={{
             justifyContent: "flex-start",
-            paddingBottom: styles.footer.height,
+            paddingBottom: styles.footer.height + 20,
           }}
         >
           {books.map((item) => (
             <View key={item.document_id} style={styles.bookItem}>
               <View style={styles.bookRow}>
-                <BookLiteCart key={item.document_id} image={item.url_image} />
+                <BookLiteCart image={item.url_image} />
                 <View style={styles.bookDetails}>
                   <View style={styles.removeIconContainer}>
                     <TouchableOpacity onPress={() => handleRemoveBook(item)}>
@@ -238,7 +277,12 @@ function Cart() {
             <CustomButton
               title="Comprar"
               text={"Realizar compra"}
-              onPress={() => setConfirmVisible(true)}
+              onPress={() => {
+                console.log(
+                  "Realizar compra button pressed. Setting confirmVisible(true)",
+                );
+                setConfirmVisible(true);
+              }}
             />
           </View>
         </View>
