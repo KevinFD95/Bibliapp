@@ -1,4 +1,4 @@
-import { customFetch } from "./Index.js";
+import { customFetch } from "./index.js";
 
 export function getDocuments() {
   return customFetch("/docs");

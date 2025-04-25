@@ -1,4 +1,4 @@
-import { customFetch } from "./ndex.js";
+import { customFetch } from "./index.js";
 
 export function getProfile() {
   return customFetch("/users/profile", {

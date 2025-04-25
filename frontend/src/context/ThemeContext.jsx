@@ -2,8 +2,8 @@ import { createContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 
-import lightTheme from "../config/LightTheme.js";
-import darkTheme from "../config/DarkTheme.js";
+import lightTheme from "../config/lightTheme.js";
+import darkTheme from "../config/darkTheme.js";
 
 export const ThemeContext = createContext();
 
