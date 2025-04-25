@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Text, StyleSheet, View, Alert } from "react-native";
-import { viewStyles } from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/GlobalStyles.js";
 
 import * as SecureStore from "expo-secure-store";
 import { logout } from "../api/auth.js";

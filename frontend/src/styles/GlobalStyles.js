@@ -53,6 +53,7 @@ export const viewStyles = (theme) => {
       fontSize: 14,
       fontWeight: 600,
       fontStyle: "italic",
+      color: theme["dark-text"],
     },
   });
 };

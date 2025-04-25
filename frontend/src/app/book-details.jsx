@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import React from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import BookLite from "../components/card.jsx";
-import { viewStyles } from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/GlobalStyles.js";
 import { IconButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 import AddCartIcon from "../../assets/icons/add-cart-icon.jsx";

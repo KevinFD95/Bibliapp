@@ -8,7 +8,7 @@ import BookView from "./book-view.jsx";
 
 import BookLite from "../components/card.jsx";
 
-import { viewStyles } from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/GlobalStyles.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const Stack = createStackNavigator();

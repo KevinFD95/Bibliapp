@@ -3,7 +3,7 @@ import { Image, View, Text, Pressable, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
-import { viewStyles } from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/GlobalStyles.js";
 
 import { CustomButton } from "../components/button.jsx";
 import {

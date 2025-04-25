@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getDocuments } from "../api/documents.js";
-import { viewStyles } from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/GlobalStyles.js";
 import BookDetails from "./book-details.jsx";
 import BookView from "./book-view.jsx";
 import BookLite from "../components/card.jsx";

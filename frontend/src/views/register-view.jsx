@@ -10,7 +10,7 @@ import { CustomButton } from "../components/button.jsx";
 import { Popup } from "../components/popup.jsx";
 
 import RegisterImage from "../../assets/icons/account-icon.jsx";
-import { viewStyles } from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/GlobalStyles.js";
 
 import { RegisterController } from "../controllers/UserController.js";
 

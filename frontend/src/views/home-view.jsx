@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import BookLite from "../components/card.jsx";
 
-import { viewStyles } from "../styles/view-styles.jsx";
+import { viewStyles } from "../styles/GlobalStyles.js";
 import { fetchAllDocuments } from "../controllers/DocumentController.js";
 import RefreshableView from "../components/refreshable.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";

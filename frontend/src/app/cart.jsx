@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useEffect, useCallback } from "react";
 import {
   ScrollView,
@@ -12,11 +12,15 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { BookLiteCart } from "../components/card.jsx";
 import { CustomButton } from "../components/button.jsx";
-import viewStyles from "../styles/view-styles";
+import { viewStyles } from "../styles/GlobalStyles.js";
 import { getCart, deleteCart, finalizePurchaseApi } from "../api/cart.js";
 import { ConfirmPopup, Popup } from "../components/popup.jsx";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 function Cart() {
+  const { theme } = useContext(ThemeContext);
+  const themeStyles = viewStyles(theme);
+
   const [books, setBooks] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -167,7 +171,12 @@ function Cart() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={[
+          themeStyles.mainContainer,
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+        ]}
+      >
         <ActivityIndicator size={"large"} />
       </View>
     );
@@ -179,44 +188,46 @@ function Cart() {
 
   if (!Array.isArray(books) || books.length === 0) {
     return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>El carrito está vacío.</Text>
+      <View style={[themeStyles.mainContainer, styles.emptyContainer]}>
+        <Text style={themeStyles.p}>El carrito está vacío.</Text>
       </View>
     );
   }
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={[
-          viewStyles.mainContainer,
-          { justifyContent: "flex-start", paddingBottom: styles.footer.height },
-        ]}
-      >
-        {books.map((item) => (
-          <View key={item.document_id} style={styles.bookItem}>
-            <View style={styles.bookRow}>
-              <BookLiteCart key={item.document_id} image={item.url_image} />
-              <View style={styles.bookDetails}>
-                <View style={styles.removeIconContainer}>
-                  <TouchableOpacity onPress={() => handleRemoveBook(item)}>
-                    <Text style={styles.removeIcon}>X</Text>
-                  </TouchableOpacity>
+      <View style={[themeStyles.mainContainer, { flex: 1 }]}>
+        <ScrollView
+          contentContainerStyle={{
+            justifyContent: "flex-start",
+            paddingBottom: styles.footer.height,
+          }}
+        >
+          {books.map((item) => (
+            <View key={item.document_id} style={styles.bookItem}>
+              <View style={styles.bookRow}>
+                <BookLiteCart key={item.document_id} image={item.url_image} />
+                <View style={styles.bookDetails}>
+                  <View style={styles.removeIconContainer}>
+                    <TouchableOpacity onPress={() => handleRemoveBook(item)}>
+                      <Text style={styles.removeIcon}>X</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.bookTitle}>{item.title}</Text>
+                  <Text style={styles.bookAuthor}>Autor: {item.author}</Text>
+                  {item.updated_at && (
+                    <Text style={styles.bookDate}>
+                      Añadido:
+                      {new Date(item.updated_at).toLocaleDateString()}
+                    </Text>
+                  )}
+                  <Text style={styles.bookPrice}>{item.price}€</Text>
                 </View>
-                <Text style={styles.bookTitle}>{item.title}</Text>
-                <Text style={styles.bookAuthor}>Autor: {item.author}</Text>
-                {item.updated_at && (
-                  <Text style={styles.bookDate}>
-                    Añadido:
-                    {new Date(item.updated_at).toLocaleDateString()}
-                  </Text>
-                )}
-                <Text style={styles.bookPrice}>{item.price}€</Text>
               </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      </View>
       {books && books.length > 0 && (
         <View style={styles.footer}>
           <View style={styles.totalContainer}>
@@ -280,16 +291,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 50,
-  },
-  emptyText: {
-    fontSize: 18,
-    color: "#666",
   },
   footer: {
     position: "absolute",
-    left: 0,
-    right: 0,
     bottom: 0,
     backgroundColor: "white",
     borderTopWidth: 1,
