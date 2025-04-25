@@ -12,7 +12,7 @@ import { Popup } from "../components/opup.jsx";
 import RegisterImage from "../../assets/icons/AccountIcon.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 
-import { RegisterController } from "../controllers/serController.js";
+import { RegisterController } from "../controllers/userController.js";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemeContext } from "../context/ThemeContext.jsx";
