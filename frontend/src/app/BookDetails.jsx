@@ -8,10 +8,12 @@ import { Popup } from "../components/PopupComponent.jsx";
 import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
 import { getCartDoc, addCart } from "../api/cart.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useCart } from "../context/CartContext.jsx";
 
 export default function BookDetails({ route, navigation }) {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
+  const { fetchCartItems } = useCart();
 
   const { document } = route.params;
   const [alertVisible, setAlertVisible] = useState(false);
@@ -35,6 +37,7 @@ export default function BookDetails({ route, navigation }) {
           setAlertMessage(`${document.title} se ha añadido al carrito`);
           setAlertTitle("Añadir Documento");
           setAlertVisible(true);
+          fetchCartItems();
         } else {
           setAlertMessage("No se ha podido añadir al carrito");
           setAlertTitle("Añadir Documento");

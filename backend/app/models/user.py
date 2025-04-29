@@ -96,7 +96,9 @@ class User:
             conn.commit()
             conn.close()
 
-            return ApiResponse.success(message="Usuario creado exitosamente.", status_code=201)
+            return ApiResponse.success(
+                message="Usuario creado exitosamente.", status_code=201
+            )
         except Exception:
             return ApiResponse.error(message="El usuario no ha sido creado.")
 
@@ -120,6 +122,18 @@ class User:
             return {"message": "El usuario ha sido actualizado correctamente."}
         except Exception:
             return {"error": "No se han podido actualizar los datos del usuario."}
+
+    def changepassword(username, password):
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor()
+
+            cursor.execute(Queries.USERS_CHANGEPASSWORD, (password, username))
+            conn.commit()
+            conn.close()
+            return {"message": "Contraseña cambiada exitósamente."}
+        except Exception:
+            return {"error": "No se ha podido cambiar la contraseña."}
 
     @staticmethod
     def delete(username):

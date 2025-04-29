@@ -11,17 +11,24 @@ import {
   CustomTextBoxPass,
 } from "../components/TextInputComponent.jsx";
 import { Popup } from "../components/PopupComponent.jsx";
-import logo from "../../assets/bibliapp-logo-inicio.png";
+import LightLogo from "../../assets/bibliapp-logo-inicio.png";
+import DarkLogo from "../../assets/bibliapp-icon-loading.png";
 import {
   handleLogin,
   validateUserToken,
 } from "../controllers/authController.js";
 import * as SecureStore from "expo-secure-store";
 
+import { useCart } from "../context/CartContext.jsx";
+
 export default function LoginScreen() {
+  const { fetchCartItems } = useCart();
   const navigation = useNavigation();
+  const { mode } = useContext(ThemeContext);
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
+
+  const logo = mode === "dark" ? DarkLogo : LightLogo;
 
   const [userInput, setUserInput] = useState();
   const [passInput, setPassInput] = useState();
@@ -64,6 +71,12 @@ export default function LoginScreen() {
           value={passInput}
           onChangeText={setPassInput}
         />
+
+        <Pressable onPress={() => handleForgotPass(navigation)}>
+          <Text style={[themeStyles.h5, { textAlign: "center" }]}>
+            He olvidado mi contraseña
+          </Text>
+        </Pressable>
       </View>
 
       <View style={styles.buttonsContainer}>
@@ -76,6 +89,7 @@ export default function LoginScreen() {
               passInput,
               setAlert,
               setAlertMessage,
+              fetchCartItems,
             )
           }
         />
@@ -112,6 +126,7 @@ async function onLoginPress(
   passInput,
   setAlert,
   setAlertMessage,
+  fetchCartItems,
 ) {
   const result = await handleLogin(
     { identifier: userInput, user_password: passInput },
@@ -121,11 +136,17 @@ async function onLoginPress(
   if (result?.error) {
     setAlertMessage(result.message);
     setAlert(true);
+  } else {
+    await fetchCartItems();
   }
 }
 
 function handleRegister(navigation) {
   navigation.navigate("RegisterView");
+}
+
+function handleForgotPass(navigation) {
+  navigation.navigate("ForgotPassView");
 }
 
 const styles = StyleSheet.create({

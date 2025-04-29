@@ -25,3 +25,17 @@ export function logout() {
     method: "POST",
   });
 }
+
+export function forgotPassword(email) {
+  return customFetch("/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function resetPassword(email, token, password) {
+  return customFetch("/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ email, token, password }),
+  });
+}

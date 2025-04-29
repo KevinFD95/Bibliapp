@@ -1,17 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { getAllRegisters } from "../api/registers.js";
 
 import BookLite from "../components/CardComponent.jsx";
 import { Popup } from "../components/PopupComponent.jsx";
+import LoadingStyleSpinner from "../components/LoadingComponent.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
@@ -39,16 +34,7 @@ export default function Library() {
   }, []);
 
   if (loading) {
-    return (
-      <View
-        style={[
-          themeStyles.mainContainer,
-          { flex: 1, alignItems: "center", justifyContent: "center" },
-        ]}
-      >
-        <ActivityIndicator size={"large"} />
-      </View>
-    );
+    return <LoadingStyleSpinner />;
   }
 
   if (!Array.isArray(documents)) {

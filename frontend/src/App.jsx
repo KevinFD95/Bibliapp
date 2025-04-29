@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -17,11 +18,13 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <LoginScreen />
-        </NavigationContainer>
-      </SafeAreaProvider>
+      <CartProvider>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <LoginScreen />
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </CartProvider>
     </ThemeProvider>
   );
 }

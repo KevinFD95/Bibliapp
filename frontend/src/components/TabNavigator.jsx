@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Image, View, Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { CartContext } from "../context/CartContext.jsx";
 
 import navLogo from "../../assets/bibliapp-logo-nav.png";
 
@@ -24,6 +25,7 @@ const iconSize = 40;
 
 export default function TabNavigator() {
   const { theme } = useContext(ThemeContext);
+  const { cartItems } = useContext(CartContext);
 
   return (
     <Tab.Navigator
@@ -43,13 +45,14 @@ export default function TabNavigator() {
             resizeMode="contain"
           />
         ),
-        headerRight: () => (
-          <View style={{ marginRight: 20 }}>
-            <Pressable onPress={() => navigation.navigate("cart")}>
-              <CartIcon size={38} />
-            </Pressable>
-          </View>
-        ),
+        headerRight: () =>
+          cartItems.length > 0 ? (
+            <View style={{ marginRight: 20 }}>
+              <Pressable onPress={() => navigation.navigate("cart")}>
+                <CartIcon size={38} />
+              </Pressable>
+            </View>
+          ) : null,
         tabBarStyle: {
           backgroundColor: theme["nav-background"],
           paddingTop: 5,

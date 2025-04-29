@@ -1,8 +1,8 @@
 # app/services/epub_converter.py
 from ebooklib import epub
 from bs4 import BeautifulSoup
-import ebooklib
-import re
+from mimetypes import guess_type
+import ebooklib, re, base64, os
 
 
 class EpubConverter:
@@ -12,6 +12,11 @@ class EpubConverter:
     def convert_to_html(self):
         try:
             book = epub.read_epub(self.epub_file_path, options={"ignore_ncx": False})
+
+            images = {}
+            for item in book.get_items_of_type(ebooklib.ITEM_IMAGE):
+                image_data = base64.b64encode(item.get_content()).decode("utf-8")
+                images[item.get_name()] = image_data
 
             chapters = []
             chapter_number = 1
@@ -25,6 +30,15 @@ class EpubConverter:
                     for item in book.get_items():
                         if item.get_type() == ebooklib.ITEM_STYLE:
                             css_styles += item.get_content().decode("utf-8") + "\n"
+                    
+                    for img in body.find_all("img"):
+                        src = img.get("src")
+                        if src:
+                            filename = os.path.basename(src)
+                            if filename in images:
+                                mime_type, _ = guess_type(filename)
+                                ext = mime_type.split("/")[1] if mime_type else "jpeg"
+                                img["src"] = f"data:image/{ext};base64,{image_data}"
 
                     # Bucle para eliminar las clases de dentro del body
                     # for tag in body.find_all(True):

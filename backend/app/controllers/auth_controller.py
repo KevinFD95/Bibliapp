@@ -7,10 +7,15 @@ from flask_jwt_extended import (
 )
 from app.models import User
 from app.helpers import verify_password, getToken
+from app.validations import password_validation
 from datetime import timedelta, datetime, timezone
 from app.database import Queries, Connection
 from app.services import ApiResponse
+from itsdangerous import URLSafeSerializer
+from app.services import send_password_reset_email
+from config import Config
 
+serializer = URLSafeSerializer(Config.SECRET_KEY)
 
 class AuthController:
     def login():
@@ -125,3 +130,45 @@ class AuthController:
             return ApiResponse.success(message="Acceso autorizado")
         except Exception as e:
             return ApiResponse.error(message="Error al cerrar sesión", status_code=500)
+        
+    def forgot_password_request():
+        data = request.get_json()
+        email = data.get("email")
+
+        if not email:
+            return ApiResponse.error(message="Email no proporcionado")
+        
+        user = User.get_user_by_email(email)
+
+        if not user:
+            return ApiResponse.error(message="Usuario no encontrado", status_code=404)
+        
+        token = serializer.dumps(email, salt="password-reset-salt")
+
+        send_password_reset_email(email, token)
+
+        return ApiResponse.success(message="Correo eléctronico de restablecimiento de contraseña enviado.")
+    
+    def forgot_password_confirm():
+        data = request.get_json()
+        email = data.get("email")
+        token = data.get("token")
+        new_password = data.get("new_password")
+
+        if not email or not token or not new_password:
+            return ApiResponse.error(message="Datos incompletos")
+        
+        if not password_validation(new_password):
+            return ApiResponse.error(message="La contraseña debe contener una minúscula, mayúscula, número y carácter especial.")
+        
+        try:
+            email_from_token = serializer.loads(token, salt="password-reset-salt", max_age=300)
+        except Exception:
+            return ApiResponse.error(message="Token inválido o expirado")
+        
+        if email != email_from_token:
+            return ApiResponse.error(message="Email no coincide con el token")
+        
+        User.changepassword(email, new_password)
+        
+        return ApiResponse.success(message="Contraseña restablecida exitósamente.")

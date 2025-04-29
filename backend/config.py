@@ -19,3 +19,5 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
 
     CLOUD_PATH = os.getenv("CLOUD_FOLDER_PATH")
+
+    RESEND_API_KEY = os.getenv("RESEND_API_KEY")

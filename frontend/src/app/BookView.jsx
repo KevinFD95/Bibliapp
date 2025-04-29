@@ -59,6 +59,10 @@ export default function BookView({ navigation, route }) {
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={true}
         nestedScrollEnabled={true}
+        allFileAccess={true}
+        allowingReadAccessToURL={"*"}
+        mixedContentMode="always"
+        allowUniversalAccessFromFileURLs={true}
       />
     </View>
   );
