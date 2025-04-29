@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import * as SecureStore from "expo-secure-store";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -57,17 +58,19 @@ export default function ForgotPassView({ navigation, route }) {
       />
       <CustomButton
         text={"Restablecer contraseña"}
-        onPress={sendPassword(
-          navigation,
-          email,
-          setAlertMessage,
-          setAlertVisible,
-          setError,
-          setErrorVisible,
-          newPassword,
-          confirmPassword,
-          resetCode,
-        )}
+        onPress={() =>
+          sendPassword(
+            navigation,
+            email,
+            setAlertMessage,
+            setAlertVisible,
+            setError,
+            setErrorVisible,
+            newPassword,
+            confirmPassword,
+            resetCode,
+          )
+        }
       />
 
       <Popup
@@ -83,7 +86,7 @@ export default function ForgotPassView({ navigation, route }) {
         title={"Error"}
         message={error}
         visible={errorVisible}
-        onClose={() => setError(false)}
+        onClose={() => setErrorVisible(false)}
       />
     </SafeAreaView>
   );
@@ -116,19 +119,28 @@ async function sendPassword(
     return;
   } else {
     try {
-      const response = await resetPassword(email, resetCode, newPassword);
+      const token = await SecureStore.getItemAsync("resetToken");
+      const response = await resetPassword(
+        email,
+        token,
+        resetCode,
+        newPassword,
+      );
       const { ok, status } = response;
 
       if (ok && status === 200) {
         setAlertMessage("Contraseña restablecida correctamente.");
         setAlertVisible(true);
+        await SecureStore.deleteItemAsync("resetToken");
       } else if (status === 400) {
         setError("No se ha podido cambiar la contraseña.");
         setErrorVisible(true);
+        await SecureStore.deleteItemAsync("resetToken");
       }
     } catch {
       setError("Error al restablecer la contraseña.");
       setErrorVisible(true);
+      await SecureStore.deleteItemAsync("resetToken");
     }
   }
 }

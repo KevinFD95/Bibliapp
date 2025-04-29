@@ -33,9 +33,14 @@ export function forgotPassword(email) {
   });
 }
 
-export function resetPassword(email, token, password) {
+export function resetPassword(email, token, code, password) {
   return customFetch("/reset-password", {
     method: "POST",
-    body: JSON.stringify({ email, token, password }),
+    body: JSON.stringify({
+      email: email,
+      token: token,
+      code: code,
+      new_password: password,
+    }),
   });
 }

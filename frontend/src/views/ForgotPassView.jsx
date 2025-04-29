@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import * as SecureStore from "expo-secure-store";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -76,8 +77,9 @@ async function sendEmail(
 ) {
   try {
     const response = await forgotPassword(email);
-    const { ok, status } = response;
+    const { ok, status, data } = response;
     if (ok && status === 200) {
+      await SecureStore.setItemAsync("resetToken", data.token);
       setAlertMessage(
         "Se ha enviado un correo electrónico con el código de restablecimiento.",
       );

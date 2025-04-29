@@ -5,12 +5,12 @@ from app.services import ApiResponse
 
 resend.api_key = Config.RESEND_API_KEY
 
-def send_password_reset_email(email, token):
+def send_password_reset_email(email, code):
     try:
-        reset_link = f"Introduce este código en la app para restablecer tu contraseña: {token}"
+        reset_link = f"Introduce este código en la app para restablecer tu contraseña: {code}"
 
         resend.Emails.send({
-            "from": "emkf_95@hotmail.com",
+            "from": "onboarding@resend.dev",
             "to": email,
             "subject": "Bibiapp - Restablecer contraseña",
             "html": f"<h1>Restablecer contraseña</h1><p>{reset_link}</p>"
