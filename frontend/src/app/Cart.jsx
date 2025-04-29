@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -14,37 +13,20 @@ import { BookLiteCart } from "../components/CardComponent.jsx";
 import { CustomButton } from "../components/ButtonComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 import { getCart, deleteCart, finalizePurchaseApi } from "../api/cart.js";
-import { ConfirmPopup, Popup } from "../components/PopupComponent.jsx";
+import { ConfirmPopup } from "../components/PopupComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { AlertContext } from "../context/AlertContext.jsx";
 
 function Cart() {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
+  const { showAlert } = useContext(AlertContext);
 
   const [books, setBooks] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0.0);
-  const [alertTitle, setAlertTitle] = useState();
-  const [alertMessage, setAlertMessage] = useState();
-  const [alertVisible, setAlertVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
-
-  useEffect(() => {
-    if (alertVisible) {
-      console.log("useEffect: alertVisible changed to TRUE");
-    } else {
-      console.log("useEffect: alertVisible changed to FALSE");
-    }
-  }, [alertVisible]);
-
-  useEffect(() => {
-    if (confirmVisible) {
-      console.log("useEffect: confirmVisible changed to TRUE");
-    } else {
-      console.log("useEffect: confirmVisible changed to FALSE");
-    }
-  }, [confirmVisible]);
 
   const fetchBooks = async () => {
     try {
@@ -63,7 +45,6 @@ function Cart() {
           response?.error ||
           "Hubo un error al cargar los libros.";
         setError(errorMessage);
-        console.error("Error fetching cart API response:", response);
       }
     } catch (err) {
       setError("Hubo un error al cargar los libros.");
@@ -77,9 +58,6 @@ function Cart() {
     useCallback(() => {
       fetchBooks();
       return () => {
-        console.log(
-          "useFocusEffect Cleanup: Screen blurred, resetting books/error state.",
-        );
         setBooks([]);
         setError(null);
       };
@@ -110,92 +88,53 @@ function Cart() {
       const { ok, status } = response;
       if (ok && status === 200) {
         await fetchBooks();
-
-        setAlertMessage(`${document.title} se ha eliminado del carrito`);
-        setAlertTitle("Eliminar Documento");
-        setTimeout(() => {
-          setAlertVisible(true);
-        }, 150);
+        showAlert(
+          "Eliminar Documento",
+          `${document.title} se ha eliminado del carrito`,
+        );
       } else {
         const errorMessage =
           response?.error?.message ||
           response?.error ||
           `Error: ${document.title} no se ha podido eliminar del carrito`;
-        setAlertMessage(errorMessage);
-        setAlertTitle("Eliminar Documento");
-        setTimeout(() => {
-          setAlertVisible(true);
-        }, 150);
+        showAlert("Eliminar Documento", errorMessage);
       }
     } catch (err) {
-      setAlertMessage(
-        "Error: Hubo un error al comunicarse con el servidor para eliminar el libro.",
+      showAlert(
+        "Error de Comunicación",
+        "Hubo un error al comunicarse con el servidor para eliminar el libro.",
       );
-      setAlertTitle("Eliminar Documento");
-      setTimeout(() => {
-        setAlertVisible(true);
-      }, 150);
-      console.error("Error al eliminar el libro:", err);
+      console.error("Error de red al eliminar el libro:", err);
     } finally {
       setLoading(false);
     }
   };
 
   const handlePurchase = async () => {
-    console.log("handlePurchase started");
     try {
       setLoading(true);
-      console.log("Calling finalizePurchaseApi...");
       const purchaseResponse = await finalizePurchaseApi();
-      console.log("finalizePurchaseApi response:", purchaseResponse);
-
       if (purchaseResponse && purchaseResponse.ok) {
-        console.log("Purchase API call successful.");
         setBooks([]);
-        setAlertMessage("Se ha/han comprado el/los documento/s del carrito");
-        setAlertTitle("Compra Finalizada");
-
-        console.log("Setting alert state for success popup...");
-        setTimeout(() => {
-          setAlertVisible(true);
-          console.log(
-            "setTimeout inside handlePurchase success fired. setAlertVisible(true)",
-          );
-        }, 150);
+        showAlert(
+          "Compra Finalizada",
+          "Se ha/han comprado el/los documento/s del carrito",
+        );
       } else {
-        console.log("Purchase API call failed or not OK.");
         const errorData = purchaseResponse?.error;
-        setAlertMessage(errorData || "Hubo un error al realizar la compra.");
-        setAlertTitle("Error de Compra");
-
-        console.log("Setting alert state for error popup...");
-        setTimeout(() => {
-          setAlertVisible(true);
-          console.log(
-            "setTimeout inside handlePurchase error fired. setAlertVisible(true)",
-          );
-        }, 150); // Retardo
-        console.error("Error al realizar la compra:", purchaseResponse);
+        showAlert(
+          "Error de Compra",
+          errorData || "Hubo un error al realizar la compra.",
+        );
       }
     } catch (error) {
-      console.log("handlePurchase caught an exception.");
-      setAlertMessage(
+      showAlert(
+        "Error de Comunicación",
         "Hubo un error al comunicarse con el servidor para realizar la compra.",
       );
-      setAlertTitle("Error de Comunicación");
-
-      console.log("Setting alert state for catch popup...");
-      setTimeout(() => {
-        setAlertVisible(true);
-        console.log(
-          "setTimeout inside handlePurchase catch fired. setAlertVisible(true)",
-        );
-      }, 150);
-
       console.error("Error de red en la compra:", error);
     } finally {
       setLoading(false);
-      console.log("handlePurchase finished (finally block).");
     }
   };
 
@@ -277,40 +216,26 @@ function Cart() {
             <CustomButton
               title="Comprar"
               text={"Realizar compra"}
+              // --- setConfirmVisible(true) (Líneas 286-288) ---
               onPress={() => {
-                console.log(
-                  "Realizar compra button pressed. Setting confirmVisible(true)",
-                );
                 setConfirmVisible(true);
               }}
             />
           </View>
         </View>
       )}
-      <Popup
-        title={alertTitle}
-        message={alertMessage}
-        visible={alertVisible}
-        onClose={() => {
-          console.log("Popup onClose triggered!");
-          setAlertVisible(false);
-          setAlertTitle(undefined);
-          setAlertMessage(undefined);
-        }}
-      />
       <ConfirmPopup
         title={"Confirmación de compra"}
         message={"¿Desea realmente realizar la compra?"}
         visible={confirmVisible}
         onConfirm={() => {
-          console.log(
-            "ConfirmPopup onConfirm: Calling handlePurchase and setting confirmVisible(false)",
-          );
+          // Llama a la lógica de compra
           handlePurchase();
+          // Cierra el popup de confirmación
           setConfirmVisible(false);
         }}
         onClose={() => {
-          console.log("ConfirmPopup onClose: Setting confirmVisible(false)");
+          // Permite cerrar la confirmación sin comprar
           setConfirmVisible(false);
         }}
       />
@@ -319,9 +244,6 @@ function Cart() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
   header: {
     marginBottom: 30,
     alignItems: "center",
@@ -339,6 +261,8 @@ const styles = StyleSheet.create({
   footer: {
     position: "absolute",
     bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: "white",
     borderTopWidth: 1,
     borderTopColor: "#eee",

@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 
 import LoginScreen from "./app/Login.jsx";
+import { AlertProvider } from "./context/AlertContext.jsx";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,9 +19,11 @@ export default function App() {
   return (
     <ThemeProvider>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <LoginScreen />
-        </NavigationContainer>
+        <AlertProvider>
+          <NavigationContainer>
+            <LoginScreen />
+          </NavigationContainer>
+        </AlertProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );
