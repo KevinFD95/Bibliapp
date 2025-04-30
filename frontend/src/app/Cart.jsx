@@ -177,8 +177,7 @@ function Cart() {
       <View style={[themeStyles.mainContainer, { flex: 1 }]}>
         <ScrollView
           contentContainerStyle={{
-            justifyContent: "flex-start",
-            paddingBottom: styles.footer.height + 20,
+            paddingBottom: styles.footer.height,
           }}
         >
           {books.map((item) => (
@@ -268,6 +267,7 @@ const styles = StyleSheet.create({
     borderTopColor: "#eee",
     padding: 15,
     width: "100%",
+    height: 140,
   },
   totalContainer: {
     flexDirection: "column",
