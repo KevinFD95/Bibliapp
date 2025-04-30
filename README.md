@@ -51,3 +51,5 @@ Bibliapp es una innovadora aplicación multiplataforma diseñada para transforma
 ---
 
 _Disfruta organizando y explorando tu biblioteca personal con Bibliapp, tu solución digital para la gestión de libros._
+
+**Bibliapp © 2025 by Kevin Fuentes and Francisco Ojeda is licensed under CC BY-NC-ND 4.0**
