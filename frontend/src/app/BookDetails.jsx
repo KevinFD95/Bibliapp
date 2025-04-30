@@ -14,6 +14,7 @@ export default function BookDetails({ route, navigation }) {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
   const { fetchCartItems } = useCart();
+  const { cartCount } = useCart();
 
   const { document } = route.params;
   const [alertVisible, setAlertVisible] = useState(false);
@@ -37,7 +38,9 @@ export default function BookDetails({ route, navigation }) {
           setAlertMessage(`${document.title} se ha añadido al carrito`);
           setAlertTitle("Añadir Documento");
           setAlertVisible(true);
-          fetchCartItems();
+          if (cartCount === 0) {
+            fetchCartItems();
+          }
         } else {
           setAlertMessage("No se ha podido añadir al carrito");
           setAlertTitle("Añadir Documento");

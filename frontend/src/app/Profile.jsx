@@ -12,6 +12,7 @@ import EditIcon from "../../assets/icons/EditIcon.jsx";
 import LogoutIcon from "../../assets/icons/LogoutIcon.jsx";
 import AccountIcon from "../../assets/icons/AccountIcon.jsx";
 import SettingsIcon from "../../assets/icons/SettingsIcon.jsx";
+import AddPhotoIcon from "../../assets/icons/AddPhotoIcon.jsx";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import ProfileEdit from "./ProfileEditView.jsx";
@@ -118,7 +119,25 @@ function ProfileScreen() {
             onPress={() => handleEditProfile(user)}
             icon={<EditIcon size={52} />}
           />
-          <AccountIcon size={200} />
+          <View>
+            <AccountIcon size={200} />
+            <View
+              style={[
+                styles.cameraContainer,
+                {
+                  backgroundColor: theme["app-background"],
+                  borderColor: theme["selected-icons"],
+                },
+              ]}
+            >
+              <Text>
+                <IconButton
+                  onPress={() => alert("Añadir foto")}
+                  icon={<AddPhotoIcon size={28} />}
+                />
+              </Text>
+            </View>
+          </View>
           <IconButton
             onPress={handleConfig}
             icon={<SettingsIcon size={52} />}
@@ -206,5 +225,18 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flexDirection: "row",
     marginBottom: 20,
+  },
+  cameraContainer: {
+    height: 60,
+    width: 60,
+    paddingLeft: 2,
+    borderRadius: "100%",
+    borderWidth: 2,
+    position: "absolute",
+    zIndex: 1,
+    bottom: 10,
+    right: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

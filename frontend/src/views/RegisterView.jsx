@@ -52,44 +52,60 @@ export default function RegisterScreen({ navigation }) {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.inputContainer}
+        contentContainerStyle={styles.inputView}
       >
-        <Text>Nombre:</Text>
-        <CustomTextBox
-          placeholder={"Introduzca un nombre de usuario"}
-          value={nameInput}
-          onChangeText={setNameInput}
-        />
-        <Text>Apellidos:</Text>
-        <CustomTextBox
-          placeholder={"Introduzca un nombre de usuario"}
-          value={lastnameInput}
-          onChangeText={setLastnameInput}
-        />
-        <Text>Usuario:</Text>
-        <CustomTextBoxUser
-          placeholder={"Introduzca un nombre de usuario"}
-          value={userInput}
-          onChangeText={setUserInput}
-        />
-        <Text>Correo electrónico:</Text>
-        <CustomTextBoxUser
-          placeholder={"Introduzca un correo electrónico"}
-          value={mailInput}
-          onChangeText={setMailInput}
-        />
-        <Text>Contraseña:</Text>
-        <CustomTextBoxPass
-          placeholder={"Introduzca una contraseña"}
-          value={passInput}
-          onChangeText={setPassInput}
-        />
-        <Text>Repetir contraseña:</Text>
-        <CustomTextBoxPass
-          placeholder={"Repita la contraseña anterior"}
-          value={secondPassInput}
-          onChangeText={setSecondPassInput}
-        />
+        <View style={styles.inputContainer}>
+          <Text style={themeStyles.h5}>Nombre:</Text>
+          <CustomTextBox
+            placeholder={"Introduzca un nombre de usuario"}
+            value={nameInput}
+            onChangeText={setNameInput}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={themeStyles.h5}>Apellidos:</Text>
+          <CustomTextBox
+            placeholder={"Introduzca un nombre de usuario"}
+            value={lastnameInput}
+            onChangeText={setLastnameInput}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={themeStyles.h5}>Usuario:</Text>
+          <CustomTextBoxUser
+            placeholder={"Introduzca un nombre de usuario"}
+            value={userInput}
+            onChangeText={setUserInput}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={themeStyles.h5}>Correo electrónico:</Text>
+          <CustomTextBoxUser
+            placeholder={"Introduzca un correo electrónico"}
+            value={mailInput}
+            onChangeText={setMailInput}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={themeStyles.h5}>Contraseña:</Text>
+          <CustomTextBoxPass
+            placeholder={"Introduzca una contraseña"}
+            value={passInput}
+            onChangeText={setPassInput}
+          />
+          <Text style={[themeStyles.required, styles.requiredText]}>
+            * Mínimo 8 caracteres, una mayúscula, una minúscula, un número y un
+            símbolo.
+          </Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={themeStyles.h5}>Repetir contraseña:</Text>
+          <CustomTextBoxPass
+            placeholder={"Repita la contraseña anterior"}
+            value={secondPassInput}
+            onChangeText={setSecondPassInput}
+          />
+        </View>
       </ScrollView>
       <CustomButton text="Registrarse" onPress={handleRegister} />
 
@@ -112,7 +128,15 @@ const styles = StyleSheet.create({
   image: {
     alignItems: "center",
   },
-  inputContainer: {
+  inputView: {
     marginVertical: 25,
+  },
+  inputContainer: {
+    marginVertical: 5,
+  },
+  requiredText: {
+    marginTop: -15,
+    marginBottom: 10,
+    marginHorizontal: 10,
   },
 });

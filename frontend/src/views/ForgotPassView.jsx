@@ -62,7 +62,7 @@ export default function ForgotPassView({ navigation }) {
         message={error}
         visible={errorVisible}
         on
-        onClose={() => setError(false)}
+        onClose={() => setErrorVisible(false)}
       />
     </SafeAreaView>
   );
@@ -77,13 +77,16 @@ async function sendEmail(
 ) {
   try {
     const response = await forgotPassword(email);
-    const { ok, status, data } = response;
+    const { ok, status, data, message } = response;
     if (ok && status === 200) {
       await SecureStore.setItemAsync("resetToken", data.token);
       setAlertMessage(
         "Se ha enviado un correo electrónico con el código de restablecimiento.",
       );
       setAlertVisible(true);
+    } else if (status === 404) {
+      setError(message);
+      setErrorVisible(true);
     }
   } catch {
     setError("Error al enviar el correo electrónico.");

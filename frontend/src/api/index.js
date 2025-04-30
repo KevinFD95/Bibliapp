@@ -20,5 +20,10 @@ export async function customFetch(endpoint, options = {}) {
 
   const data = await response.json().catch(() => ({}));
 
-  return { status: response.status, ok: response.ok, data };
+  return {
+    status: response.status,
+    ok: response.ok,
+    data,
+    message: data.message,
+  };
 }

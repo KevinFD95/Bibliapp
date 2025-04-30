@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
-import { Text } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemeContext } from "../context/ThemeContext.jsx";
@@ -44,6 +44,10 @@ export default function ForgotPassView({ navigation, route }) {
         onChangeText={setNewPassword}
         value={newPassword}
       />
+      <Text style={[themeStyles.required, styles.requiredText]}>
+        * Mínimo 8 caracteres, una mayúscula, una minúscula, un número y un
+        símbolo.
+      </Text>
       <Text style={themeStyles.h5}>Repetir contraseña:</Text>
       <CustomTextBoxPass
         placeholder={"Escribe de nuevo tu nueva contraseña"}
@@ -60,7 +64,6 @@ export default function ForgotPassView({ navigation, route }) {
         text={"Restablecer contraseña"}
         onPress={() =>
           sendPassword(
-            navigation,
             email,
             setAlertMessage,
             setAlertVisible,
@@ -93,7 +96,6 @@ export default function ForgotPassView({ navigation, route }) {
 }
 
 async function sendPassword(
-  navigation,
   email,
   setAlertMessage,
   setAlertVisible,
@@ -148,3 +150,11 @@ async function sendPassword(
 function handleLogin(navigation) {
   navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
 }
+
+const styles = StyleSheet.create({
+  requiredText: {
+    marginTop: -15,
+    marginBottom: 10,
+    marginHorizontal: 10,
+  },
+});

@@ -12,9 +12,10 @@ def send_password_reset_email(email, code):
         resend.Emails.send({
             "from": "onboarding@resend.dev",
             "to": email,
-            "subject": "Bibiapp - Restablecer contraseña",
+            "subject": "Bibliapp - Restablecer contraseña",
             "html": f"<h1>Restablecer contraseña</h1><p>{reset_link}</p>"
         })
 
+        return ApiResponse.success(message="Correo de restablecimiento de contraseña enviado")
     except Exception:
         return ApiResponse.error(message="Error al enviar el correo de restablecimiento de contraseña", status_code=500)

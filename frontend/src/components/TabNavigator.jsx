@@ -34,6 +34,7 @@ export default function TabNavigator() {
           backgroundColor: theme["nav-background"],
         },
         headerTitleAlign: "center",
+        headerTintColor: theme["dark-text"],
         headerLeft: () => (
           <Image
             source={navLogo}

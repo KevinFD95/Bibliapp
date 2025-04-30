@@ -55,5 +55,12 @@ export const viewStyles = (theme) => {
       fontStyle: "italic",
       color: theme["dark-text"],
     },
+
+    required: {
+      fontSize: 14,
+      fontWeight: 600,
+      fontStyle: "italic",
+      color: theme["required-text-color"],
+    },
   });
 };

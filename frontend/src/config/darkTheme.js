@@ -3,6 +3,7 @@ export default {
   "app-background": "#1B4F72",
   "splash-background": "#1B4F72",
   "dark-text": "#EAF2F8",
+  "required-text-color": "#D4B64A",
   "button-text": "#17202A",
   "button-background": "#A9CCE3",
   "nav-background": "#17202A",
