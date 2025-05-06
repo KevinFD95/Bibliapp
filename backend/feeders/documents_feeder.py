@@ -1,5 +1,6 @@
 # feeders/documents_feeder.py
 import sys, os
+import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -20,6 +21,7 @@ class DocumentsFeeder:
             for doc in documents:
                 i += 1
                 try:
+                    now = datetime.datetime.now()
                     cursor.execute(
                         Queries.DOC_CREATE, (
                             doc["title"],
@@ -31,10 +33,14 @@ class DocumentsFeeder:
                             doc["prequel"],
                             doc["sequel"],
                             doc["synopsis"],
+                            doc["category_1"],
+                            doc["category_2"],
                             doc["price"],
                             doc["url_image"],
                             doc["url_document"],
                             generate_slug(doc["title"]),
+                            now,
+                            now,
                         )
                     )
                     conn.commit()

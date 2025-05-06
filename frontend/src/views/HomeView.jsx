@@ -12,21 +12,25 @@ import { useNavigation } from "@react-navigation/native";
 import BookLite from "../components/CardComponent.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
-import { fetchAllDocuments } from "../controllers/documentController.js";
+import {
+  fetchAllDocuments,
+  fetchRandomDocuments,
+} from "../controllers/documentController.js";
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
+  const [newDocuments, setNewDocuments] = useState(null);
+  const [randomDocuments, setRandomDocuments] = useState(null);
 
-  const [documents, setDocuments] = useState();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
   useEffect(() => {
-    loadDocuments(setDocuments, setError, setLoading);
+    loadHomeData(setNewDocuments, setRandomDocuments, setError, setLoading);
   }, []);
 
   if (loading) {
@@ -45,81 +49,140 @@ export default function HomeScreen() {
     );
   }
 
-  if (!Array.isArray(documents)) {
-    return (
-      <View style={styles.centered}>
-        <Text>No se encontraron documentos disponibles</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={themeStyles.mainContainer}>
       <RefreshableView
         onRefresh={refreshView(
-          loadDocuments,
-          setDocuments,
+          loadHomeData,
+          setNewDocuments,
+          setRandomDocuments,
           setError,
           setLoading,
         )}
       >
         <Text style={themeStyles.h1}>Novedades</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalSection}
-        >
-          {documents.map((item) => (
-            <View key={item.document_id} style={styles.bookItem}>
-              <BookLite
-                key={item.document_id}
-                title={item.title}
-                image={item.url_image}
-                onPress={() => handleBookPress(navigation, item)}
-              />
-            </View>
-          ))}
-        </ScrollView>
+        {newDocuments &&
+        Array.isArray(newDocuments) &&
+        newDocuments.length > 0 ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalSection}
+          >
+            {newDocuments.map((item) => (
+              <View key={`new-${item.document_id}`} style={styles.bookItem}>
+                <BookLite
+                  title={item.title}
+                  image={item.url_image}
+                  onPress={() => handleBookPress(navigation, item)}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        ) : (
+          !loading &&
+          !error && (
+            <Text style={themeStyles.text}>
+              No hay novedades disponibles en este momento.
+            </Text>
+          )
+        )}
+
         <Text style={themeStyles.h2}>Recomendados para ti</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalSection}
-        >
-          {documents.map((item) => (
-            <View key={`rec-${item.document_id}`} style={styles.bookItem}>
-              <BookLite
-                title={item.title}
-                image={item.url_image}
-                onPress={() => handleBookPress(navigation, item)}
-              />
-            </View>
-          ))}
-        </ScrollView>
+        {randomDocuments &&
+        Array.isArray(randomDocuments) &&
+        randomDocuments.length > 0 ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalSection}
+          >
+            {randomDocuments.map((item) => (
+              <View key={`rec-${item.document_id}`} style={styles.bookItem}>
+                <BookLite
+                  title={item.title}
+                  image={item.url_image}
+                  onPress={() => handleBookPress(navigation, item)}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        ) : (
+          !loading &&
+          !error && (
+            <Text style={themeStyles.text}>
+              No hay recomendaciones disponibles en este momento.
+            </Text>
+          )
+        )}
       </RefreshableView>
     </View>
   );
 }
 
-function refreshView(loadDocuments, setDocuments, setError, setLoading) {
+function refreshView(
+  loadHomeData,
+  setNewDocuments,
+  setRandomDocuments,
+  setError,
+  setLoading,
+) {
   return async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    await loadDocuments(setDocuments, setError, setLoading);
+    setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await loadHomeData(
+      setNewDocuments,
+      setRandomDocuments,
+      setError,
+      setLoading,
+    );
+    setLoading(false);
     Alert.alert("Refrescando", "La vista se ha actualizado");
   };
 }
 
-async function loadDocuments(setDocuments, setError, setLoading) {
-  try {
-    const { success, data, error } = await fetchAllDocuments();
+async function loadHomeData(
+  setNewDocuments,
+  setRandomDocuments,
+  setError,
+  setLoading,
+) {
+  setLoading(true);
+  setError(null);
 
-    if (success) {
-      setDocuments(data);
+  try {
+    const [newDocsResult, randomDocsResult] = await Promise.all([
+      fetchAllDocuments(),
+      fetchRandomDocuments(),
+    ]);
+
+    let hasError = false;
+    let errorMessages = [];
+
+    if (newDocsResult.success) {
+      setNewDocuments(newDocsResult.data);
     } else {
-      setError(error);
+      console.error("Error fetching new documents:", newDocsResult.error);
+      setNewDocuments([]);
+      hasError = true;
+      errorMessages.push("Error al cargar las novedades");
     }
-  } catch {
-    setError("Error inesperado");
+
+    if (randomDocsResult.success) {
+      setRandomDocuments(randomDocsResult.data);
+    } else {
+      console.error("Error fetching random documents:", randomDocsResult.error);
+      setRandomDocuments([]);
+      hasError = true;
+      errorMessages.push("Error al cargar las recomendaciones");
+    }
+
+    if (hasError) {
+      setError(errorMessages.join(" y "));
+    }
+  } catch (e) {
+    console.error("Unexpected error in loadHomeData:", e);
+    setError("Error inesperado al cargar los datos.");
   } finally {
     setLoading(false);
   }

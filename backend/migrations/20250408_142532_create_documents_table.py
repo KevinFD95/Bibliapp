@@ -20,6 +20,8 @@ def upgrade(cursor):
         prequel INT(2),
         sequel INT(2),
         synopsis TEXT,
+        category_1 VARCHAR(25) NOT NULL,
+        category_2 VARCHAR(25),
         price DECIMAL(10, 2) NOT NULL,
         url_image VARCHAR(255),
         url_document VARCHAR(255),

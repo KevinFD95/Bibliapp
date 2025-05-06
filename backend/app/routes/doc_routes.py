@@ -5,6 +5,7 @@ from app.controllers import DocController
 document_bp = Blueprint("document_bp", __name__)
 
 document_bp.route("/docs", methods=["GET"])(DocController.get_documents)
+document_bp.route("/docs/random", methods=["GET"])(DocController.get_documents_random)
 document_bp.route("/docs/<int:document_id>", methods=["GET"])(
     DocController.get_document
 )

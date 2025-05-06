@@ -15,6 +15,18 @@ class Document:
             return documents
         except Exception:
             return None
+        
+    @staticmethod
+    def get_all_random():
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(Queries.DOC_GETALL_RANDOM)
+            documents = cursor.fetchall()
+            conn.close()
+            return documents
+        except Exception:
+            return None
 
     @staticmethod
     def get_document(document_id):
