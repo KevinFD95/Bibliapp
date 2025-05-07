@@ -1,11 +1,10 @@
-export const epubToHtml = ({ title, styles, body }) => {
+export const documentToHtml = ({ body, styles, theme }) => {
   return `
     <!DOCTYPE html>
     <html lang="es">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${title}</title>
         <style>
             ${styles}
 
@@ -14,6 +13,7 @@ export const epubToHtml = ({ title, styles, body }) => {
                 overflow-x: hidden;
                 margin: 10px;
                 padding: 0;
+                background-color: ${theme["book-view-background"]};
             }
 
             img {
@@ -31,6 +31,15 @@ export const epubToHtml = ({ title, styles, body }) => {
             div, p, span, h1, h2, h3, h4, h5, h6 {
                 max-width: 100%;
                 word-break: break-word;
+                color: ${theme["dark-text"]} !important;
+                margin: 0 0 20px 0;
+                padding: 0;
+            }
+
+            a {
+                text-decoration: none;
+                color: ${theme["dark-text"]} !important;
+                background-color: transparent !important;
             }
         </style>
     </head>

@@ -1,7 +1,9 @@
 # app/controllers/doc_controller.py
 from flask import jsonify, request
 from app.models import Document
-from app.services import ApiResponse
+from app.services import ApiResponse, EpubConverter, PDFConverter
+from config import Config
+import os
 
 
 class DocController:
@@ -13,9 +15,28 @@ class DocController:
 
     def get_document(document_id):
         document = Document.get_document(document_id)
-        return jsonify(document)
 
-    # Funciona PERO: revisar codigo
+        url = document["url_document"]
+
+        file_path = os.path.join(Config.CLOUD_PATH, url)
+
+        if file_path.endswith(".pdf"):
+            converter = PDFConverter(file_path)
+            pdf_converted = converter.convert_pdf_to_html()
+            if pdf_converted:
+                return ApiResponse.success(data={"pages": pdf_converted})
+            elif pdf_converted is None:
+                return ApiResponse.error(message="No se ha podido convertir el documento")
+        elif file_path.endswith(".epub"):
+            converter = EpubConverter(file_path)
+            epub_converted = converter.convert_to_html()
+            if epub_converted:
+                return ApiResponse.success(data={"pages": epub_converted})
+            elif epub_converted is None:
+                return ApiResponse.error(message="No se ha podido convertir el documento")
+        else:
+            return ApiResponse.error(message="Formato de documento no soportado")
+
     def create_document():
         data = request.get_json()
 

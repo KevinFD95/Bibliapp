@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -8,19 +8,22 @@ import {
   SafeAreaView,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import { epubToHtml } from "../services/epubService.js";
-import { getEpub } from "../api/documents.js";
+import { documentToHtml } from "../services/epubService.js";
+import { getDocument } from "../api/documents.js";
 
 import { IconButton } from "../components/ButtonComponent.jsx";
 import { Popup } from "../components/PopupComponent.jsx";
 import CloseIcon from "../../assets/icons/CloseIcon.jsx";
 
-import colors from "../config/lightTheme.js";
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
 const { width } = Dimensions.get("window");
 
 export default function BookView({ navigation, route }) {
   const { document } = route.params;
+
+  const { theme } = useContext(ThemeContext);
+
   const [htmlContent, setHtmlContent] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
@@ -28,19 +31,19 @@ export default function BookView({ navigation, route }) {
   useEffect(() => {
     const fetchBookContent = async () => {
       try {
-        const response = await getEpub(document.document_id);
+        const response = await getDocument(document.document_id);
         const { ok, status, data } = response;
 
         if (ok || status === 200) {
-          const chaptersHtml = data.chapters.map((chapter) => {
-            return epubToHtml({
-              title: chapter.title,
-              styles: chapter.styles,
-              body: chapter.body,
+          const pagesHtml = data.pages.map((page) => {
+            return documentToHtml({
+              body: page.body,
+              styles: page.styles,
+              theme: theme,
             });
           });
 
-          setHtmlContent(chaptersHtml);
+          setHtmlContent(pagesHtml);
         }
       } catch {
         setAlertMessage("No se ha podido abrir el libro");
@@ -49,14 +52,14 @@ export default function BookView({ navigation, route }) {
     };
 
     fetchBookContent();
-  }, [document.document_id]);
+  }, [document.document_id, theme]);
 
   const renderChapter = ({ item }) => (
     <View style={{ width, flex: 1 }}>
       <WebView
         originWhitelist={["*"]}
         source={{ html: item }}
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: theme["book-view-background"] }}
         showsVerticalScrollIndicator={true}
         nestedScrollEnabled={true}
         allFileAccess={true}
@@ -68,11 +71,10 @@ export default function BookView({ navigation, route }) {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flexGrow: 1 }}>
       <View
         style={{
-          backgroundColor: colors["app-background"],
-          flex: 1,
+          flexGrow: 1,
         }}
       >
         <View

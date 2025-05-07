@@ -18,8 +18,8 @@ class EpubConverter:
                 image_data = base64.b64encode(item.get_content()).decode("utf-8")
                 images[item.get_name()] = image_data
 
-            chapters = []
-            chapter_number = 1
+            pages = []
+            page_number = 1
             for item_id, _ in book.spine:
                 item = book.get_item_with_id(item_id)
                 if item.get_type() == ebooklib.ITEM_DOCUMENT:
@@ -38,7 +38,7 @@ class EpubConverter:
                             if filename in images:
                                 mime_type, _ = guess_type(filename)
                                 ext = mime_type.split("/")[1] if mime_type else "jpeg"
-                                img["src"] = f"data:image/{ext};base64,{image_data}"
+                                img["src"] = f"data:image/{ext};base64,{images[filename]}"
 
                     # Bucle para eliminar las clases de dentro del body
                     # for tag in body.find_all(True):
@@ -64,15 +64,12 @@ class EpubConverter:
                         )
                         title_text = preview
 
-                    # if not title_text.startswith("Capítulo"):
-                    #     title_text = f"Capítulo {chapter_number} - {title_text}"
-
                     body_content = "".join(str(tag) for tag in body.contents)
 
-                    chapters.append({"id": item_id, "title": title_text, "body": body_content, "styles": css_styles})
-                    chapter_number += 1
+                    pages.append({"id": item_id, "title": title_text, "body": body_content, "styles": css_styles})
+                    page_number += 1
 
-            return chapters
+            return pages
         except Exception as e:
             print(f"Error al convertir el EPUB en HTML: {e}")
             return {"message": "Error al convertir el EPUB en HTML", "success": False}

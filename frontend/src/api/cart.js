@@ -1,7 +1,7 @@
 import { customFetch } from "./index.js";
 
 export function getCart() {
-  return customFetch("/cart/");
+  return customFetch("/cart/", { method: "GET" });
 }
 
 export function getCartDoc(document_id) {

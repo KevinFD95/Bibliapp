@@ -13,4 +13,5 @@ export default {
   "input-border": "#7FB3D5",
   "input-border-onFocus": "#1B4F72",
   "input-text": "#17202A",
+  "book-view-background": "#000000",
 };
