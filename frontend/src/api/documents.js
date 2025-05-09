@@ -4,6 +4,14 @@ export function getDocuments() {
   return customFetch("/docs");
 }
 
+export function getDocumentsRandom() {
+  return customFetch("/random");
+}
+
+export function getDocumentsRandomByCategories() {
+  return customFetch("/random/by_categories");
+}
+
 export function getDocument(id) {
   return customFetch("/docs/" + id);
 }

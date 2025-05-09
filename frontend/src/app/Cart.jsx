@@ -215,7 +215,6 @@ function Cart() {
             <CustomButton
               title="Comprar"
               text={"Realizar compra"}
-              // --- setConfirmVisible(true) (Líneas 286-288) ---
               onPress={() => {
                 setConfirmVisible(true);
               }}
@@ -228,13 +227,10 @@ function Cart() {
         message={"¿Desea realmente realizar la compra?"}
         visible={confirmVisible}
         onConfirm={() => {
-          // Llama a la lógica de compra
           handlePurchase();
-          // Cierra el popup de confirmación
           setConfirmVisible(false);
         }}
         onClose={() => {
-          // Permite cerrar la confirmación sin comprar
           setConfirmVisible(false);
         }}
       />
