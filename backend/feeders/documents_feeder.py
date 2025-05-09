@@ -39,8 +39,6 @@ class DocumentsFeeder:
                             doc["url_image"],
                             doc["url_document"],
                             generate_slug(doc["title"]),
-                            now,
-                            now,
                         )
                     )
                     conn.commit()

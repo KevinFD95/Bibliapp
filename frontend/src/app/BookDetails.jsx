@@ -76,7 +76,10 @@ export default function BookDetails({ route, navigation }) {
             />
             <View style={styles.detailsContainer}>
               <Text style={themeStyles.p}>Autor: {document.author}</Text>
-              <Text style={themeStyles.p}>Categoría: {document.category}</Text>
+              <Text style={themeStyles.p}>
+                Categoría: {document.category_1}
+                {document.category_2 && `, ${document.category_2}`}
+              </Text>
               <Text style={themeStyles.p}>Páginas: {document.num_pages}</Text>
               <Text style={themeStyles.p}>
                 Año: {document.publication_year}
@@ -140,5 +143,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingLeft: 20,
     gap: 10,
+    flex: 1,
   },
 });

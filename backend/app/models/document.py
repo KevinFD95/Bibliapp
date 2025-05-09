@@ -25,7 +25,20 @@ class Document:
             documents = cursor.fetchall()
             conn.close()
             return documents
-        except Exception:
+        except Exception as e:
+            print(f"Error fetching general random documents: {e}")
+            return None
+
+    @staticmethod
+    def get_all_random_by_user_categories(user_identifier):
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(Queries.DOC_GETALL_RANDOM_BY_USER_CATEGORIES, (user_identifier, user_identifier, user_identifier))
+            documents = cursor.fetchall()
+            conn.close()
+            return documents
+        except Exception as e:
             return None
 
     @staticmethod
@@ -65,7 +78,6 @@ class Document:
                     )
                     for doc in docs
                 ]
-                # Generar slug a partir del titulo del libro
                 cursor.executemany(Queries.DOC_CREATE, values)
             else:
                 cursor.execute(

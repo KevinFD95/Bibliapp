@@ -5,7 +5,6 @@ import {
   View,
   Text,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,6 +14,7 @@ import { viewStyles } from "../styles/globalStyles.js";
 import {
   fetchAllDocuments,
   fetchRandomDocuments,
+  fetchRandomDocumentsByCategories,
 } from "../controllers/documentController.js";
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
@@ -137,7 +137,6 @@ function refreshView(
       setLoading,
     );
     setLoading(false);
-    Alert.alert("Refrescando", "La vista se ha actualizado");
   };
 }
 
@@ -151,9 +150,12 @@ async function loadHomeData(
   setError(null);
 
   try {
+    const newDocsPromise = fetchAllDocuments();
+    const randomDocsByCategoryPromise = fetchRandomDocumentsByCategories();
+
     const [newDocsResult, randomDocsResult] = await Promise.all([
-      fetchAllDocuments(),
-      fetchRandomDocuments(),
+      newDocsPromise,
+      randomDocsByCategoryPromise,
     ]);
 
     let hasError = false;
@@ -169,12 +171,42 @@ async function loadHomeData(
     }
 
     if (randomDocsResult.success) {
-      setRandomDocuments(randomDocsResult.data);
+      if (
+        randomDocsResult.data &&
+        Array.isArray(randomDocsResult.data) &&
+        randomDocsResult.data.length > 0
+      ) {
+        console.log("INFO Control: Recomendaciones por categoría encontradas."); // Log
+        setRandomDocuments(randomDocsResult.data);
+      } else {
+        console.log(
+          "INFO Control: No se encontraron recomendaciones por categoría, intentando fallback general random.",
+        );
+        const fallbackRandomResult = await fetchRandomDocuments();
+
+        if (fallbackRandomResult.success) {
+          console.log(
+            `INFO Control: Fallback random exitoso. Filas: ${fallbackRandomResult.data ? fallbackRandomResult.data.length : 0}`,
+          );
+          setRandomDocuments(fallbackRandomResult.data || []);
+        } else {
+          console.error(
+            "Error fetching fallback a documentos random:",
+            fallbackRandomResult.error,
+          );
+          setRandomDocuments([]);
+          hasError = true;
+          errorMessages.push("Error al cargar recomendaciones generales");
+        }
+      }
     } else {
-      console.error("Error fetching random documents:", randomDocsResult.error);
+      console.error(
+        "Error fetching random documents by categories (primary call failed):",
+        randomDocsResult.error,
+      );
       setRandomDocuments([]);
       hasError = true;
-      errorMessages.push("Error al cargar las recomendaciones");
+      errorMessages.push("Error al cargar recomendaciones personalizadas");
     }
 
     if (hasError) {
