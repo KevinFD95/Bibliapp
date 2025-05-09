@@ -1,5 +1,6 @@
 # app/controllers/doc_controller.py
 from flask import jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models import Document
 from app.services import ApiResponse, EpubConverter, PDFConverter
 from config import Config
@@ -12,6 +13,27 @@ class DocController:
         if documents is None:
             return ApiResponse.error(message="No se han obtenido documentos")
         return ApiResponse.success(data={"documents": documents})
+    
+    def get_documents_random():
+        documents = Document.get_all_random()
+        if documents is None:
+             return ApiResponse.error(message="Error al obtener documentos aleatorios generales (BD)")
+        return ApiResponse.success(data={"documents": documents})
+    
+    @jwt_required()
+    def get_documents_random_by_user_categories():
+                
+        username = get_jwt_identity()
+
+        try:
+            documents = Document.get_all_random_by_user_categories(username)
+
+            if documents is None:
+                return ApiResponse.error(message="Error al obtener recomendaciones por categorías (Error BD/Modelo)"), 500
+            return ApiResponse.success(data={"documents": documents})
+
+        except Exception as e:
+            return ApiResponse.error(message=f"Error inesperado en el servidor: {e}"), 500
 
     def get_document(document_id):
         document = Document.get_document(document_id)

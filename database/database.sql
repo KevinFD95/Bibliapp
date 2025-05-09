@@ -40,6 +40,8 @@ CREATE TABLE documents (
     sequel INT(2),
     synopsis TEXT,
     price DECIMAL(10, 2) NOT NULL,
+    category_1 VARCHAR(25) NOT NULL,
+    category_2 VARCHAR(25),
     url_image VARCHAR(255),
     url_document VARCHAR(255),
     slug VARCHAR(255) NOT NULL UNIQUE,
@@ -50,7 +52,7 @@ CREATE TABLE documents (
 
 CREATE TABLE registers (
     register_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    username INT NOT NULL,
     document_id INT NOT NULL,
     favorite BOOLEAN DEFAULT FALSE,
     readed BOOLEAN DEFAULT FALSE,
@@ -59,24 +61,9 @@ CREATE TABLE registers (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (username) REFERENCES users(username)
     ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (document_id) REFERENCES documents(document_id)
-    ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
-CREATE TABLE notes (
-    note_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    register_id INT NOT NULL,
-    note TEXT NOT NULL,
-    note_page INT NOT NULL,
-    coord_x INT NOT NULL,
-    coord_y INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    ON UPDATE CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (register_id) REFERENCES registers(register_id)
     ON DELETE RESTRICT ON UPDATE CASCADE
 );
 

@@ -15,6 +15,31 @@ class Document:
             return documents
         except Exception:
             return None
+        
+    @staticmethod
+    def get_all_random():
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(Queries.DOC_GETALL_RANDOM)
+            documents = cursor.fetchall()
+            conn.close()
+            return documents
+        except Exception as e:
+            print(f"Error fetching general random documents: {e}")
+            return None
+
+    @staticmethod
+    def get_all_random_by_user_categories(user_identifier):
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(Queries.DOC_GETALL_RANDOM_BY_USER_CATEGORIES, (user_identifier, user_identifier, user_identifier))
+            documents = cursor.fetchall()
+            conn.close()
+            return documents
+        except Exception as e:
+            return None
 
     @staticmethod
     def get_document(document_id):
@@ -46,6 +71,8 @@ class Document:
                         doc["prequel"],
                         doc["sequel"],
                         doc["synopsis"],
+                        doc["category_1"],
+                        doc["category_2"],
                         doc["price"],
                         doc["url_image"],
                         doc["url_document"],
@@ -53,7 +80,6 @@ class Document:
                     )
                     for doc in docs
                 ]
-                # Generar slug a partir del titulo del libro
                 cursor.executemany(Queries.DOC_CREATE, values)
             else:
                 cursor.execute(
@@ -68,6 +94,8 @@ class Document:
                         docs["prequel"],
                         docs["sequel"],
                         docs["synopsis"],
+                        docs["category_1"],
+                        docs["category_2"],
                         docs["price"],
                         docs["url_image"],
                         docs["url_document"],
