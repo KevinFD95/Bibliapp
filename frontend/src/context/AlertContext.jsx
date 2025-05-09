@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-import { Popup } from "../components/PopupComponent.jsx";
+import { Popup, ConfirmPopup } from "../components/PopupComponent.jsx";
 const AlertContext = createContext();
 
 export const AlertProvider = ({ children }) => {
@@ -8,8 +8,13 @@ export const AlertProvider = ({ children }) => {
     title: undefined,
     message: undefined,
   });
+  const [confirmState, setConfirmState] = useState({
+    visible: false,
+    title: undefined,
+    message: undefined,
+  });
 
-  const showAlert = (title, message) => {
+  const showAlert = ({ title, message }) => {
     setAlertState({
       visible: true,
       title,
@@ -25,14 +30,41 @@ export const AlertProvider = ({ children }) => {
     });
   };
 
+  const showConfirm = ({ title, message, onConfirm }) => {
+    setConfirmState({
+      visible: true,
+      title,
+      message,
+      onConfirm,
+    });
+  };
+
+  const hideConfirm = () => {
+    setConfirmState({
+      visible: false,
+      title: undefined,
+      message: undefined,
+    });
+  };
+
   return (
-    <AlertContext.Provider value={{ showAlert }}>
+    <AlertContext.Provider value={{ showAlert, showConfirm }}>
       {children}
       <Popup
         title={alertState.title}
         message={alertState.message}
         visible={alertState.visible}
         onClose={hideAlert}
+      />
+      <ConfirmPopup
+        title={confirmState.title}
+        message={confirmState.message}
+        visible={confirmState.visible}
+        onConfirm={() => {
+          confirmState.onConfirm?.();
+          hideConfirm();
+        }}
+        onClose={hideConfirm}
       />
     </AlertContext.Provider>
   );

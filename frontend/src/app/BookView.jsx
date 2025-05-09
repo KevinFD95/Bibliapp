@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  View,
-  Text,
-  Dimensions,
-  SafeAreaView,
-} from "react-native";
+import { FlatList, View, Text, Dimensions, SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
-import { documentToHtml } from "../services/epubService.js";
+import { documentToHtml } from "../services/docViewService.js";
 import { getDocument } from "../api/documents.js";
 
 import { IconButton } from "../components/ButtonComponent.jsx";
 import { Popup } from "../components/PopupComponent.jsx";
 import CloseIcon from "../../assets/icons/CloseIcon.jsx";
+import CustomLoader from "../components/LoadingComponent.jsx";
 
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
@@ -101,7 +95,16 @@ export default function BookView({ navigation, route }) {
             showsHorizontalScrollIndicator={false}
           />
         ) : (
-          <ActivityIndicator size={"large"} />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: theme["book-view-background"],
+            }}
+          >
+            <CustomLoader />
+          </View>
         )}
         <Popup
           title={"Aviso"}

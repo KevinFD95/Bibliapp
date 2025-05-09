@@ -1,12 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import { Text, StyleSheet, View, Alert } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { viewStyles } from "../styles/globalStyles.js";
 
 import * as SecureStore from "expo-secure-store";
 import { logout } from "../api/auth.js";
 
 import { IconButton } from "../components/ButtonComponent.jsx";
-import { ConfirmPopup, Popup } from "../components/PopupComponent.jsx";
 
 import EditIcon from "../../assets/icons/EditIcon.jsx";
 import LogoutIcon from "../../assets/icons/LogoutIcon.jsx";
@@ -21,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getProfile } from "../api/users.js";
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
 
 const Stack = createStackNavigator();
 
@@ -40,10 +40,8 @@ export default function ProfileStackNavigator() {
 function ProfileScreen() {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
+  const { showAlert, showConfirm } = useAlert();
 
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState();
-  const [confirmVisible, setConfirmVisible] = useState(false);
   const navigation = useNavigation();
 
   const [user_name, setUser_name] = useState("");
@@ -62,7 +60,6 @@ function ProfileScreen() {
   const onRefresh = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     await getUserData();
-    Alert.alert("Refrescando", "La vista se ha actualizado");
   };
 
   const getUserData = async () => {
@@ -76,16 +73,21 @@ function ProfileScreen() {
       setEmail(data.user.email);
       setSubscription(data.user.user_sub);
     } else if (status === 404) {
-      setAlertMessage("Hubo un error al buscar el usuario");
-      setAlertVisible(true);
+      showAlert({
+        title: "Error",
+        message: "Hubo un error al buscar el usuario",
+      });
     } else {
-      setAlertMessage("Hubo un error al buscar el usuario");
-      setAlertVisible(true);
+      showAlert({
+        title: "Error",
+        message: "Hubo un error al buscar el usuario",
+      });
     }
   };
 
   useEffect(() => {
     getUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEditProfile = (user) => {
@@ -106,8 +108,10 @@ function ProfileScreen() {
         navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
       }
     } catch {
-      setAlertMessage("Error al cerrar sesión. Inténtelo más tarde.");
-      setAlertVisible(true);
+      showAlert({
+        title: "Error",
+        message: "Error al cerrar sesión. Inténtelo más tarde.",
+      });
     }
   };
 
@@ -183,27 +187,17 @@ function ProfileScreen() {
           }}
         >
           <IconButton
-            onPress={() => setConfirmVisible(true)}
+            onPress={() =>
+              showConfirm({
+                title: "Cerrar sesión",
+                message:
+                  "¿Desea realmente cerrar sesión y salir de la aplicación?",
+                onConfirm: handleLogout,
+              })
+            }
             icon={<LogoutIcon size={52} />}
           />
         </View>
-
-        <Popup
-          title={"Aviso"}
-          message={alertMessage}
-          visible={alertVisible}
-          onClose={() => setAlertVisible(false)}
-        />
-        <ConfirmPopup
-          title={"Cerrando sesión"}
-          message={"¿Desea realmente cerrar sesión y salir de la aplicación?"}
-          visible={confirmVisible}
-          onConfirm={() => {
-            handleLogout();
-            setConfirmVisible(false);
-          }}
-          onClose={() => setConfirmVisible(false)}
-        />
       </RefreshableView>
     </View>
   );

@@ -4,7 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 import { CartContext } from "../context/CartContext.jsx";
 
-import navLogo from "../../assets/bibliapp-logo-nav.png";
+import navLogoLight from "../../assets/bibliapp-logo-nav.png";
+import navLogoDark from "../../assets/bibliapp-logo-nav-dark.png";
 
 // Vistas
 import HomeScreen from "../app/Home.jsx";
@@ -24,7 +25,7 @@ const Tab = createBottomTabNavigator();
 const iconSize = 40;
 
 export default function TabNavigator() {
-  const { theme } = useContext(ThemeContext);
+  const { theme, mode } = useContext(ThemeContext);
   const { cartItems } = useContext(CartContext);
 
   return (
@@ -37,7 +38,7 @@ export default function TabNavigator() {
         headerTintColor: theme["dark-text"],
         headerLeft: () => (
           <Image
-            source={navLogo}
+            source={mode === "light" ? navLogoLight : navLogoDark}
             style={{
               width: 50,
               height: 50,

@@ -21,7 +21,7 @@ export default function Library() {
 
   const [alert, setAlert] = useState(false);
   const [error, setError] = useState();
-  const [documents, setDocuments] = useState();
+  const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const onRefresh = async () => {
@@ -34,27 +34,44 @@ export default function Library() {
   }, []);
 
   if (loading) {
-    return <LoadingStyleSpinner />;
-  }
-
-  if (!Array.isArray(documents)) {
     return (
       <View
-        style={[
-          themeStyles.mainContainer,
-          { flex: 1, alignItems: "center", justifyContent: "center" },
-        ]}
+        style={{
+          flex: 1,
+          backgroundColor: theme["app-background"],
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <Text style={[themeStyles.h3, { marginBottom: 30 }]}>
-          No tienes libros en tu biblioteca.
-        </Text>
-        <View style={{ alignItems: "center", gap: 8 }}>
-          <Text style={[themeStyles.p, { textAlign: "center" }]}>
-            Descubre los libros disponibles en la tienda en la sección de
-            Búsqueda.
-          </Text>
-          <SearchIcon size={42} />
-        </View>
+        <LoadingStyleSpinner />
+      </View>
+    );
+  }
+
+  if (documents.length === 0) {
+    return (
+      <View style={[themeStyles.mainContainer]}>
+        <RefreshableView onRefresh={onRefresh}>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text
+              style={[
+                themeStyles.h3,
+                { marginBottom: 30, textAlign: "center" },
+              ]}
+            >
+              No tienes libros en tu biblioteca.
+            </Text>
+            <View style={{ alignItems: "center", gap: 8 }}>
+              <Text style={[themeStyles.p, { textAlign: "center" }]}>
+                Descubre los libros disponibles en la tienda en la sección de
+                Búsqueda.
+              </Text>
+              <SearchIcon size={42} />
+            </View>
+          </View>
+        </RefreshableView>
       </View>
     );
   }

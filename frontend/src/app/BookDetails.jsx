@@ -1,59 +1,22 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import React from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import BookLite from "../components/CardComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 import { IconButton } from "../components/ButtonComponent.jsx";
-import { Popup } from "../components/PopupComponent.jsx";
 import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
-import { getCartDoc, addCart } from "../api/cart.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 
 export default function BookDetails({ route, navigation }) {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
-  const { fetchCartItems } = useCart();
-  const { cartCount } = useCart();
+  const { addToCart } = useCart();
 
   const { document } = route.params;
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState();
-  const [alertTitle, setAlertTitle] = useState();
 
   const handleAddToCart = async () => {
-    try {
-      const check = await getCartDoc(document.document_id);
-      const { ok, status } = check;
-      if (ok && status === 200) {
-        setAlertMessage(`${document.title} ya está añadido en el carrito`);
-        setAlertTitle("Añadir Documento");
-        setAlertVisible(true);
-        return;
-      } else if (status === 404) {
-        const response = await addCart(document.document_id);
-        const { ok, status } = response;
-
-        if (ok && status === 200) {
-          setAlertMessage(`${document.title} se ha añadido al carrito`);
-          setAlertTitle("Añadir Documento");
-          setAlertVisible(true);
-          if (cartCount === 0) {
-            fetchCartItems();
-          }
-        } else {
-          setAlertMessage("No se ha podido añadir al carrito");
-          setAlertTitle("Añadir Documento");
-          setAlertVisible(true);
-        }
-      } else {
-        setAlertMessage("Error al añadir al carrito");
-        setAlertTitle("Aviso");
-        setAlertVisible(true);
-      }
-    } catch (error) {
-      console.error("Error al añadir al carrito:", error);
-    }
+    addToCart(document);
   };
 
   const handleNavigation = () => {
@@ -90,12 +53,6 @@ export default function BookDetails({ route, navigation }) {
             </View>
           </View>
           <Text style={themeStyles.p}>{document.synopsis}</Text>
-          <Popup
-            title={alertTitle}
-            message={alertMessage}
-            visible={alertVisible}
-            onClose={() => setAlertVisible(false)}
-          />
         </View>
       </ScrollView>
     </View>

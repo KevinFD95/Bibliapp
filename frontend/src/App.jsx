@@ -19,15 +19,15 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <CartProvider>
-        <SafeAreaProvider>
-          <AlertProvider>
+      <AlertProvider>
+        <CartProvider>
+          <SafeAreaProvider>
             <NavigationContainer>
               <LoginScreen />
             </NavigationContainer>
-          </AlertProvider>
-        </SafeAreaProvider>
-      </CartProvider>
+          </SafeAreaProvider>
+        </CartProvider>
+      </AlertProvider>
     </ThemeProvider>
   );
 }

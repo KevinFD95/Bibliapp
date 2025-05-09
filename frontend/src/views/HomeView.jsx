@@ -5,7 +5,6 @@ import {
   View,
   Text,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -105,7 +104,6 @@ function refreshView(loadDocuments, setDocuments, setError, setLoading) {
   return async () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     await loadDocuments(setDocuments, setError, setLoading);
-    Alert.alert("Refrescando", "La vista se ha actualizado");
   };
 }
 

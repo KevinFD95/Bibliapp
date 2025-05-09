@@ -46,8 +46,11 @@ class PDFConverter:
         
     def text_to_html_paragraphs(self, raw_text):
         lines = raw_text.splitlines()
+
         paragraphs = []
-        current_paragraph = []
+        current_paragraph = ""
+        soup = BeautifulSoup("<div></div>", "html.parser")
+        container = soup.div
 
         for line in lines:
             line = line.strip()
@@ -68,9 +71,6 @@ class PDFConverter:
 
         if current_paragraph:
             paragraphs.append(current_paragraph.strip())
-        
-        soup = BeautifulSoup("<div></div>", "html.parser")
-        container = soup.div
 
         for p in paragraphs:
             p_tag = soup.new_tag("p")

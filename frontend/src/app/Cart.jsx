@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,67 +8,27 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useFocusEffect } from "@react-navigation/native";
 import { BookLiteCart } from "../components/CardComponent.jsx";
 import { CustomButton } from "../components/ButtonComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
-import { getCart, deleteCart, finalizePurchaseApi } from "../api/cart.js";
-import { ConfirmPopup } from "../components/PopupComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
-import { AlertContext } from "../context/AlertContext.jsx";
+import { useCart } from "../context/CartContext.jsx";
 
-function Cart() {
+import { useAlert } from "../context/AlertContext.jsx";
+
+export default function Cart() {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
-  const { showAlert } = useContext(AlertContext);
+  const { cartItems, removeFromCart, purchaseItems, isLoading } = useCart();
+  const { showConfirm } = useAlert();
 
-  const [books, setBooks] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0.0);
-  const [confirmVisible, setConfirmVisible] = useState(false);
-
-  const fetchBooks = async () => {
-    try {
-      setLoading(true);
-      const response = await getCart();
-      const { ok, status, data } = response;
-      if (!ok && status === 404) {
-        setBooks([]);
-        setError(null);
-      } else if (ok && status === 200) {
-        setBooks(data.cart);
-        setError(null);
-      } else {
-        const errorMessage =
-          response?.error?.message ||
-          response?.error ||
-          "Hubo un error al cargar los libros.";
-        setError(errorMessage);
-      }
-    } catch (err) {
-      setError("Hubo un error al cargar los libros.");
-      console.error("Error fetching cart:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchBooks();
-      return () => {
-        setBooks([]);
-        setError(null);
-      };
-    }, []),
-  );
 
   useEffect(() => {
     const calculateTotal = () => {
       let total = 0;
-      if (books && Array.isArray(books)) {
-        books.forEach((book) => {
+      if (cartItems && Array.isArray(cartItems)) {
+        cartItems.forEach((book) => {
           const price = parseFloat(book.price);
           if (!isNaN(price)) {
             total += price;
@@ -79,66 +39,17 @@ function Cart() {
     };
 
     calculateTotal();
-  }, [books]);
+  }, [cartItems]);
 
   const handleRemoveBook = async (document) => {
-    try {
-      setLoading(true);
-      const response = await deleteCart(document.document_id);
-      const { ok, status } = response;
-      if (ok && status === 200) {
-        await fetchBooks();
-        showAlert(
-          "Eliminar Documento",
-          `${document.title} se ha eliminado del carrito`,
-        );
-      } else {
-        const errorMessage =
-          response?.error?.message ||
-          response?.error ||
-          `Error: ${document.title} no se ha podido eliminar del carrito`;
-        showAlert("Eliminar Documento", errorMessage);
-      }
-    } catch (err) {
-      showAlert(
-        "Error de Comunicación",
-        "Hubo un error al comunicarse con el servidor para eliminar el libro.",
-      );
-      console.error("Error de red al eliminar el libro:", err);
-    } finally {
-      setLoading(false);
-    }
+    await removeFromCart(document);
   };
 
   const handlePurchase = async () => {
-    try {
-      setLoading(true);
-      const purchaseResponse = await finalizePurchaseApi();
-      if (purchaseResponse && purchaseResponse.ok) {
-        setBooks([]);
-        showAlert(
-          "Compra Finalizada",
-          "Se ha/han comprado el/los documento/s del carrito",
-        );
-      } else {
-        const errorData = purchaseResponse?.error;
-        showAlert(
-          "Error de Compra",
-          errorData || "Hubo un error al realizar la compra.",
-        );
-      }
-    } catch (error) {
-      showAlert(
-        "Error de Comunicación",
-        "Hubo un error al comunicarse con el servidor para realizar la compra.",
-      );
-      console.error("Error de red en la compra:", error);
-    } finally {
-      setLoading(false);
-    }
+    await purchaseItems();
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <View
         style={[
@@ -151,20 +62,7 @@ function Cart() {
     );
   }
 
-  if (error && (!books || books.length === 0)) {
-    return (
-      <View
-        style={[
-          themeStyles.mainContainer,
-          { flex: 1, justifyContent: "center", alignItems: "center" },
-        ]}
-      >
-        <Text>{error}</Text>
-      </View>
-    );
-  }
-
-  if (!Array.isArray(books) || books.length === 0) {
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
     return (
       <View style={[themeStyles.mainContainer, styles.emptyContainer]}>
         <Text style={themeStyles.p}>El carrito está vacío.</Text>
@@ -180,7 +78,7 @@ function Cart() {
             paddingBottom: styles.footer.height,
           }}
         >
-          {books.map((item) => (
+          {cartItems.map((item) => (
             <View key={item.document_id} style={styles.bookItem}>
               <View style={styles.bookRow}>
                 <BookLiteCart image={item.url_image} />
@@ -205,7 +103,7 @@ function Cart() {
           ))}
         </ScrollView>
       </View>
-      {books && books.length > 0 && (
+      {cartItems && cartItems.length > 0 && (
         <View style={styles.footer}>
           <View style={styles.totalContainer}>
             <View style={styles.totalPriceContainer}>
@@ -215,29 +113,17 @@ function Cart() {
             <CustomButton
               title="Comprar"
               text={"Realizar compra"}
-              // --- setConfirmVisible(true) (Líneas 286-288) ---
               onPress={() => {
-                setConfirmVisible(true);
+                showConfirm({
+                  title: "Aviso",
+                  message: "Desea comprar todos los documentos del carrito?",
+                  onConfirm: handlePurchase,
+                });
               }}
             />
           </View>
         </View>
       )}
-      <ConfirmPopup
-        title={"Confirmación de compra"}
-        message={"¿Desea realmente realizar la compra?"}
-        visible={confirmVisible}
-        onConfirm={() => {
-          // Llama a la lógica de compra
-          handlePurchase();
-          // Cierra el popup de confirmación
-          setConfirmVisible(false);
-        }}
-        onClose={() => {
-          // Permite cerrar la confirmación sin comprar
-          setConfirmVisible(false);
-        }}
-      />
     </View>
   );
 }
@@ -336,5 +222,3 @@ const styles = StyleSheet.create({
     height: 20,
   },
 });
-
-export default Cart;
