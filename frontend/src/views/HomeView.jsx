@@ -1,14 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, ScrollView, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import BookLite from "../components/CardComponent.jsx";
+import CustomLoader from "../components/LoadingComponent.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
 import {
@@ -35,8 +30,8 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size={"large"} />
+      <View style={[themeStyles.mainContainer, styles.centered]}>
+        <CustomLoader />
       </View>
     );
   }

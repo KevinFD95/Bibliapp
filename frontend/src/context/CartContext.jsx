@@ -57,19 +57,22 @@ export function CartProvider({ children }) {
         const { ok, status } = response;
 
         if (ok && status === 200) {
-          showAlert(
-            "Añadir Documento",
-            `${document.title} se ha añadido al carrito`,
-          );
+          showAlert({
+            title: "Añadir Documento",
+            message: `${document.title} se ha añadido al carrito`,
+          });
           fetchCartItems();
         } else {
-          showAlert("Añadir Documento", "No se ha añadido al carrito");
+          showAlert({
+            title: "Añadir Documento",
+            message: "No se ha añadido al carrito",
+          });
         }
       } else {
-        showAlert("Aviso", "Error al añadir al carrito");
+        showAlert({ title: "Aviso", message: "Error al añadir al carrito" });
       }
-    } catch (error) {
-      console.error("Error al añadir al carrito:", error);
+    } catch {
+      showAlert({ title: "Aviso", message: "Error al añadir al carrito" });
     }
   };
 
@@ -85,22 +88,23 @@ export function CartProvider({ children }) {
             (item) => item.document_id !== document["document_id"],
           ),
         );
-        showAlert(
-          "Eliminar Documento",
-          `${document.title} se ha eliminado del carrito`,
-        );
+        showAlert({
+          title: "Eliminar Documento",
+          message: `${document.title} se ha eliminado del carrito`,
+        });
       } else {
         const errorMessage =
           response?.error?.message ||
           response?.error ||
           `Error: ${document.title} no se ha podido eliminar del carrito`;
-        showAlert("Eliminar Documento", errorMessage);
+        showAlert({ title: "Eliminar Documento", message: errorMessage });
       }
     } catch (err) {
-      showAlert(
-        "Error de Comunicación",
-        "Hubo un error al comunicarse con el servidor para eliminar el libro.",
-      );
+      showAlert({
+        title: "Error de Comunicación",
+        message:
+          "Hubo un error al comunicarse con el servidor para eliminar el libro.",
+      });
       console.error("Error de red al eliminar el libro:", err);
     } finally {
       setIsLoading(false);
@@ -113,23 +117,23 @@ export function CartProvider({ children }) {
       const purchaseResponse = await finalizePurchaseApi();
       if (purchaseResponse && purchaseResponse.ok) {
         setCartItems([]);
-        showAlert(
-          "Compra Finalizada",
-          "Se ha/han comprado el/los documento/s del carrito",
-        );
+        showAlert({
+          title: "Compra Finalizada",
+          message: "Se han comprado todos los documentos del carrito",
+        });
       } else {
         const errorData = purchaseResponse?.error;
-        showAlert(
-          "Error de Compra",
-          errorData || "Hubo un error al realizar la compra.",
-        );
+        showAlert({
+          title: "Error de Compra",
+          message: errorData || "Hubo un error al realizar la compra.",
+        });
       }
-    } catch (error) {
-      showAlert(
-        "Error de Comunicación",
-        "Hubo un error al comunicarse con el servidor para realizar la compra.",
-      );
-      console.error("Error de red en la compra:", error);
+    } catch {
+      showAlert({
+        title: "Error de Comunicación",
+        message:
+          "Hubo un error al comunicarse con el servidor para realizar la compra.",
+      });
     } finally {
       setIsLoading(false);
     }
