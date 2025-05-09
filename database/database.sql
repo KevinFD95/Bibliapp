@@ -67,21 +67,6 @@ CREATE TABLE registers (
     ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
-CREATE TABLE notes (
-    note_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    register_id INT NOT NULL,
-    note TEXT NOT NULL,
-    note_page INT NOT NULL,
-    coord_x INT NOT NULL,
-    coord_y INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    ON UPDATE CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (register_id) REFERENCES registers(register_id)
-    ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
 CREATE TABLE categories (
     category_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     document_id INT NOT NULL,

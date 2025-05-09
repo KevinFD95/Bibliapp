@@ -176,18 +176,11 @@ async function loadHomeData(
         Array.isArray(randomDocsResult.data) &&
         randomDocsResult.data.length > 0
       ) {
-        console.log("INFO Control: Recomendaciones por categoría encontradas."); // Log
         setRandomDocuments(randomDocsResult.data);
       } else {
-        console.log(
-          "INFO Control: No se encontraron recomendaciones por categoría, intentando fallback general random.",
-        );
         const fallbackRandomResult = await fetchRandomDocuments();
 
         if (fallbackRandomResult.success) {
-          console.log(
-            `INFO Control: Fallback random exitoso. Filas: ${fallbackRandomResult.data ? fallbackRandomResult.data.length : 0}`,
-          );
           setRandomDocuments(fallbackRandomResult.data || []);
         } else {
           console.error(
@@ -200,10 +193,7 @@ async function loadHomeData(
         }
       }
     } else {
-      console.error(
-        "Error fetching random documents by categories (primary call failed):",
-        randomDocsResult.error,
-      );
+      console.error(randomDocsResult.error);
       setRandomDocuments([]);
       hasError = true;
       errorMessages.push("Error al cargar recomendaciones personalizadas");
