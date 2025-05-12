@@ -22,18 +22,25 @@ class DocController:
     
     @jwt_required()
     def get_documents_random_by_user_categories():
-                
-        username = get_jwt_identity()
-
         try:
-            documents = Document.get_all_random_by_user_categories(username)
+            current_user_username = get_jwt_identity()
+
+            if not current_user_username:
+                 print("ERROR DocControl: Identidad de usuario falsy obtenida de JWT")
+                 return ApiResponse.error(message="Identidad de usuario no válida"), 401
+
+            documents = Document.get_all_random_by_user_categories(current_user_username)
 
             if documents is None:
+                print("ERROR DocControl: Modelo de recomendaciones retornó None")
                 return ApiResponse.error(message="Error al obtener recomendaciones por categorías (Error BD/Modelo)"), 500
+
+            print(f"INFO DocControl: Recomendaciones obtenidas (lista vacía o con resultados), enviando ApiResponse.success") # Log
             return ApiResponse.success(data={"documents": documents})
 
         except Exception as e:
-            return ApiResponse.error(message=f"Error inesperado en el servidor: {e}"), 500
+            print(f"FATAL ERROR DocControl: Excepción INESPERADA en controlador de recomendaciones: {e}")
+            return ApiResponse.error(message=f"Error inesperado del servidor: {e}"), 500
 
     def get_document(document_id):
         document = Document.get_document(document_id)
@@ -91,4 +98,8 @@ class DocController:
                 )
 
         result = Document.create(documents)
-        return jsonify(result), (201 if "message" in result else 500)
+        if "message" in result:
+             return jsonify(result), 201
+        else:
+             print(f"Error from Document.create: {result.get('error', 'Unknown error')}")
+             return jsonify(result), 500

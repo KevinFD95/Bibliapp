@@ -26,7 +26,7 @@ class Queries:
 
     # Documents
     DOC_GETALL = "SELECT * FROM documents"
-    DOC_GETALL_RANDOM = "SELECT * FROM documents ORDER BY RAND()"
+    DOC_GETALL_RANDOM = "SELECT * FROM documents ORDER BY RAND() LIMIT 10"
     DOC_GET_DOCUMENT = "SELECT url_document FROM documents WHERE document_id = %s"
     DOC_CREATE = "INSERT INTO documents (title, author, publication_year, document_type, num_pages, saga, prequel, sequel, synopsis, category_1, category_2, price, url_image, url_document, slug) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     DOC_GETALL_RANDOM_BY_USER_CATEGORIES = """
@@ -46,11 +46,13 @@ class Queries:
             WHERE r.username = %s AND d.category_2 IS NOT NULL AND d.category_2 != ''
 
         ) AS user_categories ON d_rec.category_1 = user_categories.category_name
-                               OR (d_rec.category_2 IS NOT NULL AND d_rec.category_2 != '' AND d_rec.category_2 = user_categories.category_name)
+                            OR (d_rec.category_2 IS NOT NULL AND d_rec.category_2 != '' AND d_rec.category_2 = user_categories.category_name)
+
         WHERE d_rec.document_id NOT IN (SELECT document_id FROM registers WHERE username = %s)
+
         ORDER BY RAND()
-        LIMIT 20;
-    """
+        LIMIT 10;
+        """
 
 
     # Cart
@@ -63,3 +65,4 @@ class Queries:
     # Registers
     REGISTER_GET_ALL = "SELECT documents.* FROM registers JOIN documents ON registers.document_id = documents.document_id WHERE username = %s"
     REG_INSERT_DOCS = "INSERT INTO registers (document_id, username) VALUES (%s, %s)"
+    REG_IS_REGISTERED = "SELECT 1 FROM registers WHERE username = %s AND document_id = %s"

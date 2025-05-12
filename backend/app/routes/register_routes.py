@@ -8,3 +8,7 @@ register_bp = Blueprint("reg_bp", __name__)
 register_bp.route("/registers/", methods=["GET"])(
     token_in_db_required(RegisterController.get_all)
 )
+
+register_bp.route("/registers/<int:document_id>", methods=["GET"])(
+    token_in_db_required(RegisterController.check_document)
+)

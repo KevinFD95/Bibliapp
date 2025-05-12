@@ -13,7 +13,8 @@ class Document:
             documents = cursor.fetchall()
             conn.close()
             return documents
-        except Exception:
+        except Exception as e:
+            print(f"Error fetching all documents: {e}") # Log del error
             return None
         
     @staticmethod
@@ -39,6 +40,7 @@ class Document:
             conn.close()
             return documents
         except Exception as e:
+            print(f"FATAL ERROR Modelo: Excepción capturada en get_all_random_by_user_categories: {e}") # ¡Log importante!
             return None
 
     @staticmethod
@@ -49,9 +51,13 @@ class Document:
             cursor.execute(Queries.DOC_GET_DOCUMENT, (document_id,))
             document = cursor.fetchone()
             conn.close()
-            return document
-        except Exception:
-            return {"error": "No se han obtenido los datos del documento"}
+            if document:
+                 return document
+            else:
+                 return {"error": "Documento no encontrado"}
+        except Exception as e:
+            print(f"Error fetching document by ID {document_id}: {e}") # Log del error
+            return {"error": "Error al obtener los datos del documento"}
     
     @staticmethod
     def create(docs):
@@ -107,5 +113,6 @@ class Document:
             conn.close()
 
             return {"message": "Documento(s) insertado(s) correctamente"}
-        except Exception:
+        except Exception as e:
+            print(f"Error creating document(s): {e}") # Log del error
             return {"error": "No se ha podido insertar ningún documento"}
