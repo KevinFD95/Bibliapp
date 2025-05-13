@@ -12,6 +12,7 @@ dist/
 web-build/
 expo-env.d.ts
 constants.js
+frontend/app.json
 
 # Native
 *.orig.*

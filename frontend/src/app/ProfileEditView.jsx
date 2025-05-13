@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import { viewStyles } from "../styles/globalStyles.js";
 import {
@@ -10,8 +10,9 @@ import { Popup } from "../components/PopupComponent.jsx";
 import AccountIcon from "../../assets/icons/AccountIcon.jsx";
 import { updateProfile } from "../api/users.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function EditProfileScreen({ route }) {
+export default function EditProfileScreen({ route, navigation }) {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
 
@@ -23,6 +24,12 @@ export default function EditProfileScreen({ route }) {
   const [user_name, setUser_name] = useState(user.user_name);
   const [user_lastname, setUser_lastname] = useState(user.user_lastname);
   const [email, setEmail] = useState(user.email);
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({ title: "Editar perfil" });
+    }, [navigation]),
+  );
 
   const newUser = {
     user_name: user_name,

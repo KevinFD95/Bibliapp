@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { StyleSheet, ScrollView, View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import BookLite from "../components/CardComponent.jsx";
 import CustomLoader from "../components/LoadingComponent.jsx";
@@ -27,6 +27,14 @@ export default function HomeScreen() {
   useEffect(() => {
     loadHomeData(setNewDocuments, setRandomDocuments, setError, setLoading);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({
+        title: "Bibliapp",
+      });
+    }, [navigation]),
+  );
 
   if (loading) {
     return (

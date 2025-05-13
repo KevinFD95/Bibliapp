@@ -20,7 +20,6 @@ class DocController:
              return ApiResponse.error(message="Error al obtener documentos aleatorios generales (BD)")
         return ApiResponse.success(data={"documents": documents})
     
-    @jwt_required()
     def get_documents_random_by_user_categories():
         try:
             username = get_jwt_identity()
@@ -33,10 +32,10 @@ class DocController:
             if documents is None:
                 return ApiResponse.error(message="Error al obtener recomendaciones por categorías (Error BD/Modelo)"), 500
 
+            
             return ApiResponse.success(data={"documents": documents})
 
         except Exception as e:
-            print(f"FATAL ERROR DocControl: Excepción INESPERADA en controlador de recomendaciones: {e}")
             return ApiResponse.error(message=f"Error inesperado del servidor: {e}"), 500
 
     def get_document(document_id):

@@ -34,6 +34,7 @@ export default function TabNavigator() {
         headerStyle: {
           backgroundColor: theme["nav-background"],
         },
+        headerTitleStyle: { fontSize: 21, paddingHorizontal: 10 },
         headerTitleAlign: "center",
         headerTintColor: theme["dark-text"],
         headerLeft: () => (

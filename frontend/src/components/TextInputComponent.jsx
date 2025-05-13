@@ -97,8 +97,7 @@ export function CustomTextBoxFind({ value, onChangeText, placeholder }) {
               key={index}
               style={currentStyles.dropdownOption}
               onPress={() => {
-                showAlert("Filtrar por...", option);
-                // setShowDropdown(false);
+                showAlert({ title: "Filtrar por...", message: option });
               }}
             >
               <Text style={currentStyles.h5}>{option}</Text>

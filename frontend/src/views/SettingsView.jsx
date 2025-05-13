@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { Text, StyleSheet, View, Pressable } from "react-native";
 import { viewStyles } from "../styles/globalStyles.js";
 import CustomSwitch from "../components/SwitchComponent.jsx";
@@ -8,12 +8,19 @@ import { IconButton } from "../components/ButtonComponent.jsx";
 import LightModeIcon from "../../assets/icons/LightModeIcon.jsx";
 import DarkModeIcon from "../../assets/icons/DarkModeIcon.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function HomeStackNavigator() {
+export default function HomeStackNavigator({ navigation }) {
   const { theme, mode, toggleTheme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
   const lightmode = mode === "light";
   const darkmode = mode === "dark";
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({ title: "Configuración" });
+    }, [navigation]),
+  );
 
   return (
     <View style={themeStyles.mainContainer}>

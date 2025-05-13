@@ -1,15 +1,10 @@
-import { useContext, useState, useEffect } from "react";
-import React from "react";
-import {
-  ScrollView,
-  Text,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-} from "react-native";
+import { useContext, useCallback, useState, useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { ScrollView, Text, StyleSheet, View } from "react-native";
 import BookLite from "../components/CardComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 import { IconButton } from "../components/ButtonComponent.jsx";
+import CustomLoader from "../components/LoadingComponent.jsx";
 import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
@@ -21,6 +16,14 @@ export default function BookDetails({ route, navigation }) {
   const { addToCart } = useCart();
 
   const { document } = route.params;
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({
+        title: document.title,
+      });
+    }, [navigation, document]),
+  );
 
   const [isRegistered, setIsRegistered] = useState(null);
   const [isLoadingStatus, setIsLoadingStatus] = useState(true);
@@ -64,7 +67,7 @@ export default function BookDetails({ route, navigation }) {
   if (isLoadingStatus) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color={themeStyles.text?.color} />
+        <CustomLoader />
         <Text style={themeStyles.text}>
           Verificando estado del documento...
         </Text>
