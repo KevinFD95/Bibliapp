@@ -46,3 +46,4 @@ yarn-error.*
 .env
 .flaskenv
 __pycache__/
+frontend/app.json
