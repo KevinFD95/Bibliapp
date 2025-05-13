@@ -1,26 +1,29 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+// React
+import { useState, useEffect, useContext } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { BookLiteCart } from "../components/CardComponent.jsx";
-import { CustomButton } from "../components/ButtonComponent.jsx";
-import { viewStyles } from "../styles/globalStyles.js";
+// Context
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 
-import { useAlert } from "../context/AlertContext.jsx";
+// Components
+import { BookLiteCart } from "../components/CardComponent.jsx";
+import { CustomButton, IconButton } from "../components/ButtonComponent.jsx";
+import CustomLoader from "../components/LoadingComponent.jsx";
+
+// Estilos
+import { viewStyles } from "../styles/globalStyles.js";
+
+// Iconos
+import CloseIcon from "../../assets/icons/CloseIcon.jsx";
 
 export default function Cart() {
   const { theme } = useContext(ThemeContext);
-  const themeStyles = viewStyles(theme);
-  const { cartItems, removeFromCart, purchaseItems, isLoading } = useCart();
   const { showConfirm } = useAlert();
+  const { cartItems, removeFromCart, purchaseItems, isLoading } = useCart();
+
+  const themeStyles = viewStyles(theme);
 
   const [totalPrice, setTotalPrice] = useState(0.0);
 
@@ -57,7 +60,7 @@ export default function Cart() {
           { flex: 1, alignItems: "center", justifyContent: "center" },
         ]}
       >
-        <ActivityIndicator size={"large"} />
+        <CustomLoader />
       </View>
     );
   }
@@ -84,9 +87,10 @@ export default function Cart() {
                 <BookLiteCart image={item.url_image} />
                 <View style={styles.bookDetails}>
                   <View style={styles.removeIconContainer}>
-                    <TouchableOpacity onPress={() => handleRemoveBook(item)}>
-                      <Text style={styles.removeIcon}>X</Text>
-                    </TouchableOpacity>
+                    <IconButton
+                      onPress={() => handleRemoveBook(item)}
+                      icon={<CloseIcon size={32} />}
+                    />
                   </View>
                   <Text style={styles.bookTitle}>{item.title}</Text>
                   <Text style={styles.bookAuthor}>Autor: {item.author}</Text>

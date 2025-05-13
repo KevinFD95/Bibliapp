@@ -1,18 +1,18 @@
+// React
 import { useContext } from "react";
 import { Image, View, Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+// Contextos
 import { ThemeContext } from "../context/ThemeContext.jsx";
 import { CartContext } from "../context/CartContext.jsx";
 
-import navLogoLight from "../../assets/bibliapp-logo-nav.png";
-import navLogoDark from "../../assets/bibliapp-logo-nav-dark.png";
-
 // Vistas
-import HomeScreen from "../app/Home.jsx";
-import LibraryScreen from "../app/Library.jsx";
-import SearchScreen from "../app/Search.jsx";
-import ProfileScreen from "../app/Profile.jsx";
-import CartScreen from "../app/Cart.jsx";
+import HomeScreen from "./Home.jsx";
+import LibraryScreen from "./Library.jsx";
+import SearchScreen from "./Search.jsx";
+import ProfileScreen from "./Profile.jsx";
+import CartScreen from "../views/CartView.jsx";
 
 // Iconos
 import HomeIcon from "../../assets/icons/HomeIcon.jsx";
@@ -20,6 +20,10 @@ import LibraryIcon from "../../assets/icons/LibraryIcon.jsx";
 import SearchIcon from "../../assets/icons/SearchIcon.jsx";
 import ProfileIcon from "../../assets/icons/ProfileIcon.jsx";
 import CartIcon from "../../assets/icons/CartIcon.jsx";
+
+// Logos
+import navLogoLight from "../../assets/bibliapp-logo-nav.png";
+import navLogoDark from "../../assets/bibliapp-logo-nav-dark.png";
 
 const Tab = createBottomTabNavigator();
 const iconSize = 40;

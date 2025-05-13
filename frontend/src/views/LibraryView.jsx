@@ -1,22 +1,31 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+// React
+import { useContext, useEffect, useState, useCallback } from "react";
 import { ScrollView, StyleSheet, View, Text, Pressable } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
+// Context
+import { ThemeContext } from "../context/ThemeContext.jsx";
+
+// Estilos
+import { viewStyles } from "../styles/globalStyles.js";
+
+// API
 import { getAllRegisters } from "../api/registers.js";
 
+// Componentes
 import BookLite from "../components/CardComponent.jsx";
 import { Popup } from "../components/PopupComponent.jsx";
 import LoadingStyleSpinner from "../components/LoadingComponent.jsx";
-
-import { viewStyles } from "../styles/globalStyles.js";
-import { ThemeContext } from "../context/ThemeContext.jsx";
-import SearchIcon from "../../assets/icons/SearchIcon.jsx";
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
+
+// Iconos
+import SearchIcon from "../../assets/icons/SearchIcon.jsx";
 import DropdownIcon from "../../assets/icons/DropdownIcon.jsx";
 import OrderIcon from "../../assets/icons/OrderIcon.jsx";
 
 export default function Library() {
   const { theme } = useContext(ThemeContext);
+
   const themeStyles = viewStyles(theme);
   const libraryStyles = styles(theme);
 

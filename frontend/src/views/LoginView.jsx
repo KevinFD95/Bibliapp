@@ -30,8 +30,8 @@ export default function LoginScreen() {
 
   const logo = mode === "dark" ? DarkLogo : LightLogo;
 
-  const [userInput, setUserInput] = useState();
-  const [passInput, setPassInput] = useState();
+  const [userInput, setUserInput] = useState("");
+  const [passInput, setPassInput] = useState("");
 
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
