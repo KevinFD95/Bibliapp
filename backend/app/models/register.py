@@ -8,14 +8,15 @@ class Registers:
             conn = Connection.get_db_connection()
             cursor = conn.cursor(dictionary=True)
             cursor.execute(Queries.REGISTER_GET_ALL, (username,))
-            
+
             documents = cursor.fetchall()
-            
+            conn.close()
             return documents
         except Exception as e:
-            raise e
+            print(f"Error getting all registers for {username}: {e}")
+            return None
 
-    def set_doc_cart(document_id, username):
+    def set_doc_reg_from_cart(document_id, username):
         try:
             conn = Connection.get_db_connection()
             cursor = conn.cursor()
@@ -30,7 +31,7 @@ class Registers:
             conn.close()
             return True
         except Exception as e:
-            print(f"Error adding single doc to registers: {e}")
+            print(f"Error adding single doc {document_id} to registers for {username}: {e}")
             return None
 
 
@@ -50,4 +51,17 @@ class Registers:
         except Exception as e:
             print(f"Error adding cart items to registers: {e}")
             conn.close()
+            return None
+
+    @staticmethod
+    def is_registered(username, document_id):
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(Queries.REG_IS_REGISTERED, (username, document_id))
+            result = cursor.fetchone()
+            conn.close()
+            return result is not None
+        except Exception as e:
+            print(f"Error checking if document {document_id} is registered for user {username}: {e}") # Log del error
             return None

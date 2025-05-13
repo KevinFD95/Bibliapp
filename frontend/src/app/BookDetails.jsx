@@ -1,12 +1,19 @@
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { ScrollView, Text, StyleSheet, View } from "react-native";
+import {
+  ScrollView,
+  Text,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import BookLite from "../components/CardComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
 import { IconButton } from "../components/ButtonComponent.jsx";
 import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
+import { fetchIsRegistered } from "../controllers/registerController.js";
 
 export default function BookDetails({ route, navigation }) {
   const { theme } = useContext(ThemeContext);
@@ -23,6 +30,37 @@ export default function BookDetails({ route, navigation }) {
     }, [navigation, document]),
   );
 
+  const [isRegistered, setIsRegistered] = useState(null);
+  const [isLoadingStatus, setIsLoadingStatus] = useState(true);
+
+  useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      setIsLoadingStatus(true);
+
+      if (document?.document_id) {
+        const result = await fetchIsRegistered(document.document_id);
+        if (result.success) {
+          setIsRegistered(result.isRegistered);
+        } else {
+          console.error(
+            "BookDetails: Error verificando estado de registro:",
+            result.error,
+          );
+          setIsRegistered(false);
+        }
+        setIsLoadingStatus(false);
+      } else {
+        console.warn(
+          "BookDetails: document o document_id no disponible en route.params",
+        );
+        setIsRegistered(false);
+        setIsLoadingStatus(false);
+      }
+    };
+
+    checkRegistrationStatus();
+  }, [document?.document_id]);
+
   const handleAddToCart = async () => {
     addToCart(document);
   };
@@ -31,15 +69,25 @@ export default function BookDetails({ route, navigation }) {
     navigation.navigate("BookView", { document });
   };
 
+  if (isLoadingStatus) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={themeStyles.text?.color} />
+        <Text style={themeStyles.text}>
+          Verificando estado del documento...
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <View style={themeStyles.mainContainer}>
       <ScrollView>
         <View style={{ gap: 20 }}>
           <View style={styles.rowContainer}>
             <BookLite
-              style={styles.title}
-              title="Pulsa para abrir"
-              onPress={handleNavigation}
+              onPress={isRegistered ? handleNavigation : undefined}
+              title={isRegistered ? "Pulsa para abrir" : "Cómpralo para leer"}
               image={document.url_image}
             />
             <View style={styles.detailsContainer}>
@@ -53,11 +101,15 @@ export default function BookDetails({ route, navigation }) {
                 Año: {document.publication_year}
               </Text>
               <Text style={themeStyles.p}>Tipo: {document.document_type}</Text>
-              <Text style={themeStyles.p}>Precio: {document.price}€</Text>
-              <IconButton
-                onPress={handleAddToCart}
-                icon={<AddCartIcon size={30} />}
-              />
+              {!isRegistered && (
+                <Text style={themeStyles.p}>Precio: {document.price}€</Text>
+              )}
+              {!isRegistered && (
+                <IconButton
+                  onPress={handleAddToCart}
+                  icon={<AddCartIcon size={30} />}
+                />
+              )}
             </View>
           </View>
           <Text style={themeStyles.p}>{document.synopsis}</Text>
@@ -106,5 +158,11 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     gap: 10,
     flex: 1,
+  },
+  centered: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: themeStyles.mainContainer.backgroundColor,
   },
 });

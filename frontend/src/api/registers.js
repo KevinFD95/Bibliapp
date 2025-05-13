@@ -5,3 +5,7 @@ export function getAllRegisters() {
     method: "GET",
   });
 }
+
+export function checkIfRegistered(documentId) {
+  return customFetch(`/registers/${documentId}`);
+}
