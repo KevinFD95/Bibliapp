@@ -20,7 +20,6 @@ class DocController:
              return ApiResponse.error(message="Error al obtener documentos aleatorios generales (BD)")
         return ApiResponse.success(data={"documents": documents})
     
-    @jwt_required()
     def get_documents_random_by_user_categories():
         try:
             username = get_jwt_identity()
