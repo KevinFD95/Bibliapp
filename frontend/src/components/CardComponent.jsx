@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontStyle: "italic",
     fontFamily: "serif",
-    flexGrow: 1,
   },
   image: {
     width: 120,

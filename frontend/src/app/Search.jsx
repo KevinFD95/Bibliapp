@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import {
   Text,
   View,
@@ -14,6 +14,7 @@ import BookView from "./BookView.jsx";
 import BookLite from "../components/CardComponent.jsx";
 import { CustomTextBoxFind } from "../components/TextInputComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,12 @@ function SearchView({ navigation }) {
   const [allDocuments, setAllDocuments] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({ title: "Buscar" });
+    }, [navigation]),
+  );
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -105,7 +112,7 @@ function SearchView({ navigation }) {
 
   return (
     <View style={themeStyles.mainContainer}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <CustomTextBoxFind
           placeholder="Buscar"
           value={searchText}

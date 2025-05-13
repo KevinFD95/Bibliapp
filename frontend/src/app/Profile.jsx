@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import { viewStyles } from "../styles/globalStyles.js";
 
@@ -16,7 +16,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import ProfileEdit from "./ProfileEditView.jsx";
 import Config from "../views/SettingsView.jsx";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getProfile } from "../api/users.js";
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
 import { ThemeContext } from "../context/ThemeContext.jsx";
@@ -61,6 +61,12 @@ function ProfileScreen() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     await getUserData();
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({ title: "Perfil" });
+    }, [navigation]),
+  );
 
   const getUserData = async () => {
     const response = await getProfile();

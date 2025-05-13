@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import React from "react";
+import { useContext, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView, Text, StyleSheet, View } from "react-native";
 import BookLite from "../components/CardComponent.jsx";
 import { viewStyles } from "../styles/globalStyles.js";
@@ -15,6 +15,14 @@ export default function BookDetails({ route, navigation }) {
 
   const { document } = route.params;
 
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({
+        title: document.title,
+      });
+    }, [navigation, document]),
+  );
+
   const handleAddToCart = async () => {
     addToCart(document);
   };
@@ -27,9 +35,6 @@ export default function BookDetails({ route, navigation }) {
     <View style={themeStyles.mainContainer}>
       <ScrollView>
         <View style={{ gap: 20 }}>
-          <Text style={[themeStyles.h1, { textAlign: "center" }]}>
-            {document.title}
-          </Text>
           <View style={styles.rowContainer}>
             <BookLite
               style={styles.title}

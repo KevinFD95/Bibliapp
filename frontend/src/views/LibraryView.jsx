@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useContext, useEffect, useState, useCallback } from "react";
+import { ScrollView, StyleSheet, View, Text, Pressable } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import { getAllRegisters } from "../api/registers.js";
 
@@ -12,10 +12,13 @@ import { viewStyles } from "../styles/globalStyles.js";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 import SearchIcon from "../../assets/icons/SearchIcon.jsx";
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
+import DropdownIcon from "../../assets/icons/DropdownIcon.jsx";
+import OrderIcon from "../../assets/icons/OrderIcon.jsx";
 
 export default function Library() {
   const { theme } = useContext(ThemeContext);
   const themeStyles = viewStyles(theme);
+  const libraryStyles = styles(theme);
 
   const navigation = useNavigation();
 
@@ -24,10 +27,59 @@ export default function Library() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [dropDown, setDropDown] = useState(false);
+  const [sortOption, setSortOption] = useState("Título");
+  const [desc, setDesc] = useState(false);
+
+  const dropdownOptions = ["Título", "Autor", "Categoría", "Año", "Tipo"];
+
   const onRefresh = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     await loadDocuments(setDocuments, setError, setLoading);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({ title: "Mi biblioteca" });
+    }, [navigation]),
+  );
+
+  const sortedDocuments = [...documents].sort((a, b) => {
+    switch (sortOption) {
+      case "Título":
+        if (desc) {
+          return b.title.localeCompare(a.title);
+        } else {
+          return a.title.localeCompare(b.title);
+        }
+      case "Autor":
+        if (desc) {
+          return b.author.localeCompare(a.author);
+        } else {
+          return a.author.localeCompare(b.author);
+        }
+      case "Año":
+        if (desc) {
+          return (b.publication_year || 0) - (a.publication_year || 0);
+        } else {
+          return (a.publication_year || 0) - (b.publication_year || 0);
+        }
+      case "Tipo":
+        if (desc) {
+          return b.document_type.localeCompare(a.document_type);
+        } else {
+          return a.document_type.localeCompare(b.document_type);
+        }
+      case "Categoría":
+        if (desc) {
+          return b.category_1.localeCompare(a.category_1);
+        } else {
+          return a.category_1.localeCompare(b.category_1);
+        }
+      default:
+        return 0;
+    }
+  });
 
   useEffect(() => {
     loadDocuments(setDocuments, setLoading, setError);
@@ -77,10 +129,53 @@ export default function Library() {
   }
 
   return (
-    <View style={themeStyles.mainContainer}>
+    <View style={[themeStyles.mainContainer, { flex: 1 }]}>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginBottom: 20,
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
+          <Text style={themeStyles.h5}>Ordenar por: </Text>
+          <Pressable
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+            onPress={() => (dropDown ? setDropDown(false) : setDropDown(true))}
+          >
+            <Text style={themeStyles.h5}>{sortOption}</Text>
+            <DropdownIcon size={26} filled={dropDown} />
+          </Pressable>
+        </View>
+        <Pressable
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+          onPress={() => setDesc(!desc)}
+        >
+          <Text style={themeStyles.h5}>
+            {desc ? "Descendente" : "Ascendente"}
+          </Text>
+          <OrderIcon size={20} checked={desc} />
+        </Pressable>
+      </View>
       <RefreshableView onRefresh={onRefresh}>
-        <ScrollView contentContainerStyle={styles.vistaTarjeta}>
-          {documents.map((item) => (
+        <ScrollView contentContainerStyle={libraryStyles.vistaTarjeta}>
+          {sortedDocuments.map((item) => (
             <BookLite
               key={item.document_id}
               title={item.title}
@@ -90,6 +185,23 @@ export default function Library() {
           ))}
         </ScrollView>
       </RefreshableView>
+
+      {dropDown && (
+        <View style={libraryStyles.dropdownContainer}>
+          {dropdownOptions.map((option, index) => (
+            <Pressable
+              key={index}
+              style={libraryStyles.dropdownOption}
+              onPress={() => {
+                setSortOption(option);
+                setDropDown(false);
+              }}
+            >
+              <Text style={themeStyles.h5}>{option}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
 
       <Popup message={error} onClose={() => setAlert(false)} visible={alert} />
     </View>
@@ -117,11 +229,40 @@ function handleNavigation(navigation, document) {
   navigation.navigate("BookDetails", { document });
 }
 
-const styles = StyleSheet.create({
-  vistaTarjeta: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: 30,
-  },
-});
+const styles = (theme) =>
+  StyleSheet.create({
+    vistaTarjeta: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: 30,
+    },
+    dropdownContainer: {
+      position: "absolute",
+      top: 50,
+      width: "100%",
+      marginHorizontal: 20,
+      backgroundColor: theme["nav-background"],
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: theme["dark-text"],
+      borderBottomWidth: 0,
+      elevation: 5,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      zIndex: 1,
+      overflow: "hidden",
+    },
+    dropdownOption: {
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: theme["dark-text"],
+      alignItems: "center",
+    },
+    dropdownOptionText: {
+      fontSize: 16,
+      color: theme["dark-text"],
+    },
+  });

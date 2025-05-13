@@ -1,5 +1,8 @@
 import * as SecureStore from "expo-secure-store";
-import { API_URL, FRONTEND_CLIENT } from "../../constants.js";
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.apiUrl;
+const FRONTEND_CLIENT = Constants.expoConfig.extra.frontendClient;
 
 export async function customFetch(endpoint, options = {}) {
   const token = await SecureStore.getItemAsync("access_token");
