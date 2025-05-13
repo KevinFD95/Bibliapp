@@ -5,7 +5,6 @@ cloud/
 
 # dependencies
 node_modules/
-frontend/app.json
 
 # Expo
 .expo/
@@ -13,6 +12,7 @@ dist/
 web-build/
 expo-env.d.ts
 constants.js
+app.json
 
 # Native
 *.orig.*
