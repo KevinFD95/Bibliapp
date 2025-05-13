@@ -23,19 +23,16 @@ class DocController:
     @jwt_required()
     def get_documents_random_by_user_categories():
         try:
-            current_user_username = get_jwt_identity()
+            username = get_jwt_identity()
 
-            if not current_user_username:
-                 print("ERROR DocControl: Identidad de usuario falsy obtenida de JWT")
+            if not username:
                  return ApiResponse.error(message="Identidad de usuario no válida"), 401
 
-            documents = Document.get_all_random_by_user_categories(current_user_username)
+            documents = Document.get_all_random_by_user_categories(username)
 
             if documents is None:
-                print("ERROR DocControl: Modelo de recomendaciones retornó None")
                 return ApiResponse.error(message="Error al obtener recomendaciones por categorías (Error BD/Modelo)"), 500
 
-            print(f"INFO DocControl: Recomendaciones obtenidas (lista vacía o con resultados), enviando ApiResponse.success") # Log
             return ApiResponse.success(data={"documents": documents})
 
         except Exception as e:

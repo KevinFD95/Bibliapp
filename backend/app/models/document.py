@@ -14,7 +14,7 @@ class Document:
             conn.close()
             return documents
         except Exception as e:
-            print(f"Error fetching all documents: {e}") # Log del error
+            print(f"Error fetching all documents: {e}")
             return None
         
     @staticmethod
@@ -40,7 +40,7 @@ class Document:
             conn.close()
             return documents
         except Exception as e:
-            print(f"FATAL ERROR Modelo: Excepción capturada en get_all_random_by_user_categories: {e}") # ¡Log importante!
+            print(f"FATAL ERROR Modelo: Excepción capturada en get_all_random_by_user_categories: {e}")
             return None
 
     @staticmethod
@@ -56,7 +56,7 @@ class Document:
             else:
                  return {"error": "Documento no encontrado"}
         except Exception as e:
-            print(f"Error fetching document by ID {document_id}: {e}") # Log del error
+            print(f"Error fetching document by ID {document_id}: {e}")
             return {"error": "Error al obtener los datos del documento"}
     
     @staticmethod
