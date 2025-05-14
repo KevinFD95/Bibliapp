@@ -5,6 +5,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // Context
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles.js";
@@ -14,7 +15,6 @@ import { getAllRegisters } from "../api/registers.js";
 
 // Componentes
 import BookLite from "../components/CardComponent.jsx";
-import { Popup } from "../components/PopupComponent.jsx";
 import LoadingStyleSpinner from "../components/LoadingComponent.jsx";
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
 
@@ -25,14 +25,12 @@ import OrderIcon from "../../assets/icons/OrderIcon.jsx";
 
 export default function Library() {
   const { theme } = useContext(ThemeContext);
+  const { showAlert } = useAlert();
 
   const themeStyles = viewStyles(theme);
   const libraryStyles = styles(theme);
 
   const navigation = useNavigation();
-
-  const [alert, setAlert] = useState(false);
-  const [error, setError] = useState();
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -41,11 +39,6 @@ export default function Library() {
   const [desc, setDesc] = useState(false);
 
   const dropdownOptions = ["Título", "Autor", "Categoría", "Año", "Tipo"];
-
-  const onRefresh = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    await loadDocuments(setDocuments, setError, setLoading);
-  };
 
   useFocusEffect(
     useCallback(() => {
@@ -91,8 +84,8 @@ export default function Library() {
   });
 
   useEffect(() => {
-    loadDocuments(setDocuments, setLoading, setError);
-  }, []);
+    loadDocuments(setDocuments, showAlert, setLoading);
+  }, [showAlert]);
 
   if (loading) {
     return (
@@ -112,7 +105,9 @@ export default function Library() {
   if (documents.length === 0) {
     return (
       <View style={[themeStyles.mainContainer]}>
-        <RefreshableView onRefresh={onRefresh}>
+        <RefreshableView
+          onRefresh={() => onRefresh(setDocuments, showAlert, setLoading)}
+        >
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
@@ -211,13 +206,16 @@ export default function Library() {
           ))}
         </View>
       )}
-
-      <Popup message={error} onClose={() => setAlert(false)} visible={alert} />
     </View>
   );
 }
 
-async function loadDocuments(setDocuments, setError, setLoading) {
+async function onRefresh(setDocuments, showAlert, setLoading) {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  await loadDocuments(setDocuments, showAlert, setLoading);
+}
+
+async function loadDocuments(setDocuments, showAlert, setLoading) {
   try {
     const response = await getAllRegisters();
     const { ok, status, data, errors } = response;
@@ -225,10 +223,10 @@ async function loadDocuments(setDocuments, setError, setLoading) {
     if (ok && status === 200) {
       setDocuments(data.documents);
     } else {
-      setError(errors);
+      showAlert({ title: "Error", message: errors });
     }
   } catch {
-    setError("Error inesperado");
+    showAlert({ title: "Error", message: "Error inesperado" });
   } finally {
     setLoading(false);
   }

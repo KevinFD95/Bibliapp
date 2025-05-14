@@ -1,99 +1,103 @@
+// React
 import { useState, useContext } from "react";
-import * as SecureStore from "expo-secure-store";
-import { Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+// Expo
+import * as SecureStore from "expo-secure-store";
+
+// Context
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
+
+// Estilos
 import { viewStyles } from "../styles/globalStyles";
 
+// API
+import { forgotPassword } from "../api/auth.js";
+
+// Componentes
 import { CustomTextBoxUser } from "../components/TextInputComponent";
 import { CustomButton } from "../components/ButtonComponent";
 
-import { Popup } from "../components/PopupComponent.jsx";
-import { forgotPassword } from "../api/auth.js";
-
 export default function ForgotPassView({ navigation }) {
   const { theme } = useContext(ThemeContext);
+  const { showAlert, showConfirm } = useAlert();
+
   const themeStyles = viewStyles(theme);
 
   const [email, setEmail] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [errorVisible, setErrorVisible] = useState(false);
-  const [error, setError] = useState("");
 
   return (
-    <SafeAreaView
-      style={[themeStyles.mainContainer, { flex: 1, justifyContent: "center" }]}
-    >
-      <Text style={[themeStyles.h1, { textAlign: "center" }]}>
-        Restablecer contraseña
-      </Text>
-      <Text style={themeStyles.h5}>Correo electrónico:</Text>
-      <CustomTextBoxUser
-        placeholder={"Escribe aquí tu correo electrónico"}
-        onChangeText={setEmail}
-        value={email}
-      />
-      <CustomButton
-        text={"Recibir el código de restablecimiento"}
-        onPress={() =>
-          sendEmail(
-            email,
-            setAlertVisible,
-            setAlertMessage,
-            setError,
-            setErrorVisible,
-          )
-        }
-      />
-
-      <Popup
-        title={"Aviso"}
-        message={alertMessage}
-        onClose={() => {
-          setAlertVisible(false);
-          handleReset(navigation, email);
-        }}
-        visible={alertVisible}
-      />
-      <Popup
-        title={"Error"}
-        message={error}
-        visible={errorVisible}
-        on
-        onClose={() => setErrorVisible(false)}
-      />
+    <SafeAreaView style={[themeStyles.mainContainer, styles.viewContainer]}>
+      <View style={styles.title}>
+        <Text style={themeStyles.h1}>Restablecer contraseña</Text>
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={themeStyles.h5}>Correo electrónico:</Text>
+        <CustomTextBoxUser
+          placeholder={"Escribe aquí tu correo electrónico"}
+          onChangeText={setEmail}
+          value={email}
+        />
+        <CustomButton
+          text={"Recibir el código de restablecimiento"}
+          onPress={() => sendEmail(navigation, email, showAlert, showConfirm)}
+        />
+      </View>
     </SafeAreaView>
   );
 }
 
-async function sendEmail(
-  email,
-  setAlertVisible,
-  setAlertMessage,
-  setError,
-  setErrorVisible,
-) {
-  try {
-    const response = await forgotPassword(email);
-    const { ok, status, data, message } = response;
-    if (ok && status === 200) {
-      await SecureStore.setItemAsync("resetToken", data.token);
-      setAlertMessage(
-        "Se ha enviado un correo electrónico con el código de restablecimiento.",
-      );
-      setAlertVisible(true);
-    } else if (status === 404) {
-      setError(message);
-      setErrorVisible(true);
-    }
-  } catch {
-    setError("Error al enviar el correo electrónico.");
-    setErrorVisible(true);
-  }
+async function sendEmail(navigation, email, showAlert, showConfirm) {
+  showConfirm({
+    title: "Aviso",
+    message: "¿Desea recibir el código para restablecer la contraseña?",
+    onConfirm: async () => {
+      const response = await forgotPassword(email);
+      const { ok, status, data, message } = response;
+
+      try {
+        if (ok && status === 200) {
+          await SecureStore.setItemAsync("resetToken", data.token);
+          showAlert({
+            title: "Aviso",
+            message:
+              "Se ha enviado un correo electrónico con el código de restablecimiento.",
+          });
+          handleReset(navigation, email);
+        } else if (status === 404) {
+          showAlert({
+            title: "Error",
+            message: message,
+          });
+        }
+      } catch {
+        showAlert({
+          title: "Error",
+          message: "Error al enviar el correo electrónico.",
+        });
+      }
+    },
+  });
 }
 
 function handleReset(navigation, email) {
   navigation.navigate("ResetPasswordView", email);
 }
+
+const styles = StyleSheet.create({
+  viewContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  title: {
+    marginTop: 100,
+    alignItems: "center",
+  },
+  inputContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    marginBottom: 100,
+  },
+});

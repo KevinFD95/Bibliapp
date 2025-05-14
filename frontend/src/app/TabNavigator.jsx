@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // Contextos
 import { ThemeContext } from "../context/ThemeContext.jsx";
-import { CartContext } from "../context/CartContext.jsx";
+import { useCart } from "../context/CartContext.jsx";
 
 // Vistas
 import HomeScreen from "./Home.jsx";
@@ -30,7 +30,7 @@ const iconSize = 40;
 
 export default function TabNavigator() {
   const { theme, mode } = useContext(ThemeContext);
-  const { cartItems } = useContext(CartContext);
+  const { cartItems } = useCart();
 
   return (
     <Tab.Navigator
