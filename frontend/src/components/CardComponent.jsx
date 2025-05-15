@@ -11,7 +11,9 @@ export default function BookLite({ title, image, onPress }) {
           <Text>No Image</Text>
         </View>
       )}
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+        {title}
+      </Text>
     </Pressable>
   );
 }
