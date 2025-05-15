@@ -1,21 +1,43 @@
+// React
 import { useContext, useCallback, useState, useEffect } from "react";
+import { ScrollView, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { ScrollView, Text, StyleSheet, View } from "react-native";
-import BookLite from "../components/CardComponent.jsx";
-import { viewStyles } from "../styles/globalStyles.js";
-import { IconButton } from "../components/ButtonComponent.jsx";
-import CustomLoader from "../components/LoadingComponent.jsx";
-import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
+
+// Context
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
+
+// Estilos
+import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/detailsStyles.js";
+
+// API
 import { fetchIsRegistered } from "../controllers/registerController.js";
 
+// Componentes
+import { IconButton } from "../components/ButtonComponent.jsx";
+import CustomLoader from "../components/LoadingComponent.jsx";
+import BookLite from "../components/CardComponent.jsx";
+
+// Iconos
+import AddCartIcon from "../../assets/icons/AddCartIcon.jsx";
+
 export default function BookDetails({ route, navigation }) {
+  const { document } = route.params;
+
   const { theme } = useContext(ThemeContext);
-  const themeStyles = viewStyles(theme);
+  const { showAlert } = useAlert();
   const { addToCart } = useCart();
 
-  const { document } = route.params;
+  const themeStyles = viewStyles(theme);
+
+  const [isRegistered, setIsRegistered] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    checkRegistrationStatus(document, setIsLoading, setIsRegistered, showAlert);
+  }, [document, showAlert]);
 
   useFocusEffect(
     useCallback(() => {
@@ -25,52 +47,11 @@ export default function BookDetails({ route, navigation }) {
     }, [navigation, document]),
   );
 
-  const [isRegistered, setIsRegistered] = useState(null);
-  const [isLoadingStatus, setIsLoadingStatus] = useState(true);
-
-  useEffect(() => {
-    const checkRegistrationStatus = async () => {
-      setIsLoadingStatus(true);
-
-      if (document?.document_id) {
-        const result = await fetchIsRegistered(document.document_id);
-        if (result.success) {
-          setIsRegistered(result.isRegistered);
-        } else {
-          console.error(
-            "BookDetails: Error verificando estado de registro:",
-            result.error,
-          );
-          setIsRegistered(false);
-        }
-        setIsLoadingStatus(false);
-      } else {
-        console.warn(
-          "BookDetails: document o document_id no disponible en route.params",
-        );
-        setIsRegistered(false);
-        setIsLoadingStatus(false);
-      }
-    };
-
-    checkRegistrationStatus();
-  }, [document?.document_id]);
-
-  const handleAddToCart = async () => {
-    addToCart(document);
-  };
-
-  const handleNavigation = () => {
-    navigation.navigate("BookView", { document });
-  };
-
-  if (isLoadingStatus) {
+  if (isLoading) {
     return (
-      <View style={styles.centered}>
+      <View style={[themeStyles.mainContainer, styles.centered]}>
         <CustomLoader />
-        <Text style={themeStyles.text}>
-          Verificando estado del documento...
-        </Text>
+        <Text style={themeStyles.p}>Verificando estado del documento...</Text>
       </View>
     );
   }
@@ -81,7 +62,11 @@ export default function BookDetails({ route, navigation }) {
         <View style={{ gap: 20 }}>
           <View style={styles.rowContainer}>
             <BookLite
-              onPress={isRegistered ? handleNavigation : undefined}
+              onPress={
+                isRegistered
+                  ? () => handleNavigation(navigation, document)
+                  : undefined
+              }
               title={isRegistered ? "Pulsa para abrir" : "Cómpralo para leer"}
               image={document.url_image}
             />
@@ -101,7 +86,7 @@ export default function BookDetails({ route, navigation }) {
               )}
               {!isRegistered && (
                 <IconButton
-                  onPress={handleAddToCart}
+                  onPress={() => handleAddToCart(document, addToCart)}
                   icon={<AddCartIcon size={30} />}
                 />
               )}
@@ -114,50 +99,37 @@ export default function BookDetails({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: "#fff",
-    flex: 1,
-  },
-  image: {
-    width: 200,
-    height: 300,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  content: {
-    fontSize: 16,
-    color: "#666",
-    paddingBottom: 5,
-  },
-  synopsisContent: {
-    fontSize: 16,
-    color: "#666",
-    paddingBottom: 35,
-  },
-  rowContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 2,
-  },
-  detailsContainer: {
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    paddingVertical: 5,
-    paddingLeft: 20,
-    gap: 10,
-    flex: 1,
-  },
-  centered: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    // backgroundColor: themeStyles.mainContainer.backgroundColor,
-  },
-});
+async function checkRegistrationStatus(
+  document,
+  setIsLoading,
+  setIsRegistered,
+  showAlert,
+) {
+  setIsLoading(true);
+
+  if (document?.document_id) {
+    const result = await fetchIsRegistered(document.document_id);
+    if (result.success) {
+      setIsRegistered(result.isRegistered);
+    } else {
+      showAlert({
+        title: "Error",
+        message: "Error verificando el registro del libro.",
+      });
+      setIsRegistered(false);
+    }
+    setIsLoading(false);
+  } else {
+    showAlert({ title: "Error", message: "Documento no disponible." });
+    setIsRegistered(false);
+    setIsLoading(false);
+  }
+}
+
+async function handleAddToCart(document, addToCart) {
+  addToCart(document);
+}
+
+function handleNavigation(navigation, document) {
+  navigation.navigate("BookView", { document });
+}

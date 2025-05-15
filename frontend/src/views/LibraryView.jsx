@@ -1,6 +1,6 @@
 // React
 import { useContext, useEffect, useState, useCallback } from "react";
-import { ScrollView, StyleSheet, View, Text, Pressable } from "react-native";
+import { ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // Context
@@ -9,6 +9,7 @@ import { useAlert } from "../context/AlertContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/libraryStyles.js";
 
 // API
 import { getAllRegisters } from "../api/registers.js";
@@ -46,57 +47,13 @@ export default function Library() {
     }, [navigation]),
   );
 
-  const sortedDocuments = [...documents].sort((a, b) => {
-    switch (sortOption) {
-      case "Título":
-        if (desc) {
-          return b.title.localeCompare(a.title);
-        } else {
-          return a.title.localeCompare(b.title);
-        }
-      case "Autor":
-        if (desc) {
-          return b.author.localeCompare(a.author);
-        } else {
-          return a.author.localeCompare(b.author);
-        }
-      case "Año":
-        if (desc) {
-          return (b.publication_year || 0) - (a.publication_year || 0);
-        } else {
-          return (a.publication_year || 0) - (b.publication_year || 0);
-        }
-      case "Tipo":
-        if (desc) {
-          return b.document_type.localeCompare(a.document_type);
-        } else {
-          return a.document_type.localeCompare(b.document_type);
-        }
-      case "Categoría":
-        if (desc) {
-          return b.category_1.localeCompare(a.category_1);
-        } else {
-          return a.category_1.localeCompare(b.category_1);
-        }
-      default:
-        return 0;
-    }
-  });
-
   useEffect(() => {
     loadDocuments(setDocuments, showAlert, setLoading);
   }, [showAlert]);
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: theme["app-background"],
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <View style={styles(theme).loadingScreen}>
         <LoadingStyleSpinner />
       </View>
     );
@@ -104,23 +61,16 @@ export default function Library() {
 
   if (documents.length === 0) {
     return (
-      <View style={[themeStyles.mainContainer]}>
+      <View style={themeStyles.mainContainer}>
         <RefreshableView
           onRefresh={() => onRefresh(setDocuments, showAlert, setLoading)}
         >
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text
-              style={[
-                themeStyles.h3,
-                { marginBottom: 30, textAlign: "center" },
-              ]}
-            >
+          <View style={styles(theme).noDocsScreen}>
+            <Text style={[themeStyles.h3, styles(theme).noDocsTitle]}>
               No tienes libros en tu biblioteca.
             </Text>
-            <View style={{ alignItems: "center", gap: 8 }}>
-              <Text style={[themeStyles.p, { textAlign: "center" }]}>
+            <View style={styles(theme).noDocsTextContainer}>
+              <Text style={[themeStyles.p, styles(theme).noDocsText]}>
                 Descubre los libros disponibles en la tienda en la sección de
                 Búsqueda.
               </Text>
@@ -134,29 +84,11 @@ export default function Library() {
 
   return (
     <View style={[themeStyles.mainContainer, { flex: 1 }]}>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginBottom: 20,
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
+      <View style={styles(theme).filterContainer}>
+        <View style={styles(theme).filterOrder}>
           <Text style={themeStyles.h5}>Ordenar por: </Text>
           <Pressable
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
+            style={styles(theme).filterPressable}
             onPress={() => (dropDown ? setDropDown(false) : setDropDown(true))}
           >
             <Text style={themeStyles.h5}>{sortOption}</Text>
@@ -164,11 +96,7 @@ export default function Library() {
           </Pressable>
         </View>
         <Pressable
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
+          style={styles(theme).filterPressable}
           onPress={() => setDesc(!desc)}
         >
           <Text style={themeStyles.h5}>
@@ -178,8 +106,8 @@ export default function Library() {
         </Pressable>
       </View>
       <RefreshableView onRefresh={onRefresh}>
-        <ScrollView contentContainerStyle={libraryStyles.vistaTarjeta}>
-          {sortedDocuments.map((item) => (
+        <ScrollView contentContainerStyle={libraryStyles.cardScreen}>
+          {getSortedDocuments(documents, sortOption, desc).map((item) => (
             <BookLite
               key={item.document_id}
               title={item.title}
@@ -215,6 +143,10 @@ async function onRefresh(setDocuments, showAlert, setLoading) {
   await loadDocuments(setDocuments, showAlert, setLoading);
 }
 
+function handleNavigation(navigation, document) {
+  navigation.navigate("BookDetails", { document });
+}
+
 async function loadDocuments(setDocuments, showAlert, setLoading) {
   try {
     const response = await getAllRegisters();
@@ -232,44 +164,26 @@ async function loadDocuments(setDocuments, showAlert, setLoading) {
   }
 }
 
-function handleNavigation(navigation, document) {
-  navigation.navigate("BookDetails", { document });
-}
+function getSortedDocuments(documents, sortOption, desc) {
+  return [...documents].sort((a, b) => {
+    const compare = (valA, valB) =>
+      desc ? valB.localeCompare(valA) : valA.localeCompare(valB);
 
-const styles = (theme) =>
-  StyleSheet.create({
-    vistaTarjeta: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      gap: 30,
-    },
-    dropdownContainer: {
-      position: "absolute",
-      top: 50,
-      width: "100%",
-      marginHorizontal: 20,
-      backgroundColor: theme["nav-background"],
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: theme["dark-text"],
-      borderBottomWidth: 0,
-      elevation: 5,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      zIndex: 1,
-      overflow: "hidden",
-    },
-    dropdownOption: {
-      padding: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: theme["dark-text"],
-      alignItems: "center",
-    },
-    dropdownOptionText: {
-      fontSize: 16,
-      color: theme["dark-text"],
-    },
+    switch (sortOption) {
+      case "Título":
+        return compare(a.title, b.title);
+      case "Autor":
+        return compare(a.author, b.author);
+      case "Categoría":
+        return compare(a.category_1, b.category_1);
+      case "Tipo":
+        return compare(a.document_type, b.document_type);
+      case "Año":
+        return desc
+          ? (b.publication_year || 0) - (a.publication_year || 0)
+          : (a.publication_year || 0) - (b.publication_year || 0);
+      default:
+        return 0;
+    }
   });
+}

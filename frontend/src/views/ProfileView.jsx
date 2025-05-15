@@ -1,6 +1,6 @@
 // React
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 // Expo
@@ -12,6 +12,7 @@ import { useAlert } from "../context/AlertContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/profileStyles.js";
 
 // API
 import { getProfile } from "../api/users.js";
@@ -26,12 +27,12 @@ import EditIcon from "../../assets/icons/EditIcon.jsx";
 import LogoutIcon from "../../assets/icons/LogoutIcon.jsx";
 import AccountIcon from "../../assets/icons/AccountIcon.jsx";
 import SettingsIcon from "../../assets/icons/SettingsIcon.jsx";
-import AddPhotoIcon from "../../assets/icons/AddPhotoIcon.jsx";
 
 export default function ProfileScreen() {
   const { theme } = useContext(ThemeContext);
-  const themeStyles = viewStyles(theme);
   const { showAlert, showConfirm } = useAlert();
+
+  const themeStyles = viewStyles(theme);
 
   const navigation = useNavigation();
 
@@ -48,10 +49,23 @@ export default function ProfileScreen() {
     username: username,
   };
 
-  const onRefresh = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    await getUserData();
-  };
+  useEffect(() => {
+    getUserData(
+      setUser_name,
+      setUser_lastname,
+      setUsername,
+      setEmail,
+      setSubscription,
+      showAlert,
+    );
+  }, [
+    setUser_name,
+    setUser_lastname,
+    setUsername,
+    setEmail,
+    setSubscription,
+    showAlert,
+  ]);
 
   useFocusEffect(
     useCallback(() => {
@@ -59,98 +73,35 @@ export default function ProfileScreen() {
     }, [navigation]),
   );
 
-  const getUserData = async () => {
-    const response = await getProfile();
-    const { ok, status, data } = response;
-
-    if (ok || status === 200) {
-      setUser_name(data.user.user_name);
-      setUser_lastname(data.user.user_lastname);
-      setUsername(data.user.username);
-      setEmail(data.user.email);
-      setSubscription(data.user.user_sub);
-    } else if (status === 404) {
-      showAlert({
-        title: "Error",
-        message: "Hubo un error al buscar el usuario",
-      });
-    } else {
-      showAlert({
-        title: "Error",
-        message: "Hubo un error al buscar el usuario",
-      });
-    }
-  };
-
-  useEffect(() => {
-    getUserData();
-  });
-
-  const handleEditProfile = (user) => {
-    navigation.navigate("EditProfile", { user });
-  };
-
-  const handleConfig = () => {
-    navigation.navigate("Config");
-  };
-
-  const handleLogout = async () => {
-    try {
-      const response = await logout();
-      const { ok, status } = response;
-
-      if (ok || status === 200) {
-        await SecureStore.deleteItemAsync("access_token");
-        navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
-      }
-    } catch {
-      showAlert({
-        title: "Error",
-        message: "Error al cerrar sesión. Inténtelo más tarde.",
-      });
-    }
-  };
-
   return (
-    <View style={themeStyles.mainContainer}>
-      <RefreshableView onRefresh={onRefresh}>
+    <View style={[themeStyles.mainContainer]}>
+      <RefreshableView
+        onRefresh={() =>
+          onRefresh(
+            setUser_name,
+            setUser_lastname,
+            setUsername,
+            setEmail,
+            setSubscription,
+            showAlert,
+          )
+        }
+      >
         <View style={styles.iconsBox}>
           <IconButton
-            onPress={() => handleEditProfile(user)}
+            onPress={() => handleEditProfile(navigation, user)}
             icon={<EditIcon size={52} />}
           />
-          <View>
-            <AccountIcon size={200} />
-            <View
-              style={[
-                styles.cameraContainer,
-                {
-                  backgroundColor: theme["app-background"],
-                  borderColor: theme["selected-icons"],
-                },
-              ]}
-            >
-              <Text>
-                <IconButton
-                  onPress={() => alert("Añadir foto")}
-                  icon={<AddPhotoIcon size={28} />}
-                />
-              </Text>
-            </View>
-          </View>
+
+          <AccountIcon size={200} />
+
           <IconButton
-            onPress={handleConfig}
+            onPress={() => handleConfig(navigation)}
             icon={<SettingsIcon size={52} />}
           />
         </View>
 
-        <View
-          style={{
-            flexWrap: "wrap",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
+        <View style={styles.rowContainer}>
           <View style={styles.textContainer}>
             <Text style={themeStyles.h5}>Nombre: </Text>
             <Text style={themeStyles.p}>{user_name}</Text>
@@ -174,21 +125,14 @@ export default function ProfileScreen() {
           <Text style={themeStyles.p}>{email}</Text>
         </View>
 
-        <View
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 20,
-            marginBottom: 20,
-          }}
-        >
+        <View style={styles.logoutContainer}>
           <IconButton
             onPress={() =>
               showConfirm({
                 title: "Cerrar sesión",
                 message:
                   "¿Desea realmente cerrar sesión y salir de la aplicación?",
-                onConfirm: handleLogout,
+                onConfirm: () => handleLogout(navigation, showAlert),
               })
             }
             icon={<LogoutIcon size={52} />}
@@ -199,34 +143,76 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  iconsBox: {
-    flexWrap: "wrap",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 50,
-  },
-  image: {
-    height: 150,
-    width: 150,
-    alignItems: "center",
-  },
-  textContainer: {
-    flexWrap: "wrap",
-    flexDirection: "row",
-    marginBottom: 20,
-  },
-  cameraContainer: {
-    height: 60,
-    width: 60,
-    paddingLeft: 2,
-    borderRadius: "100%",
-    borderWidth: 2,
-    position: "absolute",
-    zIndex: 1,
-    bottom: 10,
-    right: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+async function onRefresh(
+  setUser_name,
+  setUser_lastname,
+  setUsername,
+  setEmail,
+  setSubscription,
+  showAlert,
+) {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  await getUserData(
+    setUser_name,
+    setUser_lastname,
+    setUsername,
+    setEmail,
+    setSubscription,
+    showAlert,
+  );
+}
+
+async function getUserData(
+  setUser_name,
+  setUser_lastname,
+  setUsername,
+  setEmail,
+  setSubscription,
+  showAlert,
+) {
+  const response = await getProfile();
+  const { ok, status, data } = response;
+
+  if (ok || status === 200) {
+    setUser_name(data.user.user_name);
+    setUser_lastname(data.user.user_lastname);
+    setUsername(data.user.username);
+    setEmail(data.user.email);
+    setSubscription(data.user.user_sub);
+  } else if (status === 404) {
+    showAlert({
+      title: "Error",
+      message: "Hubo un error al buscar el usuario",
+    });
+  } else {
+    showAlert({
+      title: "Error",
+      message: "Hubo un error al buscar el usuario",
+    });
+  }
+}
+
+function handleEditProfile(navigation, user) {
+  navigation.navigate("EditProfile", { user });
+}
+
+function handleConfig(navigation) {
+  navigation.navigate("Config");
+}
+
+async function handleLogout(navigation, showAlert) {
+  try {
+    const response = await logout();
+    const { ok, status } = response;
+
+    if (ok || status === 200) {
+      await SecureStore.deleteItemAsync("access_token");
+      navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
+    }
+  } catch {
+    showAlert({
+      title: "Error",
+      message: "Error al cerrar sesión. Inténtelo más tarde.",
+    });
+  }
+}

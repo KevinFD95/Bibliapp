@@ -126,7 +126,7 @@ async function onLoginPress(
   );
 
   if (result?.error) {
-    showAlert({ title: "Error", message: result.error });
+    showAlert({ title: "Error", message: result.message });
   } else {
     await fetchCartItems();
   }

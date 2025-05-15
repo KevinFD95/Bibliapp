@@ -1,6 +1,6 @@
 // React
 import { useContext } from "react";
-import { Image, View, Pressable } from "react-native";
+import { Image, View, Pressable, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // Contextos
@@ -56,7 +56,12 @@ export default function TabNavigator() {
           cartItems.length > 0 ? (
             <View style={{ marginRight: 20 }}>
               <Pressable onPress={() => navigation.navigate("cart")}>
-                <CartIcon size={38} />
+                <View>
+                  <CartIcon size={38} />
+                  <Text style={styles(theme).cartNumber}>
+                    {cartItems.length}
+                  </Text>
+                </View>
               </Pressable>
             </View>
           ) : null,
@@ -64,6 +69,7 @@ export default function TabNavigator() {
           backgroundColor: theme["nav-background"],
           paddingTop: 5,
           justifyContent: "space-around",
+          borderTopWidth: 0,
         },
         tabBarLabel: () => null,
       })}
@@ -124,3 +130,24 @@ export default function TabNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = (theme) => {
+  return StyleSheet.create({
+    cartNumber: {
+      color: "red",
+      backgroundColor: theme["dark-text"],
+      borderWidth: 1,
+      borderColor: theme["app-background"],
+      borderRadius: 50,
+      width: 20,
+      height: 20,
+      fontWeight: "bold",
+      textAlign: "center",
+      alignSelf: "center",
+      zIndex: 2,
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+    },
+  });
+};

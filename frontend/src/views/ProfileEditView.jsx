@@ -1,25 +1,37 @@
+// React
 import { useCallback, useContext, useState } from "react";
-import { ScrollView, Text, StyleSheet, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+
+// Context
+import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
+
+// Estilos
 import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/profileEditStyles.js";
+
+// API
+import { updateProfile } from "../api/users.js";
+
+// Componentes
+import { CustomButton, IconButton } from "../components/ButtonComponent.jsx";
 import {
   CustomTextBox,
   CustomTextBoxUser,
 } from "../components/TextInputComponent.jsx";
-import { CustomButton } from "../components/ButtonComponent.jsx";
-import { Popup } from "../components/PopupComponent.jsx";
+
+// Iconos
 import AccountIcon from "../../assets/icons/AccountIcon.jsx";
-import { updateProfile } from "../api/users.js";
-import { ThemeContext } from "../context/ThemeContext.jsx";
-import { useFocusEffect } from "@react-navigation/native";
+import AddPhotoIcon from "../../assets/icons/AddPhotoIcon.jsx";
 
 export default function EditProfileScreen({ route, navigation }) {
   const { theme } = useContext(ThemeContext);
+  const { showAlert } = useAlert();
+
   const themeStyles = viewStyles(theme);
 
   const { user } = route.params;
-
-  const [alertMessage, setAlertMessage] = useState();
-  const [alertVisible, setAlertVisible] = useState(false);
 
   const [user_name, setUser_name] = useState(user.user_name);
   const [user_lastname, setUser_lastname] = useState(user.user_lastname);
@@ -44,60 +56,51 @@ export default function EditProfileScreen({ route, navigation }) {
       const { ok, status } = response;
 
       if (ok || status === 200) {
-        setAlertMessage("Cambios guardados");
-        setAlertVisible(true);
+        showAlert({
+          title: "Éxito",
+          message: "Cambios guardados correctamente",
+        });
       } else {
-        setAlertMessage("Imposible guardar cambios");
-        setAlertVisible(true);
+        showAlert({ title: "Error", message: "Imposible guardar los cambios" });
       }
     } catch {
-      alert("Error");
+      showAlert({ title: "Error", message: "Imposible guardar los cambios" });
     }
   };
 
   return (
     <View style={themeStyles.mainContainer}>
       <ScrollView>
-        <View style={{ alignItems: "center", marginTop: 10, marginBottom: 50 }}>
+        <View style={{ alignItems: "center" }}>
           <AccountIcon size={200} />
+          <View style={styles(theme).cameraContainer}>
+            <Text>
+              <IconButton
+                onPress={() => alert("Añadir foto")}
+                icon={<AddPhotoIcon size={28} />}
+              />
+            </Text>
+          </View>
         </View>
 
-        <View style={styles.text}>
-          <Text>Nombre: </Text>
+        <View style={styles(theme).text}>
+          <Text style={themeStyles.p}>Nombre: </Text>
           <CustomTextBox value={user_name} onChangeText={setUser_name} />
         </View>
-        <View style={styles.text}>
-          <Text>Apellidos: </Text>
+        <View style={styles(theme).text}>
+          <Text style={themeStyles.p}>Apellidos: </Text>
           <CustomTextBox
             value={user_lastname}
             onChangeText={setUser_lastname}
           />
         </View>
-        <View style={styles.text}>
-          <Text>Correo Electronico: </Text>
+        <View style={styles(theme).text}>
+          <Text style={themeStyles.p}>Correo Electronico: </Text>
           <CustomTextBoxUser value={email} onChangeText={setEmail} />
         </View>
-        <CustomButton text={"Guardar cambios"} onPress={handleSave} />
 
-        <Popup
-          title={"Aviso"}
-          message={alertMessage}
-          visible={alertVisible}
-          onClose={() => setAlertVisible(false)}
-        />
+        <CustomButton text={"Guardar cambios"} onPress={handleSave} />
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  box: {
-    flexWrap: "wrap",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
-  text: {
-    marginBottom: 20,
-  },
-});

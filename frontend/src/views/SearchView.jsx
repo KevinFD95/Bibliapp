@@ -1,13 +1,15 @@
 // React
 import { useState, useEffect, useContext, useCallback } from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
 // Context
 import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/searchStyles.js";
 
 // API
 import { getDocuments } from "../api/documents.js";
@@ -19,13 +21,18 @@ import { CustomTextBoxFind } from "../components/TextInputComponent.jsx";
 
 export default function SearchView({ navigation }) {
   const { theme } = useContext(ThemeContext);
+  const { showAlert } = useAlert();
+
   const themeStyles = viewStyles(theme);
 
   const [searchText, setSearchText] = useState("");
   const [filteredDocuments, setFilteredDocuments] = useState();
   const [allDocuments, setAllDocuments] = useState([]);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBooks(setFilteredDocuments, setAllDocuments, showAlert, setLoading);
+  }, [showAlert]);
 
   useFocusEffect(
     useCallback(() => {
@@ -33,64 +40,19 @@ export default function SearchView({ navigation }) {
     }, [navigation]),
   );
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await getDocuments();
-        const { ok, status, data } = response;
-
-        if (ok || status === 200) {
-          setFilteredDocuments(data.documents);
-          setAllDocuments(data.documents);
-        }
-      } catch (err) {
-        setError("Hubo un error al cargar los libros.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
-  }, []);
-
   if (loading) {
     return (
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
+      <View style={styles(theme).loadingScreen}>
         <CustomLoader />
       </View>
     );
   }
-  if (error) {
-    return <Text>{error}</Text>;
-  }
+
   if (!Array.isArray(filteredDocuments)) {
-    return <Text>No se encontraron libros disponibles</Text>;
-  }
-
-  const handleSearch = (text) => {
-    setSearchText(text);
-
-    const searchTerms = text
-      .split(",")
-      .map((term) => term.trim().toLowerCase());
-
-    const filtered = allDocuments.filter((doc) =>
-      searchTerms.every((term) => {
-        if (!term) return true;
-
-        return (
-          doc.title.toLowerCase().includes(term) ||
-          // documents.category.toLowerCase().includes(term) ||
-          doc.author.toLowerCase().includes(term) ||
-          doc.publication_year.toString().includes(term) ||
-          doc.document_type.toLowerCase().includes(term)
-        );
-      }),
+    return (
+      <Text style={themeStyles.h5}>No se encontraron libros disponibles</Text>
     );
-
-    setFilteredDocuments(filtered);
-  };
+  }
 
   const navigateToBookDetails = (document) => {
     navigation.navigate("BookDetails", { document });
@@ -102,34 +64,43 @@ export default function SearchView({ navigation }) {
         <CustomTextBoxFind
           placeholder="Buscar"
           value={searchText}
-          onChangeText={handleSearch}
+          onChangeText={(text) => {
+            handleSearch(
+              text,
+              allDocuments,
+              setSearchText,
+              setFilteredDocuments,
+            );
+          }}
         />
-        <View style={styles.elements}>
+        <View style={styles(theme).elements}>
           {filteredDocuments.map((item) => (
-            <View key={item.document_id} style={styles.bookContainer}>
+            <View key={item.document_id} style={styles(theme).bookContainer}>
               <BookLite
                 title="Pulsa para abrir"
                 onPress={() => navigateToBookDetails(item)}
                 image={item.url_image}
               />
-              <View style={styles.bookDescription}>
-                <View style={styles.itemLine}>
+              <View style={styles(theme).bookDescription}>
+                <View style={styles(theme).itemLine}>
                   <Text style={themeStyles.h5}>Título: </Text>
                   <Text style={themeStyles.p}>{item.title}</Text>
                 </View>
-                <View style={styles.itemLine}>
+                <View style={styles(theme).itemLine}>
                   <Text style={themeStyles.h5}>Categoría: </Text>
-                  <Text style={themeStyles.p}>{item.category}</Text>
+                  <Text style={themeStyles.p}>
+                    {item.category_1}, {item.category_2}
+                  </Text>
                 </View>
-                <View style={styles.itemLine}>
+                <View style={styles(theme).itemLine}>
                   <Text style={themeStyles.h5}>Autor: </Text>
                   <Text style={themeStyles.p}>{item.author}</Text>
                 </View>
-                <View style={styles.itemLine}>
+                <View style={styles(theme).itemLine}>
                   <Text style={themeStyles.h5}>Año: </Text>
                   <Text style={themeStyles.p}>{item.publication_year}</Text>
                 </View>
-                <View style={styles.itemLine}>
+                <View style={styles(theme).itemLine}>
                   <Text style={themeStyles.h5}>Tipo: </Text>
                   <Text style={themeStyles.p}>{item.document_type}</Text>
                 </View>
@@ -142,27 +113,49 @@ export default function SearchView({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  elements: {
-    width: "100%",
-    gap: 20,
-  },
+async function fetchBooks(
+  setFilteredDocuments,
+  setAllDocuments,
+  showAlert,
+  setLoading,
+) {
+  try {
+    const response = await getDocuments();
+    const { ok, status, data } = response;
 
-  bookContainer: {
-    width: "100%",
-    gap: 10,
-    flexDirection: "row",
-  },
+    if (ok || status === 200) {
+      setFilteredDocuments(data.documents);
+      setAllDocuments(data.documents);
+    }
+  } catch {
+    showAlert({
+      title: "Error",
+      message: "Hubo un error al cargar los documentos",
+    });
+  } finally {
+    setLoading(false);
+  }
+}
 
-  bookDescription: {
-    width: "80%",
-    paddingVertical: 10,
-    flexShrink: 1,
-    gap: 10,
-  },
+function handleSearch(text, allDocuments, setSearchText, setFilteredDocuments) {
+  setSearchText(text);
 
-  itemLine: {
-    flexWrap: "wrap",
-    flexDirection: "row",
-  },
-});
+  const searchTerms = text.split(",").map((term) => term.trim().toLowerCase());
+
+  const filtered = allDocuments.filter((doc) =>
+    searchTerms.every((term) => {
+      if (!term) return true;
+
+      return (
+        doc.title.toLowerCase().includes(term) ||
+        doc.category_1.toLowerCase().includes(term) ||
+        doc.category_2.toLowerCase().includes(term) ||
+        doc.author.toLowerCase().includes(term) ||
+        doc.publication_year.toString().includes(term) ||
+        doc.document_type.toLowerCase().includes(term)
+      );
+    }),
+  );
+
+  setFilteredDocuments(filtered);
+}
