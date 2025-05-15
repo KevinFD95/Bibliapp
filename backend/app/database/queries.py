@@ -25,7 +25,7 @@ class Queries:
     AUTH_DELETE_TOKEN = "DELETE FROM tokens WHERE token = %s"
 
     # Documents
-    DOC_GETALL = "SELECT * FROM documents"
+    DOC_GETALL = "SELECT * FROM documents ORDER BY updated_at DESC LIMIT 10"
     DOC_GETALL_RANDOM = "SELECT * FROM documents ORDER BY RAND() LIMIT 10"
     DOC_GET_DOCUMENT = "SELECT url_document FROM documents WHERE document_id = %s"
     DOC_CREATE = "INSERT INTO documents (title, author, publication_year, document_type, num_pages, saga, prequel, sequel, synopsis, category_1, category_2, price, url_image, url_document, slug) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
