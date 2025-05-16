@@ -1,4 +1,3 @@
-import React from "react";
 import { Pressable, Text, StyleSheet, View, Image } from "react-native";
 
 export default function BookLite({ title, image, onPress }) {
@@ -7,7 +6,7 @@ export default function BookLite({ title, image, onPress }) {
       {image ? (
         <Image source={{ uri: image }} style={styles.image} />
       ) : (
-        <View>
+        <View style={styles.noImage}>
           <Text>No Image</Text>
         </View>
       )}
@@ -24,7 +23,7 @@ export function BookLiteCart({ image, onPress }) {
       {image ? (
         <Image source={{ uri: image }} style={styles.image} />
       ) : (
-        <View>
+        <View style={styles.noImage}>
           <Text>No Image</Text>
         </View>
       )}
@@ -42,9 +41,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    maxWidth: 140,
-    maxHeight: 260,
+    width: 140,
+    height: 220,
   },
+
   cardcart: {
     backgroundColor: "#f9f9f9",
     padding: 10,
@@ -54,9 +54,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    maxWidth: 140,
-    maxHeight: 200,
+    width: 140,
+    height: 200,
   },
+
   title: {
     fontSize: 12,
     fontWeight: "bold",
@@ -65,6 +66,13 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontFamily: "serif",
   },
+
+  noImage: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   image: {
     width: 120,
     height: 180,

@@ -135,9 +135,9 @@ const styles = (theme) => {
   return StyleSheet.create({
     cartNumber: {
       color: "red",
-      backgroundColor: theme["dark-text"],
+      backgroundColor: "white",
       borderWidth: 1,
-      borderColor: theme["app-background"],
+      borderColor: theme["unselected-icons"],
       borderRadius: 50,
       width: 20,
       height: 20,

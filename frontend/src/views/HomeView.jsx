@@ -44,14 +44,6 @@ export default function HomeScreen() {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <Text>{error}</Text>
-  //     </View>
-  //   );
-  // }
-
   return (
     <View style={themeStyles.mainContainer}>
       <RefreshableView
