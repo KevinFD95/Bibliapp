@@ -4,6 +4,10 @@ export function getDocuments() {
   return customFetch("/docs");
 }
 
+export function getDocumentsNews() {
+  return customFetch("/docs/news");
+}
+
 export function getDocumentsRandom() {
   return customFetch("/random");
 }

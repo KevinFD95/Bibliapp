@@ -14,6 +14,12 @@ class DocController:
             return ApiResponse.error(message="No se han obtenido documentos")
         return ApiResponse.success(data={"documents": documents})
     
+    def get_documents_news():
+        documents = Document.get_all_news()
+        if documents is None:
+            return ApiResponse.error(message="No se han encontrado documentos")
+        return ApiResponse.success(data={"documents": documents})
+    
     def get_documents_random():
         documents = Document.get_all_random()
         if documents is None:

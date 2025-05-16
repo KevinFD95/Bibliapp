@@ -7,7 +7,7 @@ import CustomLoader from "../components/LoadingComponent.jsx";
 
 import { viewStyles } from "../styles/globalStyles.js";
 import {
-  fetchAllDocuments,
+  fetchAllNews,
   fetchRandomDocuments,
   fetchRandomDocumentsByCategories,
 } from "../controllers/documentController.js";
@@ -153,7 +153,7 @@ async function loadHomeData(
   setError(null);
 
   try {
-    const newDocsPromise = fetchAllDocuments();
+    const newDocsPromise = fetchAllNews();
     const randomDocsByCategoryPromise = fetchRandomDocumentsByCategories();
 
     const [newDocsResult, randomDocsResult] = await Promise.all([

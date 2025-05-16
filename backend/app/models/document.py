@@ -16,6 +16,19 @@ class Document:
         except Exception as e:
             print(f"Error fetching all documents: {e}")
             return None
+    
+    @staticmethod
+    def get_all_news():
+        try:
+            conn = Connection.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(Queries.DOC_GETNEWS)
+            documents = cursor.fetchall()
+            conn.close()
+            return documents
+        except Exception as e:
+            print(f"Error fetching all documents: {e}")
+            return None
         
     @staticmethod
     def get_all_random():

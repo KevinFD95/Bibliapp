@@ -9,6 +9,9 @@ document_bp = Blueprint("document_bp", __name__)
 document_bp.route("/docs", methods=["GET"])(
     token_in_db_required(DocController.get_documents)
 )
+document_bp.route("/docs/news", methods=["GET"])(
+    token_in_db_required(DocController.get_documents_news)
+)
 document_bp.route("/random", methods=["GET"])(
     token_in_db_required(DocController.get_documents_random)
 )
