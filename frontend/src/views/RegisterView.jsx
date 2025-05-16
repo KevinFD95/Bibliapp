@@ -1,46 +1,41 @@
-import { useContext } from "react";
+// React
+import { useContext, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
+// Context
+import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
+
+// Estilos
+import { viewStyles } from "../styles/globalStyles.js";
+
+// API
+import { registerUser } from "../controllers/userController.js";
+
+// Componentes
 import {
   CustomTextBox,
   CustomTextBoxUser,
   CustomTextBoxPass,
 } from "../components/TextInputComponent.jsx";
 import { CustomButton } from "../components/ButtonComponent.jsx";
-import { Popup } from "../components/PopupComponent.jsx";
 
+// Iconos
 import RegisterImage from "../../assets/icons/AccountIcon.jsx";
-import { viewStyles } from "../styles/globalStyles.js";
-
-import { RegisterController } from "../controllers/userController.js";
-
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemeContext } from "../context/ThemeContext.jsx";
 
 export default function RegisterScreen({ navigation }) {
   const { theme } = useContext(ThemeContext);
+  const { showAlert } = useAlert();
+
   const themeStyles = viewStyles(theme);
 
-  const {
-    nameInput,
-    lastnameInput,
-    userInput,
-    mailInput,
-    passInput,
-    secondPassInput,
-    setNameInput,
-    setLastnameInput,
-    setUserInput,
-    setMailInput,
-    setPassInput,
-    setSecondPassInput,
-    alertVisible,
-    alertMessage,
-    confirmVisible,
-    handleRegister,
-    closeAlert,
-    closeConfirm,
-  } = RegisterController(navigation);
+  const [nameInput, setNameInput] = useState("");
+  const [lastnameInput, setLastnameInput] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [mailInput, setMailInput] = useState("");
+  const [passInput, setPassInput] = useState("");
+  const [secondPassInput, setSecondPassInput] = useState("");
 
   return (
     <SafeAreaView
@@ -107,21 +102,48 @@ export default function RegisterScreen({ navigation }) {
           />
         </View>
       </ScrollView>
-      <CustomButton text="Registrarse" onPress={handleRegister} />
-
-      <Popup
-        visible={alertVisible}
-        title={"Aviso"}
-        message={alertMessage}
-        onClose={closeAlert}
-      />
-      <Popup
-        visible={confirmVisible}
-        message={"Usuario registrado correctamente"}
-        onClose={closeConfirm}
+      <CustomButton
+        text="Registrarse"
+        onPress={() =>
+          handleRegister(
+            navigation,
+            nameInput,
+            lastnameInput,
+            userInput,
+            mailInput,
+            passInput,
+            secondPassInput,
+            showAlert,
+          )
+        }
       />
     </SafeAreaView>
   );
+}
+
+async function handleRegister(
+  navigation,
+  nameInput,
+  lastnameInput,
+  userInput,
+  mailInput,
+  passInput,
+  secondPassInput,
+  showAlert,
+) {
+  const success = await registerUser(
+    nameInput,
+    lastnameInput,
+    userInput,
+    mailInput,
+    passInput,
+    secondPassInput,
+    showAlert,
+  );
+
+  if (success) {
+    navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
+  }
 }
 
 const styles = StyleSheet.create({

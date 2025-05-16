@@ -46,10 +46,10 @@ export function CartProvider({ children }) {
       const check = await getCartDoc(document.document_id);
       const { ok, status } = check;
       if (ok && status === 200) {
-        showAlert(
-          "Añadir Documento",
-          `${document.title} ya esta añadido en el carrito`,
-        );
+        showAlert({
+          title: "Añadir Documento",
+          message: `${document.title} ya esta añadido en el carrito`,
+        });
         fetchCartItems();
         return;
       } else if (status === 404) {

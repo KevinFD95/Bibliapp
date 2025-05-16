@@ -1,55 +1,51 @@
+// React
 import { useState, useEffect, useContext } from "react";
 import { Image, View, Text, Pressable, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeContext } from "../context/ThemeContext.jsx";
 
+// Expo
+import * as SecureStore from "expo-secure-store";
+
+// Context
+import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
+import { useCart } from "../context/CartContext.jsx";
+
+// Estilos
 import { viewStyles } from "../styles/globalStyles.js";
 
+// Componentes
 import { CustomButton } from "../components/ButtonComponent.jsx";
 import {
   CustomTextBoxUser,
   CustomTextBoxPass,
 } from "../components/TextInputComponent.jsx";
-import { Popup } from "../components/PopupComponent.jsx";
-import LightLogo from "../../assets/bibliapp-logo-inicio.png";
-import DarkLogo from "../../assets/bibliapp-icon-loading.png";
 import {
   handleLogin,
   validateUserToken,
 } from "../controllers/authController.js";
-import * as SecureStore from "expo-secure-store";
 
-import { useCart } from "../context/CartContext.jsx";
+// Imágenes
+import LightLogo from "../../assets/bibliapp-logo-inicio.png";
+import DarkLogo from "../../assets/bibliapp-icon-loading.png";
 
 export default function LoginScreen() {
-  const { fetchCartItems } = useCart();
   const navigation = useNavigation();
-  const { mode } = useContext(ThemeContext);
-  const { theme } = useContext(ThemeContext);
+
+  const { theme, mode } = useContext(ThemeContext);
+  const { showAlert } = useAlert();
+  const { fetchCartItems } = useCart();
+
   const themeStyles = viewStyles(theme);
 
   const logo = mode === "dark" ? DarkLogo : LightLogo;
 
-  const [userInput, setUserInput] = useState();
-  const [passInput, setPassInput] = useState();
-
-  const [alert, setAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState();
-  const [isViewReady, setIsViewReady] = useState(false);
+  const [userInput, setUserInput] = useState("");
+  const [passInput, setPassInput] = useState("");
 
   useEffect(() => {
-    checkToken(navigation, setAlertMessage, setIsViewReady);
-  }, [navigation]);
-
-  useEffect(() => {
-    if (isViewReady && alertMessage) {
-      const timeout = setTimeout(() => {
-        setAlert(true);
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [isViewReady, alertMessage]);
+    checkToken(navigation, showAlert);
+  }, [navigation, showAlert]);
 
   return (
     <View style={[themeStyles.mainContainer, styles.view]}>
@@ -87,8 +83,7 @@ export default function LoginScreen() {
               navigation,
               userInput,
               passInput,
-              setAlert,
-              setAlertMessage,
+              showAlert,
               fetchCartItems,
             )
           }
@@ -99,33 +94,30 @@ export default function LoginScreen() {
           </Text>
         </Pressable>
       </View>
-
-      <Popup
-        visible={alert}
-        title={"Error"}
-        message={alertMessage}
-        onClose={() => setAlert(false)}
-      />
     </View>
   );
 }
 
-async function checkToken(navigation, setAlertMessage, setIsViewReady) {
+async function checkToken(navigation, showAlert) {
   const result = await validateUserToken(navigation);
 
   if (result?.error) {
     await SecureStore.deleteItemAsync("access_token");
-    setAlertMessage(result.message);
+
+    setTimeout(() => {
+      showAlert({
+        title: "Sesión caducada",
+        message: "La sesión ha caducado. Vuelva a iniciar sesión",
+      });
+    }, 3000);
   }
-  setIsViewReady(true);
 }
 
 async function onLoginPress(
   navigation,
   userInput,
   passInput,
-  setAlert,
-  setAlertMessage,
+  showAlert,
   fetchCartItems,
 ) {
   const result = await handleLogin(
@@ -134,8 +126,7 @@ async function onLoginPress(
   );
 
   if (result?.error) {
-    setAlertMessage(result.message);
-    setAlert(true);
+    showAlert({ title: "Error", message: result.message });
   } else {
     await fetchCartItems();
   }

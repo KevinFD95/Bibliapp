@@ -1,7 +1,11 @@
+// React
 import { createStackNavigator } from "@react-navigation/stack";
 
+// Navegador
+import TabNavigator from "./TabNavigator.jsx";
+
+// Vistas
 import LoginScreen from "../views/LoginView.jsx";
-import TabNavigator from "../components/TabNavigator.jsx";
 import ForgotPassView from "../views/ForgotPassView.jsx";
 import ResetPasswordView from "../views/ResetPasswordView.jsx";
 import RegisterScreen from "../views/RegisterView.jsx";

@@ -1,8 +1,10 @@
+// React
 import { createStackNavigator } from "@react-navigation/stack";
 
+// Vistas
 import HomeScreen from "../views/HomeView.jsx";
-import BookDetails from "./BookDetails.jsx";
-import BookView from "./BookView.jsx";
+import BookDetails from "../views/DetailsView.jsx";
+import BookView from "../views/BookView.jsx";
 
 const Stack = createStackNavigator();
 

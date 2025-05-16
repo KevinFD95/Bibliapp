@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
     padding: 2,
+    marginBottom: 10,
   },
 
   thumb: {
