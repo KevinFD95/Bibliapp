@@ -30,6 +30,10 @@ export default function SearchView({ navigation }) {
   const [allDocuments, setAllDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [visibleDocuments, setVisibleDocuments] = useState([]);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 50;
+
   useEffect(() => {
     fetchBooks(setFilteredDocuments, setAllDocuments, showAlert, setLoading);
   }, [showAlert]);
@@ -39,6 +43,14 @@ export default function SearchView({ navigation }) {
       navigation.getParent()?.setOptions({ title: "Buscar" });
     }, [navigation]),
   );
+
+  useEffect(() => {
+    if (Array.isArray(filteredDocuments)) {
+      const initialItems = filteredDocuments.slice(0, itemsPerPage);
+      setVisibleDocuments(initialItems);
+      setPage(1);
+    }
+  }, [filteredDocuments]);
 
   if (loading) {
     return (
@@ -50,7 +62,9 @@ export default function SearchView({ navigation }) {
 
   if (!Array.isArray(filteredDocuments)) {
     return (
-      <Text style={themeStyles.h5}>No se encontraron libros disponibles</Text>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <Text style={themeStyles.h5}>No se encontraron libros disponibles</Text>
+      </View>
     );
   }
 
@@ -60,7 +74,21 @@ export default function SearchView({ navigation }) {
 
   return (
     <View style={themeStyles.mainContainer}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            loadMore(
+              page,
+              itemsPerPage,
+              filteredDocuments,
+              setVisibleDocuments,
+              setPage,
+            );
+          }
+        }}
+        scrollEventThrottle={400}
+      >
         <CustomTextBoxFind
           placeholder="Buscar"
           value={searchText}
@@ -74,7 +102,7 @@ export default function SearchView({ navigation }) {
           }}
         />
         <View style={styles(theme).elements}>
-          {filteredDocuments.map((item) => (
+          {visibleDocuments.map((item) => (
             <View key={item.document_id} style={styles(theme).bookContainer}>
               <BookLite
                 title="Pulsa para abrir"
@@ -159,4 +187,31 @@ function handleSearch(text, allDocuments, setSearchText, setFilteredDocuments) {
   );
 
   setFilteredDocuments(filtered);
+}
+
+function isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
+  const paddingToBottom = 50;
+  return (
+    layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom
+  );
+}
+
+function loadMore(
+  page,
+  itemsPerPage,
+  filteredDocuments,
+  setVisibleDocuments,
+  setPage,
+) {
+  const nextPage = page + 1;
+  const start = (nextPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+
+  const newItems = filteredDocuments.slice(start, end);
+
+  if (newItems.length > 0) {
+    setVisibleDocuments((prev) => [...prev, ...newItems]);
+    setPage(nextPage);
+  }
 }
