@@ -37,12 +37,6 @@ export default function EditProfileScreen({ route, navigation }) {
   const [user_lastname, setUser_lastname] = useState(user.user_lastname);
   const [email, setEmail] = useState(user.email);
 
-  useFocusEffect(
-    useCallback(() => {
-      navigation.getParent()?.setOptions({ title: "Editar perfil" });
-    }, [navigation]),
-  );
-
   const newUser = {
     user_name: user_name,
     user_lastname: user_lastname,
@@ -50,23 +44,11 @@ export default function EditProfileScreen({ route, navigation }) {
     username: user.username,
   };
 
-  const handleSave = async () => {
-    try {
-      const response = await updateProfile(newUser);
-      const { ok, status } = response;
-
-      if (ok || status === 200) {
-        showAlert({
-          title: "Éxito",
-          message: "Cambios guardados correctamente",
-        });
-      } else {
-        showAlert({ title: "Error", message: "Imposible guardar los cambios" });
-      }
-    } catch {
-      showAlert({ title: "Error", message: "Imposible guardar los cambios" });
-    }
-  };
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({ title: "Editar perfil" });
+    }, [navigation]),
+  );
 
   return (
     <View style={themeStyles.mainContainer}>
@@ -99,8 +81,32 @@ export default function EditProfileScreen({ route, navigation }) {
           <CustomTextBoxUser value={email} onChangeText={setEmail} />
         </View>
 
-        <CustomButton text={"Guardar cambios"} onPress={handleSave} />
+        <CustomButton
+          text={"Guardar cambios"}
+          onPress={() => handleSave(newUser, showAlert)}
+        />
       </ScrollView>
     </View>
   );
+}
+
+async function handleSave(newUser, showAlert) {
+  try {
+    const response = await updateProfile(newUser);
+    const { ok, status, message } = response;
+
+    if (ok || status === 200) {
+      showAlert({
+        title: "Éxito",
+        message: message,
+      });
+    } else {
+      showAlert({ title: "Error", message: message });
+    }
+  } catch {
+    showAlert({
+      title: "Error",
+      message: "Error al guardar los cambios. Inténtelo más tarde.",
+    });
+  }
 }

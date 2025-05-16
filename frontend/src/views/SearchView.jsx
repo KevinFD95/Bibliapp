@@ -89,7 +89,8 @@ export default function SearchView({ navigation }) {
                 <View style={styles(theme).itemLine}>
                   <Text style={themeStyles.h5}>Categoría: </Text>
                   <Text style={themeStyles.p}>
-                    {item.category_1}, {item.category_2}
+                    {item.category_1}
+                    {item.category_2 && `, ${item.category_2}`}
                   </Text>
                 </View>
                 <View style={styles(theme).itemLine}>

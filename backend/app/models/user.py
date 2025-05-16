@@ -119,9 +119,9 @@ class User:
             )
             conn.commit()
             conn.close()
-            return {"message": "El usuario ha sido actualizado correctamente."}
+            return {"message": "Los datos han sido actualizados correctamente."}
         except Exception:
-            return {"error": "No se han podido actualizar los datos del usuario."}
+            return {"message": "No se han podido actualizar los datos."}
 
     def changepassword(username, password):
         try:

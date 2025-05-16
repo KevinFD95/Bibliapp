@@ -44,13 +44,13 @@ export default function HomeScreen() {
     );
   }
 
-  if (error) {
-    return (
-      <View style={styles.centered}>
-        <Text>{error}</Text>
-      </View>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <View style={styles.centered}>
+  //       <Text>{error}</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={themeStyles.mainContainer}>
@@ -63,61 +63,89 @@ export default function HomeScreen() {
           setLoading,
         )}
       >
-        <Text style={themeStyles.h1}>Novedades</Text>
-        {newDocuments &&
-        Array.isArray(newDocuments) &&
-        newDocuments.length > 0 ? (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalSection}
-          >
-            {newDocuments.map((item) => (
-              <View key={`new-${item.document_id}`} style={styles.bookItem}>
-                <BookLite
-                  title={item.title}
-                  image={item.url_image}
-                  onPress={() => handleBookPress(navigation, item)}
-                />
-              </View>
-            ))}
-          </ScrollView>
-        ) : (
-          !loading &&
-          !error && (
-            <Text style={themeStyles.text}>
-              No hay novedades disponibles en este momento.
-            </Text>
-          )
-        )}
+        <View style={{ flex: 1, justifyContent: "flex-end" }}>
+          <View style={{ flexGrow: 1, height: "50%" }}>
+            <Text style={themeStyles.h1}>Novedades</Text>
+            {newDocuments &&
+            Array.isArray(newDocuments) &&
+            newDocuments.length > 0 ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {newDocuments.map((item) => (
+                  <View key={`new-${item.document_id}`} style={styles.bookItem}>
+                    <BookLite
+                      title={item.title}
+                      image={item.url_image}
+                      onPress={() => handleBookPress(navigation, item)}
+                    />
+                  </View>
+                ))}
+              </ScrollView>
+            ) : (
+              !loading &&
+              error && (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={[themeStyles.h4, { textAlign: "center" }]}>
+                    No hay novedades disponibles en este momento.
+                  </Text>
+                </View>
+              )
+            )}
+          </View>
 
-        <Text style={themeStyles.h2}>Recomendados para ti</Text>
-        {randomDocuments &&
-        Array.isArray(randomDocuments) &&
-        randomDocuments.length > 0 ? (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalSection}
-          >
-            {randomDocuments.map((item) => (
-              <View key={`rec-${item.document_id}`} style={styles.bookItem}>
-                <BookLite
-                  title={item.title}
-                  image={item.url_image}
-                  onPress={() => handleBookPress(navigation, item)}
-                />
-              </View>
-            ))}
-          </ScrollView>
-        ) : (
-          !loading &&
-          !error && (
-            <Text style={themeStyles.text}>
-              No hay recomendaciones disponibles en este momento.
-            </Text>
-          )
-        )}
+          <View style={{ flexGrow: 1, height: "50%" }}>
+            <Text style={themeStyles.h2}>Recomendados para ti</Text>
+            {randomDocuments &&
+            Array.isArray(randomDocuments) &&
+            randomDocuments.length > 0 ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {randomDocuments.map((item) => (
+                  <View key={`rec-${item.document_id}`} style={styles.bookItem}>
+                    <BookLite
+                      title={item.title}
+                      image={item.url_image}
+                      onPress={() => handleBookPress(navigation, item)}
+                    />
+                  </View>
+                ))}
+              </ScrollView>
+            ) : (
+              !loading &&
+              error && (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={[themeStyles.h4, { textAlign: "center" }]}>
+                    No hay recomendaciones disponibles en este momento.
+                  </Text>
+                </View>
+              )
+            )}
+          </View>
+        </View>
       </RefreshableView>
     </View>
   );
@@ -167,7 +195,6 @@ async function loadHomeData(
     if (newDocsResult.success) {
       setNewDocuments(newDocsResult.data);
     } else {
-      console.error("Error fetching new documents:", newDocsResult.error);
       setNewDocuments([]);
       hasError = true;
       errorMessages.push("Error al cargar las novedades");
@@ -186,17 +213,12 @@ async function loadHomeData(
         if (fallbackRandomResult.success) {
           setRandomDocuments(fallbackRandomResult.data || []);
         } else {
-          console.error(
-            "Error fetching fallback a documentos random:",
-            fallbackRandomResult.error,
-          );
           setRandomDocuments([]);
           hasError = true;
           errorMessages.push("Error al cargar recomendaciones generales");
         }
       }
     } else {
-      console.error(randomDocsResult.error);
       setRandomDocuments([]);
       hasError = true;
       errorMessages.push("Error al cargar recomendaciones personalizadas");
@@ -205,8 +227,7 @@ async function loadHomeData(
     if (hasError) {
       setError(errorMessages.join(" y "));
     }
-  } catch (e) {
-    console.error("Unexpected error in loadHomeData:", e);
+  } catch {
     setError("Error inesperado al cargar los datos.");
   } finally {
     setLoading(false);
