@@ -113,27 +113,22 @@ export default function SearchView({ navigation }) {
 
             <View style={styles(theme).bookDescription}>
               <View style={styles(theme).itemLine}>
-                <Text style={themeStyles.h5}>Título: </Text>
-                <Text style={themeStyles.p}>{item.title}</Text>
+                <Text style={themeStyles.h5}>Título: {item.title}</Text>
               </View>
               <View style={styles(theme).itemLine}>
-                <Text style={themeStyles.h5}>Categoría: </Text>
-                <Text style={themeStyles.p}>
-                  {item.category_1}
+                <Text style={themeStyles.h5}>
+                  Categoría: {item.category_1}
                   {item.category_2 && `, ${item.category_2}`}
                 </Text>
               </View>
               <View style={styles(theme).itemLine}>
-                <Text style={themeStyles.h5}>Autor: </Text>
-                <Text style={themeStyles.p}>{item.author}</Text>
+                <Text style={themeStyles.h5}>Autor: {item.author}</Text>
               </View>
               <View style={styles(theme).itemLine}>
-                <Text style={themeStyles.h5}>Año: </Text>
-                <Text style={themeStyles.p}>{item.publication_year}</Text>
+                <Text style={themeStyles.h5}>Año: {item.publication_year}</Text>
               </View>
               <View style={styles(theme).itemLine}>
-                <Text style={themeStyles.h5}>Tipo: </Text>
-                <Text style={themeStyles.p}>{item.document_type}</Text>
+                <Text style={themeStyles.h5}>Tipo: {item.document_type}</Text>
               </View>
             </View>
           </View>

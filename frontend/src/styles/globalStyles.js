@@ -9,6 +9,7 @@ export const viewStyles = (theme) => {
     },
 
     h1: {
+      flexWrap: "wrap",
       fontSize: 24,
       fontWeight: "bold",
       marginBottom: 20,
@@ -16,6 +17,7 @@ export const viewStyles = (theme) => {
     },
 
     h2: {
+      flexWrap: "wrap",
       fontSize: 20,
       fontWeight: "bold",
       marginBottom: 10,
@@ -23,6 +25,7 @@ export const viewStyles = (theme) => {
     },
 
     h3: {
+      flexWrap: "wrap",
       fontSize: 18,
       fontWeight: "bold",
       marginBottom: 10,
@@ -30,6 +33,7 @@ export const viewStyles = (theme) => {
     },
 
     h4: {
+      flexWrap: "wrap",
       fontSize: 16,
       fontWeight: "bold",
       marginBottom: 10,
@@ -37,6 +41,7 @@ export const viewStyles = (theme) => {
     },
 
     h5: {
+      flexWrap: "wrap",
       fontSize: 14,
       fontWeight: 700,
       marginBottom: 5,
@@ -44,12 +49,14 @@ export const viewStyles = (theme) => {
     },
 
     p: {
+      flexWrap: "wrap",
       fontSize: 14,
       fontWeight: 500,
       color: theme["dark-text"],
     },
 
     enfasis: {
+      flexWrap: "wrap",
       fontSize: 14,
       fontWeight: 600,
       fontStyle: "italic",
@@ -57,6 +64,7 @@ export const viewStyles = (theme) => {
     },
 
     required: {
+      flexWrap: "wrap",
       fontSize: 14,
       fontWeight: 600,
       fontStyle: "italic",

@@ -38,9 +38,12 @@ export default function TabNavigator() {
         headerStyle: {
           backgroundColor: theme["nav-background"],
         },
-        headerTitleStyle: { fontSize: 21, paddingHorizontal: 10 },
+        headerTitleStyle: { fontSize: 21 },
         headerTitleAlign: "center",
         headerTintColor: theme["dark-text"],
+        headerTitleContainerStyle: {
+          maxWidth: "65%",
+        },
         headerLeft: () => (
           <Image
             source={mode === "light" ? navLogoLight : navLogoDark}
