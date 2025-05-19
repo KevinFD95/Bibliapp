@@ -1,15 +1,24 @@
-import React, { useState, useEffect, useContext } from "react";
-import { FlatList, View, Text, Dimensions, SafeAreaView } from "react-native";
+// React
+import { useState, useEffect, useContext } from "react";
+import { FlatList, View, Dimensions, SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
-import { documentToHtml } from "../services/docViewService.js";
+
+// Context
+import { ThemeContext } from "../context/ThemeContext.jsx";
+import { useAlert } from "../context/AlertContext.jsx";
+
+// API
 import { getDocument } from "../api/documents.js";
 
-import { IconButton } from "../components/ButtonComponent.jsx";
-import { Popup } from "../components/PopupComponent.jsx";
-import CloseIcon from "../../assets/icons/CloseIcon.jsx";
+// Services
+import { documentToHtml } from "../services/docViewService.js";
+
+// Componentes
 import CustomLoader from "../components/LoadingComponent.jsx";
 
-import { ThemeContext } from "../context/ThemeContext.jsx";
+// Iconos
+import { IconButton } from "../components/ButtonComponent.jsx";
+import CloseIcon from "../../assets/icons/CloseIcon.jsx";
 
 const { width } = Dimensions.get("window");
 
@@ -17,52 +26,13 @@ export default function BookView({ navigation, route }) {
   const { document } = route.params;
 
   const { theme } = useContext(ThemeContext);
+  const { showAlert } = useAlert();
 
   const [htmlContent, setHtmlContent] = useState("");
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
-    const fetchBookContent = async () => {
-      try {
-        const response = await getDocument(document.document_id);
-        const { ok, status, data } = response;
-
-        if (ok || status === 200) {
-          const pagesHtml = data.pages.map((page) => {
-            return documentToHtml({
-              body: page.body,
-              styles: page.styles,
-              theme: theme,
-            });
-          });
-
-          setHtmlContent(pagesHtml);
-        }
-      } catch {
-        setAlertMessage("No se ha podido abrir el libro");
-        setAlertVisible(true);
-      }
-    };
-
-    fetchBookContent();
-  }, [document.document_id, theme]);
-
-  const renderChapter = ({ item }) => (
-    <View style={{ width, flex: 1 }}>
-      <WebView
-        originWhitelist={["*"]}
-        source={{ html: item }}
-        style={{ flex: 1, backgroundColor: theme["book-view-background"] }}
-        showsVerticalScrollIndicator={true}
-        nestedScrollEnabled={true}
-        allFileAccess={true}
-        allowingReadAccessToURL={"*"}
-        mixedContentMode="always"
-        allowUniversalAccessFromFileURLs={true}
-      />
-    </View>
-  );
+    fetchBookContent(document.document_id, theme, setHtmlContent, showAlert);
+  }, [document.document_id, theme, showAlert]);
 
   return (
     <SafeAreaView style={{ flexGrow: 1 }}>
@@ -84,12 +54,11 @@ export default function BookView({ navigation, route }) {
             onPress={() => navigation.goBack()}
           />
         </View>
-        {alertVisible && <Text>{alertMessage}</Text>}
         {htmlContent.length > 0 ? (
           <FlatList
             data={htmlContent}
             keyExtractor={(_, index) => index.toString()}
-            renderItem={renderChapter}
+            renderItem={({ item }) => renderChapter(item, theme)}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -106,13 +75,50 @@ export default function BookView({ navigation, route }) {
             <CustomLoader />
           </View>
         )}
-        <Popup
-          title={"Aviso"}
-          message={alertMessage}
-          visible={alertVisible}
-          onClose={() => setAlertVisible(false)}
-        />
       </View>
     </SafeAreaView>
+  );
+}
+
+async function fetchBookContent(document_id, theme, setHtmlContent, showAlert) {
+  try {
+    const response = await getDocument(document_id);
+    const { ok, status, data } = response;
+
+    if (ok || status === 200) {
+      const pagesHtml = data.pages.map((page) => {
+        return documentToHtml({
+          body: page.body,
+          styles: page.styles,
+          theme: theme,
+        });
+      });
+
+      setHtmlContent(pagesHtml);
+    }
+  } catch {
+    showAlert({
+      title: "Error",
+      message: "No se ha podido abrir el libro",
+    });
+  }
+}
+
+function renderChapter(item, theme) {
+  return (
+    <View style={{ width, flex: 1 }}>
+      <WebView
+        originWhitelist={["*"]}
+        source={{ html: item }}
+        style={{ flex: 1, backgroundColor: theme["book-view-background"] }}
+        showsVerticalScrollIndicator={true}
+        scrollEnabled={true}
+        nestedScrollEnabled={false}
+        allFileAccess={true}
+        allowingReadAccessToURL={"*"}
+        mixedContentMode="always"
+        allowUniversalAccessFromFileURLs={true}
+      />
+    </View>
   );
 }
