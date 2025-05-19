@@ -1,8 +1,8 @@
 import { Pressable, Text, StyleSheet, View, Image } from "react-native";
 
-export default function BookLite({ title, image, onPress }) {
+export default function BookLite({ title, image, onPress, cardStyle }) {
   return (
-    <Pressable onPress={onPress} style={styles.card}>
+    <Pressable onPress={onPress} style={[styles.card, cardStyle]}>
       {image ? (
         <Image source={{ uri: image }} style={styles.image} />
       ) : (

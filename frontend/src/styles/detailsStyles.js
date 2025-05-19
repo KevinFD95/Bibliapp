@@ -45,4 +45,17 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  seriesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 10,
+  },
+  seriesItem: {
+    alignItems: "center",
+  },
+  scaledBookLite: {
+    transform: [{ scale: 0.4 }],
+    marginTop: -60,
+    marginBottom: -60,
+  },
 });

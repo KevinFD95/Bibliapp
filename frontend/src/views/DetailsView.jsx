@@ -92,7 +92,31 @@ export default function BookDetails({ route, navigation }) {
               )}
             </View>
           </View>
+          <View>
+            <Text style={themeStyles.p}>Saga: {document.saga}</Text>
+          </View>
           <Text style={themeStyles.p}>{document.synopsis}</Text>
+          <View style={styles.seriesContainer}>
+            <View style={styles.seriesItem}>
+              <Text style={themeStyles.p}> {"<"}-- Precuela</Text>
+              <BookLite
+                onPress={() => console.log("Navegar a precuela")}
+                title={"Título Precuela"}
+                image={document.url_image}
+                cardStyle={styles.scaledBookLite}
+              />
+            </View>
+
+            <View style={styles.seriesItem}>
+              <Text style={themeStyles.p}>Secuela --{">"} </Text>
+              <BookLite
+                onPress={() => console.log("Navegar a secuela")}
+                title={"Título Secuela"}
+                image={document.url_image}
+                cardStyle={styles.scaledBookLite}
+              />
+            </View>
+          </View>
         </View>
       </ScrollView>
     </View>
