@@ -183,7 +183,7 @@ function handleSearch(text, allDocuments, setSearchText, setFilteredDocuments) {
         doc.author.toLowerCase().includes(term) ||
         doc.publication_year.toString().includes(term) ||
         doc.document_type.toLowerCase().includes(term) ||
-        doc.saga.toLowerCase().include(term)
+        (doc.saga && doc.saga.toLowerCase().includes(term))
       );
     }),
   );
