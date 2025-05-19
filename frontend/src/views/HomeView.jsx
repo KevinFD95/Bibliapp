@@ -1,18 +1,26 @@
+// React
 import { useState, useEffect, useContext, useCallback } from "react";
-import { StyleSheet, ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
-import BookLite from "../components/CardComponent.jsx";
-import CustomLoader from "../components/LoadingComponent.jsx";
+// Context
+import { ThemeContext } from "../context/ThemeContext.jsx";
 
+// Estilos
 import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/homeStyles.js";
+
+// API
 import {
   fetchAllNews,
   fetchRandomDocuments,
   fetchRandomDocumentsByCategories,
 } from "../controllers/documentController.js";
+
+// Components
 import RefreshableView from "../components/RefreshableViewComponent.jsx";
-import { ThemeContext } from "../context/ThemeContext.jsx";
+import CustomLoader from "../components/LoadingComponent.jsx";
+import BookLite from "../components/CardComponent.jsx";
 
 export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
@@ -229,21 +237,3 @@ async function loadHomeData(
 function handleBookPress(navigation, document) {
   navigation.navigate("BookDetails", { document });
 }
-
-const styles = StyleSheet.create({
-  section: {
-    marginBottom: 20,
-    gap: 20,
-    maxHeight: 250,
-  },
-
-  bookItem: {
-    marginRight: 10,
-  },
-
-  centered: {
-    alignItems: "center",
-    justifyContent: "center",
-    flexGrow: 1,
-  },
-});

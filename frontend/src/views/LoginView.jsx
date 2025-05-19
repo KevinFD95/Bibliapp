@@ -1,6 +1,6 @@
 // React
 import { useState, useEffect, useContext } from "react";
-import { Image, View, Text, Pressable, StyleSheet } from "react-native";
+import { Image, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 // Expo
@@ -13,6 +13,7 @@ import { useCart } from "../context/CartContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/loginStyles.js";
 
 // Componentes
 import { CustomButton } from "../components/ButtonComponent.jsx";
@@ -139,34 +140,3 @@ function handleRegister(navigation) {
 function handleForgotPass(navigation) {
   navigation.navigate("ForgotPassView");
 }
-
-const styles = StyleSheet.create({
-  view: {
-    justifyContent: "center",
-  },
-
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-
-  logo: {
-    width: 200,
-    height: 200,
-  },
-
-  inputContainer: {
-    marginVertical: 50,
-  },
-
-  row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    gap: 5,
-  },
-
-  buttonsContainer: {
-    alignItems: "center",
-  },
-});

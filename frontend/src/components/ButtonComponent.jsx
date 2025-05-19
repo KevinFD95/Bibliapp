@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import { ThemeContext } from "../context/ThemeContext.jsx";
 
