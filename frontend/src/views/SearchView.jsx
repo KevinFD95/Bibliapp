@@ -116,13 +116,18 @@ export default function SearchView({ navigation }) {
                 <Text style={themeStyles.h5}>Título: {item.title}</Text>
               </View>
               <View style={styles(theme).itemLine}>
+                <Text style={themeStyles.h5}>Autor: {item.author}</Text>
+              </View>
+              {item.saga && (
+                <View style={styles(theme).itemLine}>
+                  <Text style={themeStyles.h5}>Saga: {item.saga}</Text>
+                </View>
+              )}
+              <View style={styles(theme).itemLine}>
                 <Text style={themeStyles.h5}>
                   Categoría: {item.category_1}
                   {item.category_2 && `, ${item.category_2}`}
                 </Text>
-              </View>
-              <View style={styles(theme).itemLine}>
-                <Text style={themeStyles.h5}>Autor: {item.author}</Text>
               </View>
               <View style={styles(theme).itemLine}>
                 <Text style={themeStyles.h5}>Año: {item.publication_year}</Text>
@@ -177,7 +182,8 @@ function handleSearch(text, allDocuments, setSearchText, setFilteredDocuments) {
         doc.category_2.toLowerCase().includes(term) ||
         doc.author.toLowerCase().includes(term) ||
         doc.publication_year.toString().includes(term) ||
-        doc.document_type.toLowerCase().includes(term)
+        doc.document_type.toLowerCase().includes(term) ||
+        doc.saga.toLowerCase().include(term)
       );
     }),
   );

@@ -1,6 +1,6 @@
 // React
 import { useState, useContext } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Expo
@@ -12,6 +12,7 @@ import { useAlert } from "../context/AlertContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles";
+import { styles } from "../styles/forgotpassStyles.js";
 
 // API
 import { forgotPassword } from "../api/auth.js";
@@ -85,19 +86,3 @@ async function sendEmail(navigation, email, showAlert, showConfirm) {
 function handleReset(navigation, email) {
   navigation.navigate("ResetPasswordView", email);
 }
-
-const styles = StyleSheet.create({
-  viewContainer: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  title: {
-    marginTop: 100,
-    alignItems: "center",
-  },
-  inputContainer: {
-    flexGrow: 1,
-    justifyContent: "center",
-    marginBottom: 100,
-  },
-});

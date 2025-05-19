@@ -1,6 +1,6 @@
 // React
 import { useContext, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Context
@@ -9,6 +9,7 @@ import { useAlert } from "../context/AlertContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles.js";
+import { styles } from "../styles/registerStyles.js";
 
 // API
 import { registerUser } from "../controllers/userController.js";
@@ -145,20 +146,3 @@ async function handleRegister(
     navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
   }
 }
-
-const styles = StyleSheet.create({
-  image: {
-    alignItems: "center",
-  },
-  inputView: {
-    marginVertical: 25,
-  },
-  inputContainer: {
-    marginVertical: 5,
-  },
-  requiredText: {
-    marginTop: -15,
-    marginBottom: 10,
-    marginHorizontal: 10,
-  },
-});

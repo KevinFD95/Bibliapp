@@ -1,6 +1,6 @@
 // React
 import { useState, useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Expo
@@ -12,6 +12,7 @@ import { useAlert } from "../context/AlertContext.jsx";
 
 // Estilos
 import { viewStyles } from "../styles/globalStyles";
+import { styles } from "../styles/resetpassStyles.js";
 
 // API
 import { resetPassword } from "../api/auth.js";
@@ -145,21 +146,3 @@ async function sendPassword(
 function handleLogin(navigation) {
   navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
 }
-
-const styles = StyleSheet.create({
-  viewContainer: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  title: {
-    marginTop: 100,
-  },
-  inputContainer: {
-    marginBottom: 100,
-  },
-  requiredText: {
-    marginTop: -15,
-    marginBottom: 10,
-    marginHorizontal: 10,
-  },
-});
