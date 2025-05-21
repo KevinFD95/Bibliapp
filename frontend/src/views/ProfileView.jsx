@@ -203,11 +203,16 @@ function handleConfig(navigation) {
 async function handleLogout(navigation, showAlert) {
   try {
     const response = await logout();
-    const { ok, status } = response;
+    const { ok, status, message } = response;
 
     if (ok || status === 200) {
       await SecureStore.deleteItemAsync("access_token");
       navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
+    } else if (status === 401) {
+      await SecureStore.deleteItemAsync("access_token");
+      navigation.reset({ index: 0, routes: [{ name: "LoginView" }] });
+    } else {
+      showAlert({ title: "Error", message: message });
     }
   } catch {
     showAlert({

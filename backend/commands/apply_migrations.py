@@ -1,5 +1,6 @@
 # commands/apply_migrations.py
-import os, importlib.util
+import os
+import importlib.util
 from app.database import Connection
 
 MIGRATIONS_DIR = "migrations"
@@ -10,7 +11,7 @@ def apply_migrations():
     cursor = conn.cursor()
 
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS migrations (migration_id INT AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255) NOT NULL UNIQUE, applied_at DATETIME DEFAULT CURRENT_TIMESTAMP);"
+        "CREATE TABLE IF NOT EXISTS migrations (migration_id INT AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255) NOT NULL UNIQUE, applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) CHARACTER SET utf8 COLLATE utf8_general_ci;"
     )
     conn.commit()
 
@@ -22,7 +23,8 @@ def apply_migrations():
             migration_module_name = filename[:-3]
             migration_path = os.path.join(MIGRATIONS_DIR, filename)
 
-            spec = importlib.util.spec_from_file_location(migration_module_name, migration_path)
+            spec = importlib.util.spec_from_file_location(
+                migration_module_name, migration_path)
             migration_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(migration_module)
 

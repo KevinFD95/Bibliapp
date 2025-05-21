@@ -14,11 +14,10 @@ def upgrade(cursor):
         username VARCHAR(30) NOT NULL,
         token TEXT NOT NULL,
         device VARCHAR(255) NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        expires_at DATETIME NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
         CONSTRAINT tokens_username FOREIGN KEY (username) REFERENCES users(username)
         ON DELETE RESTRICT ON UPDATE CASCADE
-        );
+        ) CHARACTER SET utf8 COLLATE utf8_general_ci;
         """
     )
     pass

@@ -74,6 +74,13 @@ export default function SearchView({ navigation }) {
 
   return (
     <View style={themeStyles.mainContainer}>
+      <CustomTextBoxFind
+        placeholder="Buscar"
+        value={searchText}
+        onChangeText={(text) => {
+          handleSearch(text, allDocuments, setSearchText, setFilteredDocuments);
+        }}
+      />
       <FlatList
         data={visibleDocuments}
         keyExtractor={(item) => item.document_id.toString()}
@@ -88,20 +95,6 @@ export default function SearchView({ navigation }) {
           )
         }
         onEndReachedThreshold={0.5}
-        ListHeaderComponent={
-          <CustomTextBoxFind
-            placeholder="Buscar"
-            value={searchText}
-            onChangeText={(text) => {
-              handleSearch(
-                text,
-                allDocuments,
-                setSearchText,
-                setFilteredDocuments,
-              );
-            }}
-          />
-        }
         contentContainerStyle={styles(theme).elements}
         renderItem={({ item }) => (
           <View key={item.document_id} style={styles(theme).bookContainer}>

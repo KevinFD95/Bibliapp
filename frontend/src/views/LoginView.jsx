@@ -108,7 +108,7 @@ async function checkToken(navigation, showAlert) {
     setTimeout(() => {
       showAlert({
         title: "Sesión caducada",
-        message: "La sesión ha caducado. Vuelva a iniciar sesión",
+        message: "Introduce tus datos para volver a iniciar sesión.",
       });
     }, 3000);
   }

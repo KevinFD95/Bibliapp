@@ -43,11 +43,9 @@ export async function validateUserToken(navigation) {
 
     return {
       error: true,
-      message: "Sesión caducada. Vuelva a iniciar sesión.",
     };
   } catch {
     return {
-      error: true,
       message: "Sesión caducada. Vuelva a iniciar sesión.",
     };
   }

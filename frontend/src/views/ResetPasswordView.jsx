@@ -117,19 +117,19 @@ async function sendPassword(
         resetCode,
         newPassword,
       );
-      const { ok, status } = response;
+      const { ok, status, message } = response;
 
       if (ok && status === 200) {
         showAlert({
           title: "Éxito",
-          message: "Contraseña restablecida correctamente.",
+          message: message,
         });
         await SecureStore.deleteItemAsync("resetToken");
         handleLogin(navigation);
       } else if (status === 400) {
         showAlert({
           title: "Error",
-          message: "No se ha podido cambiar la contraseña.",
+          message: message,
         });
         await SecureStore.deleteItemAsync("resetToken");
       }
