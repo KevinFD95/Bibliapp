@@ -15,14 +15,13 @@ def upgrade(cursor):
         favorite BOOLEAN DEFAULT FALSE,
         readed BOOLEAN DEFAULT FALSE,
         progress INT(3) DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
         CONSTRAINT registers_username FOREIGN KEY (username) REFERENCES users(username)
         ON DELETE RESTRICT ON UPDATE CASCADE,
         CONSTRAINT registers_document_id FOREIGN KEY (document_id) REFERENCES documents(document_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
-        );
+        ) CHARACTER SET utf8 COLLATE utf8_general_ci;
         """
     )
     pass

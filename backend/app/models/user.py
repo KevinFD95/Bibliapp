@@ -64,43 +64,28 @@ class User:
             return {"error": "Usuario no encontrado en la base de datos"}
 
     @staticmethod
-    def create(users):
+    def create(user):
         try:
             conn = Connection.get_db_connection()
             cursor = conn.cursor()
 
-            if isinstance(users, list):
-                values = [
-                    (
-                        user["user_name"],
-                        user["user_lastname"],
-                        user["username"],
-                        user["email"],
-                        user["user_password"],
-                    )
-                    for user in users
-                ]
-                cursor.executemany(Queries.USERS_INSERT, values)
-            else:
-                cursor.execute(
-                    Queries.USERS_INSERT,
-                    (
-                        users["user_name"],
-                        users["user_lastname"],
-                        users["username"],
-                        users["email"],
-                        users["user_password"],
-                    ),
-                )
+            cursor.execute(
+                Queries.USERS_INSERT,
+                (
+                    user["user_name"],
+                    user["user_lastname"],
+                    user["username"],
+                    user["email"],
+                    user["user_password"],
+                ),
+            )
 
             conn.commit()
             conn.close()
 
-            return ApiResponse.success(
-                message="Usuario creado exitosamente.", status_code=201
-            )
+            return True;
         except Exception:
-            return ApiResponse.error(message="El usuario no ha sido creado.")
+            return False;
 
     @staticmethod
     def update(user):

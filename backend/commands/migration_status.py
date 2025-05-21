@@ -13,7 +13,7 @@ def migration_status():
     cursor = conn.cursor()
 
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS migrations (migration_id INT AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255) NOT NULL UNIQUE, applied_at DATETIME DEFAULT CURRENT_TIMESTAMP);"
+        "CREATE TABLE IF NOT EXISTS migrations (migration_id INT AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255) NOT NULL UNIQUE, applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);"
     )
     conn.commit()
 

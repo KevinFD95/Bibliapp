@@ -24,7 +24,7 @@ class AuthController:
 
         if not data or "identifier" not in data or "user_password" not in data:
             return ApiResponse.error(
-                message="No se encuentran identificador y contraseña"
+                message="No se encuentran usuario o email y contraseña."
             )
 
         identifier = data["identifier"]
@@ -44,7 +44,7 @@ class AuthController:
         if not verify_password(user_password, user["user_password"]):
             conn.close()
             return ApiResponse.error(
-                message="Credenciales incorrectas", status_code=404
+                message="Usuario y/o contraseña incorrectos", status_code=404
             )
 
         expires = timedelta(days=7)
@@ -65,18 +65,19 @@ class AuthController:
             (user["username"], access_token, device, expires_at),
         )
         conn.commit()
+        cursor.close()
         conn.close()
 
         return ApiResponse.success(data={"access_token": access_token})
 
     def validate_token():
         token = getToken()
+        print(token)
 
         conn = Connection.get_db_connection()
         cursor = conn.cursor()
 
         try:
-            verify_jwt_in_request()
             user = get_jwt_identity()
 
             cursor.execute(Queries.AUTH_GET_TOKENS, (user, token))
@@ -87,20 +88,16 @@ class AuthController:
 
                 if datetime.now() < expires_at:
                     conn.close()
-                    return ApiResponse.success(message="Acceso autorizado")
+                    return ApiResponse.success(message="Inicio de sesión correcto")
                 else:
                     cursor.execute(Queries.AUTH_DELETE_TOKEN, (token_db,))
                     conn.commit()
                     conn.close()
-                    return ApiResponse.error(message="Token expirado")
+                    return ApiResponse.error(message="Sesión caducada. Vuelva a iniciar sesión.")
             else:
-                conn.close()
-                return ApiResponse.error(message="Token no encontrado")
+                return ApiResponse.error(message="Sesión caducada. Vuelva a iniciar sesión.")
         except Exception:
-            cursor.execute(Queries.AUTH_DELETE_TOKEN, (token,))
-            conn.commit()
-            conn.close()
-            return ApiResponse.error(message="Token expirado")
+            return ApiResponse.error(message="Sesión caducada. Vuelva a iniciar sesión.")
 
     def logout():
         verify_jwt_in_request()
@@ -108,7 +105,7 @@ class AuthController:
         token = request.headers.get("Authorization", None)
 
         if not token:
-            return ApiResponse.error(message="Token no proporcionado", status_code=401)
+            return ApiResponse.error(message="Sesión no autorizada.", status_code=401)
 
         token = token.replace("Bearer ", "")
 
@@ -117,7 +114,7 @@ class AuthController:
 
             if not username:
                 return ApiResponse.error(
-                    message="No se encontró 'identity en el token", status_code=400
+                    message="Sesión no autorizada.", status_code=400
                 )
 
             conn = Connection.get_db_connection()
@@ -128,7 +125,7 @@ class AuthController:
             conn.commit()
             conn.close()
 
-            return ApiResponse.success(message="Acceso autorizado")
+            return ApiResponse.success(message="Se cerró sesión con éxito.1")
         except Exception as e:
             return ApiResponse.error(message="Error al cerrar sesión", status_code=500)
         

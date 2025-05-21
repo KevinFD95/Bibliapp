@@ -172,7 +172,7 @@ const styles = (theme) =>
       gap: 5,
       width: "100%",
       height: 45,
-      marginVertical: 20,
+      marginBottom: 20,
       paddingVertical: 10,
       paddingHorizontal: 15,
       borderRadius: 20,

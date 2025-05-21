@@ -16,7 +16,7 @@ def upgrade(cursor):
         ON DELETE RESTRICT ON UPDATE CASCADE,
         CONSTRAINT cart_document_id FOREIGN KEY (document_id) REFERENCES documents(document_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
-        );        
+        ) CHARACTER SET utf8 COLLATE utf8_general_ci;        
         """
     )
     pass

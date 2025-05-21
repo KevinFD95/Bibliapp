@@ -14,11 +14,12 @@ export const AlertProvider = ({ children }) => {
     message: undefined,
   });
 
-  const showAlert = ({ title, message }) => {
+  const showAlert = ({ title, message, onClose }) => {
     setAlertState({
       visible: true,
       title,
       message,
+      onClose,
     });
   };
 
