@@ -59,7 +59,10 @@ export async function registerUser(
   }
 
   if (secondPassInput !== passInput) {
-    showAlert("La contraseña no es la misma en los dos campos");
+    showAlert({
+      title: "Error",
+      message: "La contraseña no es la misma en los dos campos",
+    });
     return false;
   }
 
@@ -73,18 +76,18 @@ export async function registerUser(
 
   try {
     const response = await register(user);
-    const { ok, status } = response;
+    const { ok, status, message } = response;
 
     if (ok && status === 201) {
       showAlert({
         title: "Éxito",
-        message: `Se ha creado el usuario ${user.username}.`,
+        message: message,
       });
       return true;
     } else {
       showAlert({
         title: "Error",
-        message: "El usuario no ha podido ser creado",
+        message: message,
       });
       return false;
     }

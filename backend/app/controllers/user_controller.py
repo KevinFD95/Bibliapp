@@ -28,34 +28,20 @@ class UserController:
         )
 
     def create_user():
-        data = request.get_json()
-
-        if not isinstance(data, (dict, list)):
-            return jsonify({"error": "Formato de datos inválido"}), 400
-
-        users = data if isinstance(data, list) else [data]
-        validated_users = []
-        errors_list = []
-
-        for i, user in enumerate(users):
-            errors = user_validation(user)
-
-            if errors:
-                errors_list.append({"user_index": i, "errors": errors})
-                continue
-
-            user["user_password"] = hash_password(user["user_password"])
-            validated_users.append(user)
-
-        if errors_list:
-            errors_list = [str(e) for e in errors_list]
-            return jsonify({"errors": errors_list}), 400
-
         try:
-            users_created = User.create(validated_users)
-            return users_created
+            data = request.get_json()
+
+            if not data:
+                return ApiResponse.error(message="Formato de datos inválido.")
+
+            data["user_password"] = hash_password(data["user_password"])
+
+            if User.create(data):
+                return ApiResponse.success(message="Usuario "+data["username"]+" creado exitósamente.", status_code=201)
+            else:
+                return ApiResponse.error(message="El usuario no es válido.", status_code=400)
         except Exception as e:
-            return jsonify({"error": str(e)}), 400
+            return ApiResponse.error(message="No se ha podido registrar el usuario.")
 
     def update_profile(username):
         try:

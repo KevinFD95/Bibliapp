@@ -26,10 +26,9 @@ def upgrade(cursor):
         url_image VARCHAR(255),
         url_document VARCHAR(255),
         slug VARCHAR(255) NOT NULL UNIQUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP
-        );
+        ) CHARACTER SET utf8 COLLATE utf8_general_ci;
         """
     )
     pass

@@ -63,8 +63,7 @@ async function sendEmail(navigation, email, showAlert, showConfirm) {
           await SecureStore.setItemAsync("resetToken", data.token);
           showAlert({
             title: "Aviso",
-            message:
-              "Se ha enviado un correo electrónico con el código de restablecimiento.",
+            message: message,
           });
           handleReset(navigation, email);
         } else if (status === 404) {

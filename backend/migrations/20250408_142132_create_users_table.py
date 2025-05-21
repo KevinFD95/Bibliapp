@@ -18,9 +18,8 @@ def upgrade(cursor):
         user_password VARCHAR(60) NOT NULL,
         user_role VARCHAR(10) DEFAULT 'user',
         user_sub INT(2) DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        );
+        ) CHARACTER SET utf8 COLLATE utf8_general_ci;
         """
     )
     pass
