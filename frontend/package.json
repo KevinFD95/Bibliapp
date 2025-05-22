@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "bibliapp",
   "version": "1.0.0",
   "main": "src/entry.js",
   "type": "commonjs",
