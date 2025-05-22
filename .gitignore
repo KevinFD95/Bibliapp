@@ -47,3 +47,4 @@ yarn-error.*
 .env
 .flaskenv
 __pycache__/
+backend/temp/
