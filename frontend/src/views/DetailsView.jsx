@@ -61,10 +61,6 @@ export default function BookDetails({ route, navigation }) {
     );
   }
 
-  function handleNavigateToBookDetails(navigation, doc) {
-    navigation.navigate("BookDetails", { document: doc });
-  }
-
   return (
     <View style={themeStyles.mainContainer}>
       <ScrollView>
@@ -175,6 +171,10 @@ async function handleAddToCart(document, addToCart) {
 
 function handleNavigation(navigation, document) {
   navigation.navigate("BookView", { document });
+}
+
+function handleNavigateToBookDetails(navigation, doc) {
+  navigation.navigate("BookDetails", { document: doc });
 }
 
 async function fetchDocumentDetails(documentId, setDocumentState, showAlert) {
