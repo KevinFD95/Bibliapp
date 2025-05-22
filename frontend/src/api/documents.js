@@ -16,6 +16,10 @@ export function getDocumentsRandomByCategories() {
   return customFetch("/random/by_categories");
 }
 
+export function getDocumentDetails(id) {
+  return customFetch("/docs/details/" + id);
+}
+
 export function getDocument(id) {
   return customFetch("/docs/" + id);
 }

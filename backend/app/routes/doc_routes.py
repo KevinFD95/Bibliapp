@@ -18,6 +18,9 @@ document_bp.route("/random", methods=["GET"])(
 document_bp.route("/random/by_categories", methods=["GET"])(
     token_in_db_required(DocController.get_documents_random_by_user_categories)
 )
+document_bp.route("/docs/details/<int:document_id>", methods=["GET"])(
+    token_in_db_required(DocController.get_document_details)
+)
 document_bp.route("/docs/<int:document_id>", methods=["GET"])(
     token_in_db_required(DocController.get_document)
 )
