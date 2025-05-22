@@ -45,6 +45,16 @@ class DocController:
         except Exception as e:
             return ApiResponse.error(message=f"Error inesperado del servidor: {e}"), 500
 
+    def get_document_details(document_id):
+        document = Document.get_document(document_id)
+
+        if document and "error" not in document:
+            return ApiResponse.success(data={"document": document})
+        elif document and "error" in document:
+            return ApiResponse.error(message=document["error"]), 404
+        else:
+            return ApiResponse.error(message="Documento no encontrado o error desconocido"), 404
+
     def get_document(document_id):
         document = Document.get_document(document_id)
         url = document["url_document"]

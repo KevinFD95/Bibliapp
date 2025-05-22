@@ -14,6 +14,7 @@ import { styles } from "../styles/detailsStyles.js";
 
 // API
 import { fetchIsRegistered } from "../controllers/registerController.js";
+import { getDocumentDetails } from "../api/documents.js";
 
 // Componentes
 import { IconButton } from "../components/ButtonComponent.jsx";
@@ -34,9 +35,13 @@ export default function BookDetails({ route, navigation }) {
 
   const [isRegistered, setIsRegistered] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [prequelDocument, setPrequelDocument] = useState(null);
+  const [sequelDocument, setSequelDocument] = useState(null);
 
   useEffect(() => {
     checkRegistrationStatus(document, setIsLoading, setIsRegistered, showAlert);
+    fetchDocumentDetails(document.prequel, setPrequelDocument, showAlert);
+    fetchDocumentDetails(document.sequel, setSequelDocument, showAlert);
   }, [document, showAlert]);
 
   useFocusEffect(
@@ -56,6 +61,10 @@ export default function BookDetails({ route, navigation }) {
     );
   }
 
+  function handleNavigateToBookDetails(navigation, doc) {
+    navigation.navigate("BookDetails", { document: doc });
+  }
+
   return (
     <View style={themeStyles.mainContainer}>
       <ScrollView>
@@ -67,7 +76,7 @@ export default function BookDetails({ route, navigation }) {
                   ? () => handleNavigation(navigation, document)
                   : undefined
               }
-              title={isRegistered ? "Pulsa para abrir" : "Cómpralo para leer"}
+              title={isRegistered ? "Pulsa para leer" : "Compra para leer"}
               image={document.url_image}
             />
             <View style={styles.detailsContainer}>
@@ -92,30 +101,40 @@ export default function BookDetails({ route, navigation }) {
               )}
             </View>
           </View>
-          <View>
-            <Text style={themeStyles.p}>Saga: {document.saga}</Text>
-          </View>
+          {document.saga && (
+            <View>
+              <Text style={themeStyles.p}>Saga: {document.saga}</Text>
+            </View>
+          )}
           <Text style={themeStyles.p}>{document.synopsis}</Text>
           <View style={styles.seriesContainer}>
-            <View style={styles.seriesItem}>
-              <Text style={themeStyles.p}> {"<"}-- Precuela</Text>
-              <BookLite
-                onPress={() => console.log("Navegar a precuela")}
-                title={"Título Precuela"}
-                image={document.url_image}
-                cardStyle={styles.scaledBookLite}
-              />
-            </View>
+            {prequelDocument && (
+              <View style={styles.seriesItem}>
+                <Text style={themeStyles.p}> {"<"}-- Precuela</Text>
+                <BookLite
+                  onPress={() =>
+                    handleNavigateToBookDetails(navigation, prequelDocument)
+                  }
+                  title={prequelDocument.title}
+                  image={prequelDocument.url_image}
+                  cardStyle={styles.scaledBookLite}
+                />
+              </View>
+            )}
 
-            <View style={styles.seriesItem}>
-              <Text style={themeStyles.p}>Secuela --{">"} </Text>
-              <BookLite
-                onPress={() => console.log("Navegar a secuela")}
-                title={"Título Secuela"}
-                image={document.url_image}
-                cardStyle={styles.scaledBookLite}
-              />
-            </View>
+            {sequelDocument && (
+              <View style={styles.seriesItem}>
+                <Text style={themeStyles.p}>Secuela --{">"} </Text>
+                <BookLite
+                  onPress={() =>
+                    handleNavigateToBookDetails(navigation, sequelDocument)
+                  }
+                  title={sequelDocument.title}
+                  image={sequelDocument.url_image}
+                  cardStyle={styles.scaledBookLite}
+                />
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -156,4 +175,39 @@ async function handleAddToCart(document, addToCart) {
 
 function handleNavigation(navigation, document) {
   navigation.navigate("BookView", { document });
+}
+
+async function fetchDocumentDetails(documentId, setDocumentState, showAlert) {
+  if (!documentId) {
+    setDocumentState(null);
+    return;
+  }
+  try {
+    const response = await getDocumentDetails(documentId);
+
+    if (response.ok || response.status === 200) {
+      if (response.data && response.data.document) {
+        setDocumentState(response.data.document);
+      } else {
+        showAlert({
+          title: "Error de formato",
+          message:
+            "Respuesta inesperada del servidor para el documento relacionado. No se encontró la clave 'document'.",
+        });
+        setDocumentState(null);
+      }
+    } else {
+      showAlert({
+        title: "Error al cargar documento",
+        message: `No se pudo obtener la información del documento: ${response.message || "Error desconocido"}`,
+      });
+      setDocumentState(null);
+    }
+  } catch (error) {
+    showAlert({
+      title: "Error de conexión",
+      message: `Hubo un problema al cargar el documento relacionado: ${error.message || "Verifica tu conexión y el servidor."}`,
+    });
+    setDocumentState(null);
+  }
 }
