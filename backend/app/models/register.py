@@ -13,7 +13,6 @@ class Registers:
             conn.close()
             return documents
         except Exception as e:
-            print(f"Error getting all registers for {username}: {e}")
             return None
 
     def set_doc_reg_from_cart(document_id, username):
@@ -31,7 +30,6 @@ class Registers:
             conn.close()
             return True
         except Exception as e:
-            print(f"Error adding single doc {document_id} to registers for {username}: {e}")
             return None
 
 
@@ -49,7 +47,6 @@ class Registers:
             conn.close()
             return rows_affected
         except Exception as e:
-            print(f"Error adding cart items to registers: {e}")
             conn.close()
             return None
 
@@ -63,5 +60,4 @@ class Registers:
             conn.close()
             return result is not None
         except Exception as e:
-            print(f"Error checking if document {document_id} is registered for user {username}: {e}") # Log del error
             return None

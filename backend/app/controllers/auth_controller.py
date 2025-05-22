@@ -72,7 +72,6 @@ class AuthController:
 
     def validate_token():
         token = getToken()
-        print(token)
 
         conn = Connection.get_db_connection()
         cursor = conn.cursor()

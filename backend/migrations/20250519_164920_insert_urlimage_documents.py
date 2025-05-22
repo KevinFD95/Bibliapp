@@ -86,7 +86,7 @@ def upgrade(cursor):
         "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=1nv0YVvnV2PENphSC2cqD9EtmVEfzYACE' WHERE title = 'Dragón Rojo'",
         "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=1s4iIEsQzoU5DuFZGfj7iow1qZN4BaWVi' WHERE title = 'El silencio de los corderos'",
         "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=1o3O5wDBPXcvTZcThSPN6mMdzpWpIy5e8' WHERE title = 'Hannibal'",
-        "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=142OKzgkmux34jxdWQC3mIYG00keRzLFJ' WHERE title = 'En defensa del Eliseo'",
+        "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=142OKzgkmux34jxdWQC3mIYG00keRzLFJ' WHERE title = 'La defensa del Eliseo'",
         "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=1Uv5u3xng21vhZFNJPOTLNidFklaKb26Z' WHERE title = 'En las montañas de la locura'",
         "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=1wLcrFAqTw63SrQOoGvRHafo-JVjgVOSo' WHERE title = 'Fahreinheit 451'",
         "UPDATE `documents` SET url_image = 'https://drive.google.com/uc?export=download&id=16aFF1PS5223WD_WG_Z0ja2LTTFYt1hD0' WHERE title = 'Frankenstein'",

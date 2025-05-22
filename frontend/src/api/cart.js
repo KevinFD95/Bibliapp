@@ -22,8 +22,8 @@ export function deleteCart(documentId) {
   });
 }
 
-export function finalizePurchaseApi() {
-  return customFetch("/purchase", {
+export function buyCart() {
+  return customFetch("/cart/", {
     method: "POST",
   });
 }

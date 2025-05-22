@@ -4,7 +4,7 @@ import {
   getCartDoc,
   addCart,
   deleteCart,
-  finalizePurchaseApi,
+  buyCart,
 } from "../api/cart.js";
 import { useAlert } from "./AlertContext.jsx";
 
@@ -114,7 +114,7 @@ export function CartProvider({ children }) {
   const purchaseItems = async () => {
     try {
       setIsLoading(true);
-      const purchaseResponse = await finalizePurchaseApi();
+      const purchaseResponse = await buyCart();
       if (purchaseResponse && purchaseResponse.ok) {
         setCartItems([]);
         showAlert({

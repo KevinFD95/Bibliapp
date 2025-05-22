@@ -17,6 +17,6 @@ cart_bp.route("/cart/<int:document_id>", methods=["POST"])(
 cart_bp.route("/cart/<int:document_id>", methods=["DELETE"])(
     token_in_db_required(CartController.delete_doc_cart)
 )
-cart_bp.route("/cart/", methods=["DELETE"])(
+cart_bp.route("/cart/", methods=["POST"])(
     token_in_db_required(CartController.buy_doc_cart)
 )

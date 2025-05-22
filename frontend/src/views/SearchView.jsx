@@ -73,7 +73,7 @@ export default function SearchView({ navigation }) {
   };
 
   return (
-    <View style={themeStyles.mainContainer}>
+    <View style={[themeStyles.mainContainer, { flex: 1 }]}>
       <CustomTextBoxFind
         placeholder="Buscar"
         value={searchText}

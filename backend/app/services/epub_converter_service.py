@@ -40,10 +40,6 @@ class EpubConverter:
                                 ext = mime_type.split("/")[1] if mime_type else "jpeg"
                                 img["src"] = f"data:image/{ext};base64,{images[filename]}"
 
-                    # Bucle para eliminar las clases de dentro del body
-                    # for tag in body.find_all(True):
-                    #     tag.attrs.pop("class", None)
-
                     if not body or not body.get_text(strip=True):
                         continue
 
@@ -71,5 +67,4 @@ class EpubConverter:
 
             return pages
         except Exception as e:
-            print(f"Error al convertir el EPUB en HTML: {e}")
             return {"message": "Error al convertir el EPUB en HTML", "success": False}

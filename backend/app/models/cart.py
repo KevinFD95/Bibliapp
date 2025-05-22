@@ -13,7 +13,6 @@ class Cart:
             conn.close()
             return cart
         except Exception as e:
-            print(f"Error getting cart: {e}")
             return None
         
     @staticmethod
@@ -26,7 +25,6 @@ class Cart:
             conn.close()
             return exists
         except Exception as e:
-            print(f"Error checking doc in cart: {e}")
             raise
         
     @staticmethod
@@ -39,7 +37,6 @@ class Cart:
             conn.close()
             return True
         except Exception as e:
-            print(f"Error setting doc in cart: {e}")
             return None
         
     @staticmethod
@@ -52,7 +49,6 @@ class Cart:
             conn.close()
             return cursor.rowcount > 0
         except Exception as e:
-            print(f"Error deleting doc from cart: {e}")
             return False
         
     @staticmethod
@@ -65,5 +61,4 @@ class Cart:
             conn.close()
             return cursor.rowcount > 0
         except Exception as e:
-            print(f"Error buying doc from cart: {e}")
             return False
